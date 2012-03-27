@@ -9,7 +9,7 @@ public class KlangQuelle extends UnitOscillator {
 	public void generate(int start, int limit) {
 		
 		double[] outputs = output.getValues();
-		System.out.println("start: " + start + "  limit: " + limit + " inputs:");
+		System.out.println("start: " + start + "  limit: " + limit );
 		for( int i = start; i < limit; i++)
 		{
 			
