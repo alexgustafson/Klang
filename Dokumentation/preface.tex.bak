@@ -1,0 +1,20 @@
+\chapter*{Einleitung}
+
+\section*{Aufgabenstellung}
+Die Aufgabe dieser Arbeit besteht in der Simulation stehender Wellen in Röhren. Die Simulation soll falls möglich sowohl mit einem numerischen Verfahren, als auch analytisch möglich sein.
+Beispielsweise soll anhand einstellbarer Länge und Durchmesser einer Röhre und dem darauf wirkenden Luftdruck ein Ton erzeugt werden.
+
+\subsection*{Mögliche Erweiterungen}
+-\ Simulation mit gebogenen Röhren
+-\ Erzeugung spezieller Klangcharakteristika (z.B. verschiedener spezifischer Instrumente)
+
+\section*{Vorgehen}
+1. Proof of Concept (Erzeugung von akustischen Signalen mit Java)
+2. Erarbeiten der mathematischen Grundlagen (Wellengleichung, Struktur von Klängen, etc.)
+3. Verfahren zur Berechnung der Klänge auswählen
+4. Umsetzung (Programmierung)
+5. Erweitern und Verbessern des Programms
+
+\subsection*{Proof of Concept}
+Die Möglichkeit mit Java akustische Signale zu erzeugen haben wir getestet mit der jsyn Library 
+\verb+http://www.softsynth.com/jsyn/index.php

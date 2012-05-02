@@ -1,0 +1,11 @@
+%<TpX v="5" TeXFormat="pgf" PdfTeXFormat="pgf" ArrowsSize="0.3" StarsSize="0.2" DefaultFontHeight="5" DefaultSymbolSize="30" ApproximationPrecision="0.01" PicScale="1" Border="0" BitmapRes="20000" HatchingStep="2" DottedSize="0.5" DashSize="1" LineWidth="0.1" TeXFigure="none" FontSizeInTeX="0">
+%  <circle x="50" y="55" d="50"/>
+%  <text x="75" y="60" t="hallo" h="5"/>
+%</TpX>
+\begin{pgfpicture}{25.00mm}{30.00mm}{85.00mm}{80.00mm}
+\pgfsetxvec{\pgfpoint{1.00mm}{0mm}}
+\pgfsetyvec{\pgfpoint{0mm}{1.00mm}}
+\color[rgb]{0,0,0}\pgfsetlinewidth{0.10mm}\pgfsetdash{}{0mm}
+\pgfcircle[stroke]{\pgfxy(50.00,55.00)}{25.00mm}
+\pgfputat{\pgfxy(75.00,60.00)}{\pgfbox[bottom,left]{hallo}}
+\end{pgfpicture}%

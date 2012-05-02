@@ -1,0 +1,25 @@
+\input{preamble} 			%hier sind alle wichtigen eigenschaften 
+											%des Dokuments vorgelegt
+\begin{document}
+\pagestyle{empty}
+\pagenumbering{alph}
+\input{titlepage}
+\cleardoublepage
+\pagenumbering{roman}   % i, ii, iii, iv, ...
+\setcounter{page}{1}
+\cleardoublepage
+\tableofcontents			%Inhaltsverzeichnis
+\cleardoublepage
+\input{preface}
+\cleardoublepage
+\pagestyle{headings}
+\pagenumbering{arabic}  % 1, 2, 3, 4, ...
+\setcounter{page}{1}
+\input{phys_grundlagen}				%alle Kapitel kommen nun da rein
+\clearpage{\pagestyle{empty}\cleardoublepage}
+\bibliographystyle{alphadin} %oder plainnatDeutsch (alphadin geht nicht mit natbib)amsalpha
+%\bibliography{literatur}
+%\clearpage{\pagestyle{empty}\cleardoublepage}
+%\printindex										%fuer den Index
+\end{document}
+

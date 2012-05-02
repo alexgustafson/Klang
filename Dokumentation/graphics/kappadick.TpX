@@ -1,0 +1,35 @@
+%<TpX v="5" TeXFormat="pgf" PdfTeXFormat="pgf" ArrowsSize="0.3" StarsSize="0.2" DefaultFontHeight="2.8109" DefaultSymbolSize="30" ApproximationPrecision="0.01" PicScale="1" Border="0" BitmapRes="20000" HatchingStep="2" DottedSize="0.5" DashSize="1" LineWidth="0.1" TeXCenterFigure="1" TeXFigure="none" FontSizeInTeX="0">
+%  <rect x="-4.29154E-6" y="-1.43051E-6" w="100" h="22" li="none"/>
+%  <bezier>22.75,17.2 26.75,14.2 30.05,8.75 32.05,3.75</bezier>
+%  <bezier>29,11 37,11 40,14 46,14</bezier>
+%  <bezier>52,14 59,14 62,10 70,10</bezier>
+%  <text x="49" y="14" t="&gt;" tex="$\geq$" h="2.8109" halign="c" jv="c"/>
+%  <text x="32" y="3" t="cj(tj)" tex="$c_j(t_j)$" h="2.8109" halign="c" jv="t"/>
+%  <text x="22" y="17" t="ci(ti)" tex="$c_i(t_i)$" h="2.8109" halign="r" jv="b"/>
+%  <text x="67" y="14" t="ci(ti)" tex="$\bar{c}_i(t_i)$" h="2.8109" halign="r" jv="b"/>
+%  <text x="77" y="3" t="cj(tj)" tex="$\bar{c}_j(t_j)$" h="2.8109" halign="c" jv="t"/>
+%  <text x="0" y="22" t="(X,d)" tex="$(X,d)$" h="2.8109" jv="t"/>
+%  <text x="100" y="22" t="M2k" tex="$M_\kappa^2$" h="2.8109" halign="r" jv="t"/>
+%  <bezier closed="1">13,5 16,11 22,18 30,22 34,18 37,11 39,5 33,3 21,3</bezier>
+%  <polygon>75,22 57,4 85,3</polygon>
+%  <line x1="68" y1="15" x2="76.85" y2="3.3"/>
+%</TpX>
+\centering
+\begin{pgfpicture}{0.00mm}{0.00mm}{100.00mm}{22.00mm}
+\pgfsetxvec{\pgfpoint{1.00mm}{0mm}}
+\pgfsetyvec{\pgfpoint{0mm}{1.00mm}}
+\color[rgb]{0,0,0}\pgfsetlinewidth{0.10mm}\pgfsetdash{}{0mm}
+\pgfmoveto{\pgfxy(22.75,17.20)}\pgfcurveto{\pgfxy(26.75,14.20)}{\pgfxy(30.05,8.75)}{\pgfxy(32.05,3.75)}\pgfstroke
+\pgfmoveto{\pgfxy(29.00,11.00)}\pgfcurveto{\pgfxy(37.00,11.00)}{\pgfxy(40.00,14.00)}{\pgfxy(46.00,14.00)}\pgfstroke
+\pgfmoveto{\pgfxy(52.00,14.00)}\pgfcurveto{\pgfxy(59.00,14.00)}{\pgfxy(62.00,10.00)}{\pgfxy(70.00,10.00)}\pgfstroke
+\pgfputat{\pgfxy(49.00,14.00)}{\pgfbox[bottom,left]{\makebox(0,0)[]{$\geq$\strut}}}
+\pgfputat{\pgfxy(32.00,3.00)}{\pgfbox[bottom,left]{\makebox(0,0)[t]{$c_j(t_j)$\strut}}}
+\pgfputat{\pgfxy(22.00,17.00)}{\pgfbox[bottom,left]{\makebox(0,0)[rb]{$c_i(t_i)$\strut}}}
+\pgfputat{\pgfxy(67.00,14.00)}{\pgfbox[bottom,left]{\makebox(0,0)[rb]{$\bar{c}_i(t_i)$\strut}}}
+\pgfputat{\pgfxy(77.00,3.00)}{\pgfbox[bottom,left]{\makebox(0,0)[t]{$\bar{c}_j(t_j)$\strut}}}
+\pgfputat{\pgfxy(0.00,22.00)}{\pgfbox[bottom,left]{\makebox(0,0)[lt]{$(X,d)$\strut}}}
+\pgfputat{\pgfxy(100.00,22.00)}{\pgfbox[bottom,left]{\makebox(0,0)[rt]{$M_\kappa^2$\strut}}}
+\pgfmoveto{\pgfxy(13.00,5.00)}\pgfcurveto{\pgfxy(16.00,11.00)}{\pgfxy(22.00,18.00)}{\pgfxy(30.00,22.00)}\pgfcurveto{\pgfxy(34.00,18.00)}{\pgfxy(37.00,11.00)}{\pgfxy(39.00,5.00)}\pgfcurveto{\pgfxy(33.00,3.00)}{\pgfxy(21.00,3.00)}{\pgfxy(13.00,5.00)}\pgfclosepath\pgfstroke
+\pgfmoveto{\pgfxy(75.00,22.00)}\pgflineto{\pgfxy(57.00,4.00)}\pgflineto{\pgfxy(85.00,3.00)}\pgfclosepath\pgfstroke
+\pgfmoveto{\pgfxy(68.00,15.00)}\pgflineto{\pgfxy(76.85,3.30)}\pgfstroke
+\end{pgfpicture}%

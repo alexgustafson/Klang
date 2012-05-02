@@ -1,0 +1,94 @@
+%<TpX v="5" TeXFormat="pgf" PdfTeXFormat="pgf" ArrowsSize="0.3" StarsSize="0.2" DefaultFontHeight="2.8109" DefaultSymbolSize="30" ApproximationPrecision="0.01" PicScale="1" Border="0" BitmapRes="20000" HatchingStep="2" DottedSize="0.5" DashSize="1" LineWidth="0.1" TeXCenterFigure="1" TeXFigure="none" FontSizeInTeX="0">
+%  <rect x="8.61189E-6" y="4.17498E-10" w="100" h="34" li="none"/>
+%  <line x1="22" y1="17" x2="85" y2="34"/>
+%  <line x1="22" y1="17" x2="85" y2="0"/>
+%  <line x1="22" y1="17" x2="76" y2="21.7"/>
+%  <line x1="22" y1="17" x2="78.3" y2="28.1"/>
+%  <text x="80" y="17" t="(O,a)" tex="$(\Omega,\alpha)$" h="2.8109" jv="c"/>
+%  <ellipse x="70.75" y="17" dx="17.5" dy="26" rotdeg="360"/>
+%  <line x1="22" y1="17" x2="80.6" y2="31.2"/>
+%  <line x1="22" y1="17" x2="77" y2="25"/>
+%  <line x1="22" y1="17" x2="75.6" y2="18.6"/>
+%  <line x1="22" y1="17" x2="75.7" y2="15.4"/>
+%  <line x1="22" y1="17" x2="76" y2="12.3"/>
+%  <line x1="22" y1="17" x2="77" y2="9"/>
+%  <line x1="22" y1="17" x2="78.3" y2="5.9"/>
+%  <line x1="22" y1="17" x2="80.6" y2="2.8"/>
+%  <line x1="22" y1="17" x2="89" y2="34"/>
+%  <line x1="22" y1="17" x2="92.5" y2="32.5"/>
+%  <line x1="22" y1="17" x2="95" y2="29.5"/>
+%  <line x1="22" y1="17" x2="97" y2="26"/>
+%  <line x1="22" y1="17" x2="98" y2="22.5"/>
+%  <line x1="22" y1="17" x2="99" y2="19"/>
+%  <line x1="22" y1="17" x2="99" y2="15"/>
+%  <line x1="22" y1="17" x2="98" y2="11.5"/>
+%  <line x1="22" y1="17" x2="97" y2="8"/>
+%  <line x1="22" y1="17" x2="95" y2="4.5"/>
+%  <line x1="22" y1="17" x2="92.5" y2="1.5"/>
+%  <line x1="22" y1="17" x2="89" y2="0"/>
+%  <star x="63.4" y="24.1"/>
+%  <star x="79" y="12.9"/>
+%  <ellipse x="60.65" y="23.8" dx="4.70001" dy="3" li="none" fill="white"/>
+%  <text x="62.5" y="24" t="w1" tex="$\omega_1$" h="2.8109" halign="r" jv="c"/>
+%  <text x="79" y="13.5" t="w2" tex="$\omega_2$" h="2.8109" jv="t" li="none" fill="white"/>
+%  <star x="91.5" y="12" fill="black"/>
+%  <rect x="86.5" y="8.49997" w="9.49998" h="3.00003" li="none" fill="white"/>
+%  <text x="91.5" y="12" t="[r2,w2]" tex="$[r_2,\omega_2]$" h="2.8109" halign="c" jv="t" li="none" fill="white"/>
+%  <star x="43" y="20.6" fill="black"/>
+%  <rect x="32" y="18.5" w="10" h="4.5" li="none" fill="white"/>
+%  <text x="42" y="20.5" t="[r1,w1]" tex="$[r_1,\omega_1]$" h="2.8109" halign="r" jv="c" li="none" fill="white"/>
+%  <text x="21.5" y="17" t="[0,w1]=[0,w2]" tex="$[0,\omega_1]=[0,\omega_2]$" h="2.8109" halign="r" jv="c" li="none" fill="white"/>
+%  <star x="22" y="17" fill="black"/>
+%  <text x="47" y="10" t="C(O)" tex="$C(\Omega)$" h="2.8109" halign="r" jv="t" li="none" fill="black"/>
+%</TpX>
+\centering
+\begin{pgfpicture}{0.00mm}{0.00mm}{100.00mm}{34.00mm}
+\pgfsetxvec{\pgfpoint{1.00mm}{0mm}}
+\pgfsetyvec{\pgfpoint{0mm}{1.00mm}}
+\color[rgb]{0,0,0}\pgfsetlinewidth{0.10mm}\pgfsetdash{}{0mm}
+\pgfmoveto{\pgfxy(22.00,17.00)}\pgflineto{\pgfxy(85.00,34.00)}\pgfstroke
+\pgfmoveto{\pgfxy(22.00,17.00)}\pgflineto{\pgfxy(85.00,0.00)}\pgfstroke
+\pgfmoveto{\pgfxy(22.00,17.00)}\pgflineto{\pgfxy(76.00,21.70)}\pgfstroke
+\pgfmoveto{\pgfxy(22.00,17.00)}\pgflineto{\pgfxy(78.30,28.10)}\pgfstroke
+\pgfputat{\pgfxy(80.00,17.00)}{\pgfbox[bottom,left]{\makebox(0,0)[l]{$(\Omega,\alpha)$\strut}}}
+\pgfellipse[stroke]{\pgfxy(70.75,17.00)}{\pgfxy(8.75,0.00)}{\pgfxy(0.00,13.00)}
+\pgfmoveto{\pgfxy(22.00,17.00)}\pgflineto{\pgfxy(80.60,31.20)}\pgfstroke
+\pgfmoveto{\pgfxy(22.00,17.00)}\pgflineto{\pgfxy(77.00,25.00)}\pgfstroke
+\pgfmoveto{\pgfxy(22.00,17.00)}\pgflineto{\pgfxy(75.60,18.60)}\pgfstroke
+\pgfmoveto{\pgfxy(22.00,17.00)}\pgflineto{\pgfxy(75.70,15.40)}\pgfstroke
+\pgfmoveto{\pgfxy(22.00,17.00)}\pgflineto{\pgfxy(76.00,12.30)}\pgfstroke
+\pgfmoveto{\pgfxy(22.00,17.00)}\pgflineto{\pgfxy(77.00,9.00)}\pgfstroke
+\pgfmoveto{\pgfxy(22.00,17.00)}\pgflineto{\pgfxy(78.30,5.90)}\pgfstroke
+\pgfmoveto{\pgfxy(22.00,17.00)}\pgflineto{\pgfxy(80.60,2.80)}\pgfstroke
+\pgfmoveto{\pgfxy(22.00,17.00)}\pgflineto{\pgfxy(89.00,34.00)}\pgfstroke
+\pgfmoveto{\pgfxy(22.00,17.00)}\pgflineto{\pgfxy(92.50,32.50)}\pgfstroke
+\pgfmoveto{\pgfxy(22.00,17.00)}\pgflineto{\pgfxy(95.00,29.50)}\pgfstroke
+\pgfmoveto{\pgfxy(22.00,17.00)}\pgflineto{\pgfxy(97.00,26.00)}\pgfstroke
+\pgfmoveto{\pgfxy(22.00,17.00)}\pgflineto{\pgfxy(98.00,22.50)}\pgfstroke
+\pgfmoveto{\pgfxy(22.00,17.00)}\pgflineto{\pgfxy(99.00,19.00)}\pgfstroke
+\pgfmoveto{\pgfxy(22.00,17.00)}\pgflineto{\pgfxy(99.00,15.00)}\pgfstroke
+\pgfmoveto{\pgfxy(22.00,17.00)}\pgflineto{\pgfxy(98.00,11.50)}\pgfstroke
+\pgfmoveto{\pgfxy(22.00,17.00)}\pgflineto{\pgfxy(97.00,8.00)}\pgfstroke
+\pgfmoveto{\pgfxy(22.00,17.00)}\pgflineto{\pgfxy(95.00,4.50)}\pgfstroke
+\pgfmoveto{\pgfxy(22.00,17.00)}\pgflineto{\pgfxy(92.50,1.50)}\pgfstroke
+\pgfmoveto{\pgfxy(22.00,17.00)}\pgflineto{\pgfxy(89.00,0.00)}\pgfstroke
+\pgfcircle[fill]{\pgfxy(63.40,24.10)}{0.20mm}
+\pgfcircle[stroke]{\pgfxy(63.40,24.10)}{0.20mm}
+\pgfcircle[fill]{\pgfxy(79.00,12.90)}{0.20mm}
+\pgfcircle[stroke]{\pgfxy(79.00,12.90)}{0.20mm}
+\color[rgb]{1,1,1}\pgfellipse[fill]{\pgfxy(60.65,23.80)}{\pgfxy(2.35,0.00)}{\pgfxy(0.00,1.50)}
+\color[rgb]{0,0,0}\pgfputat{\pgfxy(62.50,24.00)}{\pgfbox[bottom,left]{\makebox(0,0)[r]{$\omega_1$\strut}}}
+\pgfputat{\pgfxy(79.00,13.50)}{\pgfbox[bottom,left]{\makebox(0,0)[lt]{$\omega_2$\strut}}}
+\pgfcircle[fill]{\pgfxy(91.50,12.00)}{0.20mm}
+\pgfcircle[stroke]{\pgfxy(91.50,12.00)}{0.20mm}
+\color[rgb]{1,1,1}\pgfmoveto{\pgfxy(96.00,11.50)}\pgflineto{\pgfxy(86.50,11.50)}\pgflineto{\pgfxy(86.50,8.50)}\pgflineto{\pgfxy(96.00,8.50)}\pgfclosepath\pgffill
+\color[rgb]{0,0,0}\pgfputat{\pgfxy(91.50,12.00)}{\pgfbox[bottom,left]{\makebox(0,0)[t]{$[r_2,\omega_2]$\strut}}}
+\pgfcircle[fill]{\pgfxy(43.00,20.60)}{0.20mm}
+\pgfcircle[stroke]{\pgfxy(43.00,20.60)}{0.20mm}
+\color[rgb]{1,1,1}\pgfmoveto{\pgfxy(42.00,18.50)}\pgflineto{\pgfxy(42.00,23.00)}\pgflineto{\pgfxy(32.00,23.00)}\pgflineto{\pgfxy(32.00,18.50)}\pgfclosepath\pgffill
+\color[rgb]{0,0,0}\pgfputat{\pgfxy(42.00,20.50)}{\pgfbox[bottom,left]{\makebox(0,0)[r]{$[r_1,\omega_1]$\strut}}}
+\pgfputat{\pgfxy(21.50,17.00)}{\pgfbox[bottom,left]{\makebox(0,0)[r]{$[0,\omega_1]=[0,\omega_2]$\strut}}}
+\pgfcircle[fill]{\pgfxy(22.00,17.00)}{0.20mm}
+\pgfcircle[stroke]{\pgfxy(22.00,17.00)}{0.20mm}
+\pgfputat{\pgfxy(47.00,10.00)}{\pgfbox[bottom,left]{\makebox(0,0)[rt]{$C(\Omega)$\strut}}}
+\end{pgfpicture}%

@@ -1,0 +1,63 @@
+%<TpX v="5" TeXFormat="pgf" PdfTeXFormat="pgf" ArrowsSize="0.3" StarsSize="0.2" DefaultFontHeight="2.8109" DefaultSymbolSize="30" ApproximationPrecision="0.01" PicScale="1" Border="0" BitmapRes="20000" HatchingStep="2" DottedSize="0.5" DashSize="1" LineWidth="0.1" TeXCenterFigure="1" TeXFigure="none" FontSizeInTeX="0">
+%  <rect x="0" y="1.91098E-7" w="100" h="31" li="none"/>
+%  <text x="49" y="27" t="(Ox,a)" tex="$(\Omega_x,\alpha)$" h="2.8109" halign="r"/>
+%  <bezier>27,0 33,2 51,2 57,0</bezier>
+%  <bezier>57,0 59,9 63,17 70,22</bezier>
+%  <bezier li="dot">30.8456,11.0481 33.0638,15.4127 36.0557,19.1826 40,22</bezier>
+%  <bezier>27,0 27.873,3.92871 29.1272,7.66687 30.8456,11.0481</bezier>
+%  <bezier>64.7973,23.002 66.9181,22.7578 68.7285,22.4238 70,22</bezier>
+%  <bezier li="dot">40,22 44.7285,23.5762 56.91,23.9102 64.7973,23.002</bezier>
+%  <polygon>27,11 57,11 70,31 40,31</polygon>
+%  <star x="48.5" y="21"/>
+%  <star x="48.5" y="15"/>
+%  <bezier li="dot">42.1692,11.0365 47.7621,14.9199 54,18.5 60.5,21</bezier>
+%  <bezier>37,7 38.4314,8.30127 40.2015,9.67027 42.1692,11.0365</bezier>
+%  <bezier>61.3657,17.8672 62.1582,17.9538 62.8753,18 63.5,18</bezier>
+%  <bezier li="dot">36.5323,11.003 43.9016,13.9096 55.0391,17.176 61.3657,17.8672</bezier>
+%  <bezier>33,9.5 34.0254,9.97852 35.219,10.4851 36.5323,11.003</bezier>
+%  <line x1="48.5" y1="21" x2="57.3" y2="23.6" arr2="h40"/>
+%  <line x1="48.5" y1="21" x2="55" y2="25" arr2="h40"/>
+%  <ellipse x="48.58" y="20.82" dx="19" dy="9" rotdeg="190.624"/>
+%  <text x="48.5" y="15" t="x" tex="$x$" h="2.8109" jv="t"/>
+%  <text x="47.5" y="21" t="0" tex="$0$" h="2.8109" halign="r" jv="c"/>
+%  <text x="59.5" y="6" t="(X,d)" tex="$(X,d)$" h="2.8109" jv="t"/>
+%  <text x="70.5" y="31" t="TxX" tex="$T_xX$" h="2.8109" jv="t"/>
+%  <text x="33" y="9.5" t="o" tex="$\sigma$" h="2.8109" halign="c" jv="t" li="none"/>
+%  <text x="37" y="7" t="t" tex="$\tau$" h="2.8109" halign="c" jv="t" li="none"/>
+%</TpX>
+\centering
+\begin{pgfpicture}{0.00mm}{0.00mm}{100.00mm}{31.00mm}
+\pgfsetxvec{\pgfpoint{1.00mm}{0mm}}
+\pgfsetyvec{\pgfpoint{0mm}{1.00mm}}
+\color[rgb]{0,0,0}\pgfsetlinewidth{0.10mm}\pgfsetdash{}{0mm}
+\pgfputat{\pgfxy(49.00,27.00)}{\pgfbox[bottom,left]{\makebox[0pt][r]{$(\Omega_x,\alpha)$}}}
+\pgfmoveto{\pgfxy(27.00,0.00)}\pgfcurveto{\pgfxy(33.00,2.00)}{\pgfxy(51.00,2.00)}{\pgfxy(57.00,0.00)}\pgfstroke
+\pgfmoveto{\pgfxy(57.00,0.00)}\pgfcurveto{\pgfxy(59.00,9.00)}{\pgfxy(63.00,17.00)}{\pgfxy(70.00,22.00)}\pgfstroke
+\pgfsetdash{{0.10mm}{0.50mm}}{0mm}\pgfmoveto{\pgfxy(30.85,11.05)}\pgfcurveto{\pgfxy(33.06,15.41)}{\pgfxy(36.06,19.18)}{\pgfxy(40.00,22.00)}\pgfstroke
+\pgfsetdash{}{0mm}\pgfmoveto{\pgfxy(27.00,0.00)}\pgfcurveto{\pgfxy(27.87,3.93)}{\pgfxy(29.13,7.67)}{\pgfxy(30.85,11.05)}\pgfstroke
+\pgfmoveto{\pgfxy(64.80,23.00)}\pgfcurveto{\pgfxy(66.92,22.76)}{\pgfxy(68.73,22.42)}{\pgfxy(70.00,22.00)}\pgfstroke
+\pgfsetdash{{0.10mm}{0.50mm}}{0mm}\pgfmoveto{\pgfxy(40.00,22.00)}\pgfcurveto{\pgfxy(44.73,23.58)}{\pgfxy(56.91,23.91)}{\pgfxy(64.80,23.00)}\pgfstroke
+\pgfsetdash{}{0mm}\pgfmoveto{\pgfxy(27.00,11.00)}\pgflineto{\pgfxy(57.00,11.00)}\pgflineto{\pgfxy(70.00,31.00)}\pgflineto{\pgfxy(40.00,31.00)}\pgfclosepath\pgfstroke
+\pgfcircle[fill]{\pgfxy(48.50,21.00)}{0.20mm}
+\pgfcircle[stroke]{\pgfxy(48.50,21.00)}{0.20mm}
+\pgfcircle[fill]{\pgfxy(48.50,15.00)}{0.20mm}
+\pgfcircle[stroke]{\pgfxy(48.50,15.00)}{0.20mm}
+\pgfsetdash{{0.10mm}{0.50mm}}{0mm}\pgfmoveto{\pgfxy(42.17,11.04)}\pgfcurveto{\pgfxy(47.76,14.92)}{\pgfxy(54.00,18.50)}{\pgfxy(60.50,21.00)}\pgfstroke
+\pgfsetdash{}{0mm}\pgfmoveto{\pgfxy(37.00,7.00)}\pgfcurveto{\pgfxy(38.43,8.30)}{\pgfxy(40.20,9.67)}{\pgfxy(42.17,11.04)}\pgfstroke
+\pgfmoveto{\pgfxy(61.37,17.87)}\pgfcurveto{\pgfxy(62.16,17.95)}{\pgfxy(62.88,18.00)}{\pgfxy(63.50,18.00)}\pgfstroke
+\pgfsetdash{{0.10mm}{0.50mm}}{0mm}\pgfmoveto{\pgfxy(36.53,11.00)}\pgfcurveto{\pgfxy(43.90,13.91)}{\pgfxy(55.04,17.18)}{\pgfxy(61.37,17.87)}\pgfstroke
+\pgfsetdash{}{0mm}\pgfmoveto{\pgfxy(33.00,9.50)}\pgfcurveto{\pgfxy(34.03,9.98)}{\pgfxy(35.22,10.49)}{\pgfxy(36.53,11.00)}\pgfstroke
+\pgfmoveto{\pgfxy(48.50,21.00)}\pgflineto{\pgfxy(57.30,23.60)}\pgfstroke
+\pgfmoveto{\pgfxy(57.30,23.60)}\pgflineto{\pgfxy(56.06,23.55)}\pgflineto{\pgfxy(57.30,23.60)}\pgflineto{\pgfxy(56.23,22.97)}\pgflineto{\pgfxy(57.30,23.60)}\pgfclosepath\pgffill
+\pgfmoveto{\pgfxy(57.30,23.60)}\pgflineto{\pgfxy(56.06,23.55)}\pgflineto{\pgfxy(57.30,23.60)}\pgflineto{\pgfxy(56.23,22.97)}\pgflineto{\pgfxy(57.30,23.60)}\pgfclosepath\pgfstroke
+\pgfmoveto{\pgfxy(48.50,21.00)}\pgflineto{\pgfxy(55.00,25.00)}\pgfstroke
+\pgfmoveto{\pgfxy(55.00,25.00)}\pgflineto{\pgfxy(53.82,24.63)}\pgflineto{\pgfxy(55.00,25.00)}\pgflineto{\pgfxy(54.14,24.12)}\pgflineto{\pgfxy(55.00,25.00)}\pgfclosepath\pgffill
+\pgfmoveto{\pgfxy(55.00,25.00)}\pgflineto{\pgfxy(53.82,24.63)}\pgflineto{\pgfxy(55.00,25.00)}\pgflineto{\pgfxy(54.14,24.12)}\pgflineto{\pgfxy(55.00,25.00)}\pgfclosepath\pgfstroke
+\pgfellipse[stroke]{\pgfxy(48.58,20.82)}{\pgfxy(-9.34,-1.75)}{\pgfxy(0.83,-4.42)}
+\pgfputat{\pgfxy(48.50,15.00)}{\pgfbox[bottom,left]{\makebox(0,0)[lt]{$x$\strut}}}
+\pgfputat{\pgfxy(47.50,21.00)}{\pgfbox[bottom,left]{\makebox(0,0)[r]{$0$\strut}}}
+\pgfputat{\pgfxy(59.50,6.00)}{\pgfbox[bottom,left]{\makebox(0,0)[lt]{$(X,d)$\strut}}}
+\pgfputat{\pgfxy(70.50,31.00)}{\pgfbox[bottom,left]{\makebox(0,0)[lt]{$T_xX$\strut}}}
+\pgfputat{\pgfxy(33.00,9.50)}{\pgfbox[bottom,left]{\makebox(0,0)[t]{$\sigma$\strut}}}
+\pgfputat{\pgfxy(37.00,7.00)}{\pgfbox[bottom,left]{\makebox(0,0)[t]{$\tau$\strut}}}
+\end{pgfpicture}%

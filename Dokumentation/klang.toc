@@ -1,0 +1,5 @@
+\select@language {ngerman}
+\contentsline {chapter}{\numberline {1}Physikalische Grundlagen}{1}{chapter.1}
+\contentsline {section}{\numberline {1.1}Stehende Wellen}{1}{section.1.1}
+\contentsline {subsection}{\numberline {1.1.1}Was ist eine stehende Welle?}{1}{subsection.1.1.1}
+\contentsline {subsection}{\numberline {1.1.2}Entstehung einer Stehenden Welle}{1}{subsection.1.1.2}

@@ -1,0 +1,46 @@
+\chapter{Tangentialkegel und Differential}
+\section{Kegel}
+\begin{dfi}
+Sei $(\Omega,\alpha)$ ein metrischer Raum und sei auf $[0,\infty)\times\Omega$ die Äquivalenzrelation $\sim$ folgendermassen gegeben:
+$$(r_1,\omega_1)\sim(r_2,\omega_2)\quad:\Longleftrightarrow\quad(r_1,\omega_1)=(r_2,\omega_2)\,\textrm{ oder }\,r_1=r_2=0$$
+Wir definieren den \define{Kegel} über $(\Omega,\alpha)$ durch
+$$C(\Omega):=[0,\infty)\times\Omega/\sim$$
+und nennen die Äquivalenzklasse $[0,\omega]=0$ \define{Kegelpunkt}. Wir definieren auf $C(\Omega)$ die Metrik $d$ durch
+$$d([r_1,\omega_1],[r_2,\omega_2])^2=r_1^2+r_2^2-2r_1r_2\cos(\alpha_\pi(\omega_2,\omega_2)),$$
+wobei
+$$\alpha_\pi(\omega_1,\omega_2):=\min\{\alpha(\omega_1,\omega_2),\pi\}.$$
+\end{dfi}
+%
+\graphic{kegel}
+%
+\begin{rem}
+Die Metrik $d$ ist vom Cosinussatz für $\kappa=0$ abgeleitet.
+\end{rem}
+%
+\begin{dfi}
+Seien $[r_1,\omega_1]$ und $[r_2,\omega_2]$ in $C(\Omega)$. Wir definieren auf $(C(\Omega),d)$ die Norm $\|\,\|:C(\Omega)\rightarrow\R_{\geq0}$ durch $\|[r,\omega]\|:=r$, sowie das Skalarprodukt $\langle\,,\rangle:C(\Omega)\times C(\Omega)\rightarrow\R_{\geq0}$ durch
+$$\langle[r_1,\omega_1],[r_2,\omega_2]\rangle:=r_1r_2\cos\big(\alpha_\pi(\omega_1,\omega_2)\big).$$
+\end{dfi}
+%
+%
+%
+%
+%
+%
+%
+%
+\section{Tangentialkegel}
+In diesem Abschnitt bezeichne $(X,d)$ einen geodätischen metrischen Raum, der $\mathrm{CBB}(\kappa)$ ist.
+\begin{dfi}
+Sei $x$ in $X$. Wir definieren für zwei Kürzeste $\sigma,\tau$, die in $x$ beginnen, die pseudo-Metrik
+$$\alpha(\sigma,\tau):=\angle(\sigma,\tau),$$
+sowie die Äquivalenzrelation $\sim$ durch 
+$$\sigma\sim\tau\quad\Longleftrightarrow\quad\alpha(\sigma,\tau)=0.$$
+Somit können wir den metrischen Raum
+$$\Omega_x':=\{\sigma\mid\sigma:[0,a]\rightarrow X\textrm{ Kürzeste mit }\sigma(0)=x\}/\sim.$$
+mit der Metrik $\alpha$ definieren.\\
+Wir nennen die Vervollständigung $\Omega_x$ von $\Omega_x'$ den \define{Raum der Richtungen}. Falls $\Omega_x\neq\emptyset$, definieren den \define{Tangentialkegel} in $x$ durch $T_xX:=C(\Omega_x)$, andernfalls durch $T_xX:=\{0\}$.
+\end{dfi}
+%
+\graphic{tangentialkegel}
+%

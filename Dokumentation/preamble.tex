@@ -1,0 +1,69 @@
+\documentclass[11pt,a4paper,twoside,draft,BCOR=1cm,DIV=11,headsepline]{scrreprt} %draft
+
+%***************Start Paket-Einbindungen******************
+\usepackage[latin1]{inputenc} %textcodierung, in windows auch latin1, in unix utf8
+\usepackage[ngerman]{babel}		%deutsche Sprachtrennung
+\usepackage{amsfonts,amsmath,amsthm}	
+\usepackage{makeidx}	%fuer Verwendung des index'
+\usepackage[colorlinks=false,pdfborder={0 0 0},plainpages=false]{hyperref}%fuer hyperlinks im pdf-format
+%GENAU DANN verwenden, wenn digital veroeffentlicht
+\usepackage{pgf} %fuer grafiken
+%***************Ende Paket-Einbindungen******************
+
+%**************Start Allgemeine Optionen*****************
+\setkomafont{sectioning}{\rmfamily\bfseries\boldmath}
+\makeindex
+%\hyphenation{geo-dä-tisch Geo-dä-te Län-gen-raum un-ter-halb-ste-tig un-ter-halb-ste-ti-ge Ver-gleichs-drei-ecke Alex-an-drov} %hier gehören zu trennende Wörter hin, die Latex nicht kennt
+%% Gleichungen nach Kapitel nummerieren
+\renewcommand{\theequation}{\thechapter.\arabic{equation}}
+\numberwithin{equation}{chapter}
+%\setlength{\parindent}{0pt} %kein Einzug (nie)
+%\addtolength{\leftmargini}{2.5em}
+%****************Ende Allgemeine Optionen*************
+
+%************* Start Theoreme*************************
+\theoremstyle{plain}
+\newtheorem{theo}{Theorem}[chapter]
+\newtheorem{lem}[theo]{Lemma}
+\newtheorem{cor}[theo]{Korollar}
+\newtheorem{pro}[theo]{Proposition}
+\newtheorem{supp}[theo]{Vermutung}
+\newtheorem{claim}[theo]{Behauptung}
+\theoremstyle{definition}
+\newtheorem{dfi}[theo]{Definition}
+\newtheorem{con}[theo]{Konstruktion}
+\theoremstyle{remark}
+\newtheorem{rem}[theo]{Bemerkung}
+\newtheorem{war}[theo]{Warnung}
+\newtheorem{ntt}[theo]{Notation}
+\newtheorem{exa}[theo]{Beispiel}
+\newtheorem{exas}[theo]{Beispiele}
+\newtheorem{exc}[theo]{\"Ubung}
+%************** Ende Theoreme *************
+
+%************** Start Befehle *************
+%Aenderung der Nummerierungsart (klein roemisch)
+\renewcommand{\labelenumi}{(\roman{enumi})}
+%Das sind nur vereinfachungen
+%bereits bestehender Befehle:
+\providecommand{\define}[1]{\index{#1}\emph{#1}}
+\providecommand{\Z}{\ensuremath{\mathbb{Z}}}
+\providecommand{\N}{\ensuremath{\mathbb{N}}}
+\providecommand{\C}{\ensuremath{\mathbb{C}}}
+\providecommand{\Q}{\ensuremath{\mathbb{Q}}}
+\providecommand{\R}{\ensuremath{\mathbb{R}}}
+\providecommand{\de}{\ensuremath{\mathrm{d}}}
+%************** Ende Befehle **************
+
+%************** Start Operatoren **********
+%das Bild 'im' willst du ja nicht kursiv
+%gesetzt im mathemodus, deshalb ist es hier
+%aufgefuehrt
+\DeclareMathOperator{\id}{id}
+\DeclareMathOperator{\im}{im}
+\DeclareMathOperator{\sign}{sign}
+%************** Ende Operatoren ***********
+
+%************** Start Grafik **********
+\providecommand{\graphic}[1]{\begin{center}{\footnotesize \input{graphics/#1.TpX}}\end{center}}
+%************** Ende Grafik ***********

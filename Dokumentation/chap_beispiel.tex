@@ -1,0 +1,66 @@
+\chapter{Ein Kapitel}
+bla
+\section{Ein Abschnitt}
+bla
+\subsection{Ein Unterabschnitt}
+bla
+\subsubsection{Ein Unterunterabschnitt}
+bla
+\section{Bilder}
+Mathematische Skizzen erstellt man am besten mit dem freien Programm TpX. TpX kann die Grafiken als PGF speichern, ein vektorielles Graphikformat, das direkt in latex (beziehungsweise pdflatex) verwendet werden kann. Die Handhabung von TpX ist sehr intuitiv und TpX kann auch externe Graphikformate importieren, beispielsweise SVG (nativ) oder EPS (über pstoedit, welches zuerst installiert werden muss). Erhältlich unter:
+\verb+http://home.arcor.de/unimath/tpx+
+%
+\graphic{kappadick}
+%
+\section{Theoreme}
+Im Folgenden werden alle Möglichkeiten der Theoreme angefügt.
+\begin{theo}
+Das ist ein Theorem (auch manchmal Satz genannt).
+\end{theo}
+\begin{lem}
+Das ist ein Lemma.
+\end{lem}
+\begin{cor}
+Das ist ein Korollar.
+%
+\graphic{versuch}
+%
+\end{cor}
+\begin{pro}
+Das ist eine Proposition.
+\end{pro}
+\begin{dfi}
+Das ist eine Definition. Ich definiere eine \define{Ableitung}.
+\end{dfi}
+\begin{con}
+Das ist eine Konstruktion.
+\end{con}
+\begin{rem}
+Das ist eine Bemerkung.
+\end{rem}
+\begin{war}
+Das ist eine Warnung.
+\end{war}
+\begin{ntt}
+Das ist eine Notation.
+\end{ntt}
+\begin{exa}
+Das ist ein Beispiel.
+\end{exa}
+\begin{exas}
+Das sind Beispiele.
+\end{exas}
+\begin{exc}
+Das ist eine Übung.
+\end{exc}
+\begin{proof}
+Das ist ein Beweis.
+\end{proof}
+%
+%
+%
+Will man einen Querverweis machen, geht das beispielsweise so:
+\begin{theo}\label{Rvollstaendig}
+$\R$ ist vollständig.
+\end{theo}
+Und die Referenz darauf ist: siehe Theorem \ref{Rvollstaendig}. Auf der Nummer des verwiesenen Theorems liegt wie bei den Abbildungen ein Hyperlink, falls hyperref in der Präambel verwendet wird. Will man auf ein Buch referezieren, macht man das so: Siehe \cite{bridsonhaefliger}. Was zu dieser Referenz gehört, steht in der literatur.bib.
