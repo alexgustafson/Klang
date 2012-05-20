@@ -33,6 +33,7 @@ public class MainWindow {
 	private JRadioButton drawMode_solid;
 	private JRadioButton drawMode_gen;
 	private JRadioButton drawMode_nil;
+	private JTextField textField;
 
 	/**
 	 * Launch the application.
@@ -62,7 +63,7 @@ public class MainWindow {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 546, 403);
+		frame.setBounds(100, 100, 546, 448);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
@@ -91,7 +92,7 @@ public class MainWindow {
 
 		});
 		runButton.setBackground(Color.GREEN);
-		runButton.setBounds(6, 341, 117, 29);
+		runButton.setBounds(119, 391, 117, 29);
 		frame.getContentPane().add(runButton);
 		
 		JButton btnSetupSim = new JButton("setup sim");
@@ -101,7 +102,7 @@ public class MainWindow {
 				setUpSimulationField();
 			}
 		});
-		btnSetupSim.setBounds(6, 113, 117, 29);
+		btnSetupSim.setBounds(6, 146, 117, 29);
 		frame.getContentPane().add(btnSetupSim);
 		
 		JButton btnStep = new JButton("step");
@@ -110,7 +111,7 @@ public class MainWindow {
 				stepSimulation();
 			}
 		});
-		btnStep.setBounds(6, 315, 117, 29);
+		btnStep.setBounds(6, 391, 117, 29);
 		frame.getContentPane().add(btnStep);
 		
 		widthField = new JTextField();
@@ -144,7 +145,7 @@ public class MainWindow {
 		frame.getContentPane().add(resField);
 		
 		lblNewLabel_1 = new JLabel("Draw Mode");
-		lblNewLabel_1.setBounds(16, 154, 97, 16);
+		lblNewLabel_1.setBounds(16, 239, 97, 16);
 		frame.getContentPane().add(lblNewLabel_1);
 		
 		drawMode_luft = new JRadioButton("luft");
@@ -159,7 +160,7 @@ public class MainWindow {
 			}
 		});
 		drawMode_luft.setSelected(true);
-		drawMode_luft.setBounds(29, 182, 72, 23);
+		drawMode_luft.setBounds(29, 267, 72, 23);
 		frame.getContentPane().add(drawMode_luft);
 		
 		drawMode_solid = new JRadioButton("wand");
@@ -173,7 +174,7 @@ public class MainWindow {
 				
 			}
 		});
-		drawMode_solid.setBounds(29, 208, 72, 23);
+		drawMode_solid.setBounds(29, 293, 72, 23);
 		frame.getContentPane().add(drawMode_solid);
 		
 		drawMode_gen = new JRadioButton("generator");
@@ -186,7 +187,7 @@ public class MainWindow {
 				drawMode_gen.setSelected(true);
 			}
 		});
-		drawMode_gen.setBounds(29, 235, 117, 23);
+		drawMode_gen.setBounds(29, 320, 117, 23);
 		frame.getContentPane().add(drawMode_gen);
 		
 		drawMode_nil = new JRadioButton("nil");
@@ -198,8 +199,32 @@ public class MainWindow {
 				drawMode_gen.setSelected(false);
 			}
 		});
-		drawMode_nil.setBounds(29, 262, 117, 23);
+		drawMode_nil.setBounds(29, 347, 117, 23);
 		frame.getContentPane().add(drawMode_nil);
+		
+		JButton btnSaveMesh = new JButton("save mesh");
+		btnSaveMesh.setBackground(Color.GREEN);
+		btnSaveMesh.setBounds(311, 391, 117, 29);
+		frame.getContentPane().add(btnSaveMesh);
+		
+		JButton btnLoadMesh = new JButton("load mesh");
+		btnLoadMesh.setBackground(Color.GREEN);
+		btnLoadMesh.setBounds(423, 391, 117, 29);
+		frame.getContentPane().add(btnLoadMesh);
+		
+		JLabel lblTimeH = new JLabel("time h");
+		lblTimeH.setBounds(16, 119, 72, 16);
+		frame.getContentPane().add(lblTimeH);
+		
+		textField = new JTextField();
+		textField.setText("1");
+		textField.setColumns(10);
+		textField.setBounds(83, 113, 87, 28);
+		frame.getContentPane().add(textField);
+		
+		JButton btnClearSim = new JButton("clear sim");
+		btnClearSim.setBounds(6, 175, 117, 29);
+		frame.getContentPane().add(btnClearSim);
 	}
 	
 	private void setUpSimulationField()
