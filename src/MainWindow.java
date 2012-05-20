@@ -10,6 +10,15 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
 import javax.swing.JTextField;
 import javax.swing.JLabel;
 import javax.swing.JCheckBox;
@@ -203,11 +212,38 @@ public class MainWindow {
 		frame.getContentPane().add(drawMode_nil);
 		
 		JButton btnSaveMesh = new JButton("save mesh");
+		btnSaveMesh.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				try {
+					saveMesh();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			}
+		});
 		btnSaveMesh.setBackground(Color.GREEN);
 		btnSaveMesh.setBounds(311, 391, 117, 29);
 		frame.getContentPane().add(btnSaveMesh);
 		
 		JButton btnLoadMesh = new JButton("load mesh");
+		btnLoadMesh.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				try {
+					loadMesh();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (ClassNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+			}
+		});
 		btnLoadMesh.setBackground(Color.GREEN);
 		btnLoadMesh.setBounds(423, 391, 117, 29);
 		frame.getContentPane().add(btnLoadMesh);
@@ -227,6 +263,23 @@ public class MainWindow {
 		frame.getContentPane().add(btnClearSim);
 	}
 	
+	protected void loadMesh() throws IOException, ClassNotFoundException {
+		
+		simulationField.readFromFile(new File("simulationField.csv"));
+
+		simulationField.attatchCanvasElement(simulationFieldCanvas);
+		simulationField.updateCanvas();
+
+		
+	}
+
+	protected void saveMesh() throws IOException {
+
+		
+		simulationField.dumpToFile(new File("simulationField.csv"));
+		
+	}
+
 	private void setUpSimulationField()
 	{
 		simulationField = new SimulationField();
@@ -241,11 +294,13 @@ public class MainWindow {
 	private void mouseClickInSimulationField(MouseEvent event)
 	{
 		if(drawMode_luft.isSelected()){
-			simulationField.mouseClickInField(event.getX(), event.getY());
+			
+			simulationField.mouseClickInFieldWithCellType(event.getX(), event.getY(), CellType.CellTypeSimulationCell);
 		}else if (drawMode_solid.isSelected()) {
 			simulationField.mouseClickInFieldWithCellType(event.getX(), event.getY(), CellType.CellTypeSolidCell);
 		}else if (drawMode_gen.isSelected()) {
 			simulationField.mouseClickInFieldWithCellType(event.getX(), event.getY(), CellType.CellTypeGeneratorCell);
+			
 		}
 		
 	}

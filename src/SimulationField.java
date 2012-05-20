@@ -1,7 +1,18 @@
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Serializable;
+import java.io.Writer;
 import java.util.ArrayList;
+
+import com.sun.tools.doclets.internal.toolkit.util.DocFinder.Output;
 
 
 public class SimulationField implements CellDelegate, Runnable{
@@ -34,6 +45,10 @@ public class SimulationField implements CellDelegate, Runnable{
 	
 	private float timeH;
 	private float spaceH;
+	
+	private int generator_x_coord;
+	private int generator_y_coord;
+	private Boolean generator;
 	
 	
 	public void createNewField(int sizex_cm, int sizey_cm, int resolution, float timeH)
@@ -201,25 +216,48 @@ public class SimulationField implements CellDelegate, Runnable{
 			float height = yPixelCellRatio;
 			int i = 0;
 			
+			int circle_left = 0;
+			int circle_top = 0;
+			Color circle_color = Color.red;
+			Color c;
+			
+			Graphics g = canvasField.getGraphics();
+			
 			for (Cell cell : field) {
 			
-				Graphics g = canvasField.getGraphics();
 				
-				if (cell.getCellType() == CellType.CellTypeSimulationCell) {
-					Color c = new Color(  Color.HSBtoRGB((float)cell.getPressure(), (float)0.8, (float)0.8) );
+				
+				if (cell.getCellType() == CellType.CellTypeSimulationCell ) {
+					
+					c = new Color(  Color.HSBtoRGB((float)(cell.getPressure(0.0) + 1.8), (float)0.8, (float)0.8) );
 					g.setColor(c);
 					g.fillRect((int)Math.ceil(width * (i%xcount)), (int)Math.ceil(height * (i/xcount)), (int)Math.ceil(width), (int)Math.ceil(height));
-					i++;
+					
+					
 				}else if(cell.getCellType() == CellType.CellTypeSolidCell)
 				{
 					
 					g.setColor(Color.BLACK);
 					g.fillRect((int)Math.ceil(width * (i%xcount)), (int)Math.ceil(height * (i/xcount)), (int)Math.ceil(width), (int)Math.ceil(height));
-					i++;
+					
+				}else if(cell.getCellType() == CellType.CellTypeGeneratorCell)
+				{
+					
+					circle_color = new Color(  Color.HSBtoRGB((float)(cell.getPressure(0.0) + 1.8), (float)0.8, (float)0.8) );
+					g.setColor(circle_color);
+
+					circle_left = (int)Math.ceil(width * (i%xcount)) - 10;
+					circle_top = (int)Math.ceil(height * (i/xcount)) - 10;
+					
+
 				}
-				
+				i++;
 
 			}
+			
+			g.setColor(circle_color);
+			g.drawOval(circle_left, circle_top, 20, 20);
+			
 		}
 	}
 	
@@ -275,6 +313,88 @@ public class SimulationField implements CellDelegate, Runnable{
 	public float getSpaceH() {
 		
 		return spaceH;
+	}
+	
+	public void dumpToFile(File aFile)
+	{
+		
+		try {
+			BufferedWriter output = new BufferedWriter(new FileWriter(aFile));
+			
+			output.write("" + xcount + "," + ycount + "," + resolution + "," + timeH);
+			output.newLine();
+			for (Cell cell : field) {
+				output.write( cell.getCellType().toString() + "," + cell.getPressure(0.0) );
+				output.newLine();
+			}
+			
+			
+			output.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public void readFromFile(File aFile)
+	{
+		String thisLine;
+		
+		try {
+			BufferedReader br = new BufferedReader(new FileReader(aFile));
+			
+			//SimulationField simulationField = new SimulationField();
+			
+			String delim = "[,]";
+			String[] tokens = br.readLine().split(delim);
+			String x = tokens[0];
+			String y = tokens[1];
+			String res = tokens[2];
+			String tH = tokens[3];
+			
+			createNewField(Integer.parseInt(x) / Integer.parseInt(res),
+					Integer.parseInt(y) / Integer.parseInt(res), 
+					Integer.parseInt(res), 
+					Float.parseFloat(tH));
+			
+			int i = 0;
+			Cell cell;
+			
+			while ((thisLine = br.readLine()) != null && i < field.size()) { // while loop begins here
+      
+		         cell = field.get(i);
+		         
+		         tokens = thisLine.split(delim);
+		         
+		         if (tokens.length < 1) {
+					return;
+				}
+		         
+		         if (tokens[0].equalsIgnoreCase("CellTypeSimulationCell")) {
+					cell.setPressure(Double.parseDouble(tokens[1]));
+				 }else if (tokens[0].equalsIgnoreCase("CellTypeSolidCell")) {
+					cell.setCellType(CellType.CellTypeSolidCell);
+				}else if (tokens[0].equalsIgnoreCase("CellTypeGeneratorCell")) {
+					cell.setCellType(CellType.CellTypeGeneratorCell);
+				}else if (tokens[0].equalsIgnoreCase("CellTypeBeyondEdgeCell")) {
+					cell.setCellType(CellType.CellTypeBeyondEdgeCell);
+				}
+		         
+		         i++;
+		         
+		       } // end while 
+			
+			br.close();
+			
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 	
 }

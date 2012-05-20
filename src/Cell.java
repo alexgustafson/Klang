@@ -1,4 +1,6 @@
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Random;
 
 
 public class Cell {
@@ -22,6 +24,7 @@ public class Cell {
 	int neighborCounter;
 	
 	private double K = 0.04;
+	private double time = 0.0;
 	
 	
 	public Cell(CellDelegate delegate)
@@ -59,8 +62,13 @@ public class Cell {
 		pressure = pressure + d;
 	}
 	
-	public double getPressure()
+	public double getPressure(double externalPrevious)
 	{
+		if(cellType == CellType.CellTypeBeyondEdgeCell)
+		{
+			return externalPrevious ;
+		}
+		
 		return pressure;
 	}
 	
@@ -106,7 +114,7 @@ public class Cell {
 					//nextPressure += neighbor.getPressure()  ;
 				}else
 				{
-					neightborValues +=  neighbor.getPressure();
+					neightborValues +=  neighbor.getPressure( previousY);
 				}
 				
 				i++;
@@ -118,8 +126,20 @@ public class Cell {
 		}else if(cellType == CellType.CellTypeSolidCell)
 		{
 			nextPressure = 0;
+		}else if(cellType == CellType.CellTypeGeneratorCell)
+		{
+			nextPressure = Math.random() - 0.5;
+			time++;
 		}
 		
+	}
+
+	public double getPressure() {
+		return pressure;
+	}
+
+	public void setPressure(double pressure) {
+		this.pressure = pressure;
 	}
 
 	public CellType getCellType() {
