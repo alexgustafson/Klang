@@ -32,10 +32,16 @@ public class SimulationField implements CellDelegate, Runnable{
 	private float xPixelCellRatio;
 	private float yPixelCellRatio;
 	
+	private float timeH;
+	private float spaceH;
 	
-	public void createNewField(int sizex_cm, int sizey_cm, int resolution)
+	
+	public void createNewField(int sizex_cm, int sizey_cm, int resolution, float timeH)
 	{
 		this.resolution = resolution;
+		this.timeH = timeH;
+		
+		spaceH = (float) (sizex_cm / ( 100.0 * resolution));
 		
 		xcount = sizex_cm * resolution;
 		ycount = sizey_cm * resolution;
@@ -243,6 +249,20 @@ public class SimulationField implements CellDelegate, Runnable{
 		{
 			step();
 		}
+	}
+
+
+	@Override
+	public float getTimeH() {
+		
+		return timeH;
+	}
+
+
+	@Override
+	public float getSpaceH() {
+		
+		return spaceH;
 	}
 	
 }

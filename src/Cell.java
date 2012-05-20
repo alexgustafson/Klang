@@ -34,6 +34,9 @@ public class Cell {
 		acceleration[0] = 0;
 		acceleration[1] = 0;
 		nextPressure = 0;
+		
+		K = 343.0 * 343.0 * delegate.getTimeH() * delegate.getTimeH() / (delegate.getSpaceH() * delegate.getSpaceH());
+		
 	}
 	
 	public void setCellType(CellType cellType)

@@ -11,5 +11,9 @@ public interface CellDelegate {
 	 */
 	
 	public ArrayList<Cell> getNeighbors(int idNr);
+	
+	public float getTimeH();
+	
+	public float getSpaceH();
 
 }

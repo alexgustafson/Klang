@@ -33,7 +33,7 @@ public class MainWindow {
 	private JRadioButton drawMode_solid;
 	private JRadioButton drawMode_gen;
 	private JRadioButton drawMode_nil;
-	private JTextField textField;
+	private JTextField timeField;
 
 	/**
 	 * Launch the application.
@@ -139,7 +139,7 @@ public class MainWindow {
 		frame.getContentPane().add(resLabel);
 		
 		resField = new JTextField();
-		resField.setText("1");
+		resField.setText("5");
 		resField.setColumns(10);
 		resField.setBounds(83, 79, 87, 28);
 		frame.getContentPane().add(resField);
@@ -216,11 +216,11 @@ public class MainWindow {
 		lblTimeH.setBounds(16, 119, 72, 16);
 		frame.getContentPane().add(lblTimeH);
 		
-		textField = new JTextField();
-		textField.setText("1");
-		textField.setColumns(10);
-		textField.setBounds(83, 113, 87, 28);
-		frame.getContentPane().add(textField);
+		timeField = new JTextField();
+		timeField.setText(".0001");
+		timeField.setColumns(10);
+		timeField.setBounds(83, 113, 87, 28);
+		frame.getContentPane().add(timeField);
 		
 		JButton btnClearSim = new JButton("clear sim");
 		btnClearSim.setBounds(6, 175, 117, 29);
@@ -230,7 +230,10 @@ public class MainWindow {
 	private void setUpSimulationField()
 	{
 		simulationField = new SimulationField();
-		simulationField.createNewField(Integer.parseInt(widthField.getText()), Integer.parseInt(heightField.getText()), Integer.parseInt(resField.getText()));
+		simulationField.createNewField(Integer.parseInt(widthField.getText()), 
+				Integer.parseInt(heightField.getText()), 
+				Integer.parseInt(resField.getText()),
+				Float.parseFloat(timeField.getText()));
 		simulationField.attatchCanvasElement(simulationFieldCanvas);
 		simulationField.updateCanvas();
 	}
