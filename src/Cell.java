@@ -94,26 +94,36 @@ public class Cell {
 	
 	public void prepareUpdate()
 	{
-		nextPressure = 0;
-		double neightborValues = 0;
-		
-		int i = 0;
-		for (Cell neighbor : neighbors) {
+		if (cellType == CellType.CellTypeSimulationCell) {
 			
-			if ((i%2) == 0) {
-				//nextPressure += neighbor.getPressure()  ;
-			}else
-			{
-				neightborValues +=  neighbor.getPressure();
+			nextPressure = 0;
+			double neightborValues = 0;
+			
+			int i = 0;
+			for (Cell neighbor : neighbors) {
+				
+				if ((i%2) == 0) {
+					//nextPressure += neighbor.getPressure()  ;
+				}else
+				{
+					neightborValues +=  neighbor.getPressure();
+				}
+				
+				i++;
+				
+
 			}
 			
-			i++;
-			
-
+			nextPressure = (2 * pressure) - previousY + (K*( neightborValues - (4 * currentY)));
+		}else if(cellType == CellType.CellTypeSolidCell)
+		{
+			nextPressure = 0;
 		}
 		
-		nextPressure = (2 * pressure) - previousY + (K*( neightborValues - (4 * currentY)));
+	}
 
+	public CellType getCellType() {
+		return cellType;
 	}
 
 }

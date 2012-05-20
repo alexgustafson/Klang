@@ -184,7 +184,8 @@ public class SimulationField implements CellDelegate, Runnable{
 		System.out.println("zelle nummer:" + cellNumber);
 		
 		Cell cell = field.get(cellNumber);
-		cell.changePressure(1.0);
+		cell.setCellType(type);
+
 		
 		updateCanvas();
 	}
@@ -203,10 +204,21 @@ public class SimulationField implements CellDelegate, Runnable{
 			for (Cell cell : field) {
 			
 				Graphics g = canvasField.getGraphics();
-				Color c = new Color(  Color.HSBtoRGB((float)cell.getPressure(), (float)0.8, (float)0.8) );
-				g.setColor(c);
-				g.fillRect((int)Math.ceil(width * (i%xcount)), (int)Math.ceil(height * (i/xcount)), (int)Math.ceil(width), (int)Math.ceil(height));
-				i++;
+				
+				if (cell.getCellType() == CellType.CellTypeSimulationCell) {
+					Color c = new Color(  Color.HSBtoRGB((float)cell.getPressure(), (float)0.8, (float)0.8) );
+					g.setColor(c);
+					g.fillRect((int)Math.ceil(width * (i%xcount)), (int)Math.ceil(height * (i/xcount)), (int)Math.ceil(width), (int)Math.ceil(height));
+					i++;
+				}else if(cell.getCellType() == CellType.CellTypeSolidCell)
+				{
+					
+					g.setColor(Color.BLACK);
+					g.fillRect((int)Math.ceil(width * (i%xcount)), (int)Math.ceil(height * (i/xcount)), (int)Math.ceil(width), (int)Math.ceil(height));
+					i++;
+				}
+				
+
 			}
 		}
 	}

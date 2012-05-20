@@ -115,7 +115,7 @@ public class MainWindow {
 		frame.getContentPane().add(btnStep);
 		
 		widthField = new JTextField();
-		widthField.setText("10");
+		widthField.setText("36");
 		widthField.setBounds(83, 10, 87, 28);
 		frame.getContentPane().add(widthField);
 		widthField.setColumns(10);
@@ -129,7 +129,7 @@ public class MainWindow {
 		frame.getContentPane().add(lblHeight);
 		
 		heightField = new JTextField();
-		heightField.setText("10");
+		heightField.setText("36");
 		heightField.setColumns(10);
 		heightField.setBounds(83, 46, 87, 28);
 		frame.getContentPane().add(heightField);
@@ -240,7 +240,14 @@ public class MainWindow {
 	
 	private void mouseClickInSimulationField(MouseEvent event)
 	{
-		simulationField.mouseClickInField(event.getX(), event.getY());
+		if(drawMode_luft.isSelected()){
+			simulationField.mouseClickInField(event.getX(), event.getY());
+		}else if (drawMode_solid.isSelected()) {
+			simulationField.mouseClickInFieldWithCellType(event.getX(), event.getY(), CellType.CellTypeSolidCell);
+		}else if (drawMode_gen.isSelected()) {
+			simulationField.mouseClickInFieldWithCellType(event.getX(), event.getY(), CellType.CellTypeGeneratorCell);
+		}
+		
 	}
 	
 	private void stepSimulation()
