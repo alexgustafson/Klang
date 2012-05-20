@@ -9,13 +9,12 @@ public class KlangQuelle extends UnitOscillator {
 	public void generate(int start, int limit) {
 		
 		double[] outputs = output.getValues();
-		System.out.println("start: " + start + "  limit: " + limit );
 		for( int i = start; i < limit; i++)
 		{
 			
 
 				// test
-				outputs[i] = Math.sin( sampleCount/100.0 * Math.sin(sampleCount/1000)  ) * 10;
+				outputs[i] = Math.sin( sampleCount/200.0 * Math.sin( sampleCount*2.0)  ) ;
 				sampleCount++;
 
 			
