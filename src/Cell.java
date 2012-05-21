@@ -111,7 +111,7 @@ public class Cell {
 			for (Cell neighbor : neighbors) {
 				
 				if ((i%2) == 0) {
-					//nextPressure += neighbor.getPressure()  ;
+					//nextPressure += 0.1 * neighbor.getPressure(previousY)  ;
 				}else
 				{
 					neightborValues +=  neighbor.getPressure( previousY);
@@ -123,12 +123,14 @@ public class Cell {
 			}
 			
 			nextPressure = (2 * pressure) - previousY + (K*( neightborValues - (4 * currentY)));
+			//System.out.println("K value: " + K);
+			
 		}else if(cellType == CellType.CellTypeSolidCell)
 		{
 			nextPressure = 0;
 		}else if(cellType == CellType.CellTypeGeneratorCell)
 		{
-			nextPressure = 0.05;
+			nextPressure = 0.9 * Math.sin(time );
 			time++;
 		}
 		
