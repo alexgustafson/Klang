@@ -128,7 +128,7 @@ public class Cell {
 			nextPressure = 0;
 		}else if(cellType == CellType.CellTypeGeneratorCell)
 		{
-			nextPressure = Math.random() - 0.5;
+			nextPressure = 0.05;
 			time++;
 		}
 		
