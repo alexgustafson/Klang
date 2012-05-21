@@ -12,7 +12,6 @@ import java.io.Serializable;
 import java.io.Writer;
 import java.util.ArrayList;
 
-import com.sun.tools.doclets.internal.toolkit.util.DocFinder.Output;
 
 
 public class SimulationField implements CellDelegate, Runnable{
