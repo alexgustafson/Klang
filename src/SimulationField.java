@@ -49,7 +49,9 @@ public class SimulationField implements CellDelegate, Runnable{
 	private int generator_x_coord;
 	private int generator_y_coord;
 	private Boolean generator;
-	
+	private Boolean drawModeActive = false;
+	private int drawStartXCoordinate;
+	private int drawStartYCoordinate;
 	
 	public void createNewField(int sizex_cm, int sizey_cm, int resolution, float timeH)
 	{
@@ -202,6 +204,70 @@ public class SimulationField implements CellDelegate, Runnable{
 		cell.setCellType(type);
 
 		
+		updateCanvas();
+	}
+	
+	public void mouseMovedOverField(int x, int y)
+	{
+		
+		int xCellCoordinate = (int) Math.floor(x / xPixelCellRatio);
+		int yCellCoordinate = (int) Math.floor(y / yPixelCellRatio);
+		
+		if(drawModeActive){
+			
+			for (int i = (drawStartYCoordinate * ycount) + drawStartXCoordinate; i < (drawStartYCoordinate * ycount) + xCellCoordinate; i++) {
+				
+				
+			}
+			
+			for (int i = (yCellCoordinate * ycount) + drawStartXCoordinate; i <(yCellCoordinate * ycount) + xCellCoordinate; i++) {
+				
+				
+			}
+			
+
+			Color c;
+			Graphics g = canvasField.getGraphics();
+					
+			c =  Color.BLACK ;
+			g.setColor(c);
+			g.drawLine((int)(drawStartXCoordinate / xPixelCellRatio),(int)( drawStartYCoordinate/ yPixelCellRatio), x, (int)(drawStartYCoordinate/ yPixelCellRatio));
+			g.drawLine((int)(drawStartXCoordinate / xPixelCellRatio), y, x, y);
+					
+		}
+	}
+	
+	public void mouseClickInFieldCreateRohr(int x, int y)
+	{
+		//System.out.println("click x:" + x + " y:" + y);
+		
+		int xCellCoordinate = (int) Math.floor(x / xPixelCellRatio);
+		int yCellCoordinate = (int) Math.floor(y / yPixelCellRatio);
+		
+
+		if(drawModeActive){
+			
+			drawModeActive = false;
+			
+			for (int i = (drawStartYCoordinate * ycount) + drawStartXCoordinate; i < (drawStartYCoordinate * ycount) + xCellCoordinate; i++) {
+				
+				field.get(i).setCellType(CellType.CellTypeSolidCell);
+			}
+			
+			for (int i = (yCellCoordinate * ycount) + drawStartXCoordinate; i <(yCellCoordinate * ycount) + xCellCoordinate; i++) {
+				
+				field.get(i).setCellType(CellType.CellTypeSolidCell);
+			}
+			
+		}else{
+			drawModeActive = true;
+			
+			drawStartXCoordinate = xCellCoordinate;
+			drawStartYCoordinate = yCellCoordinate;
+			
+		}
+		
+
 		updateCanvas();
 	}
 	

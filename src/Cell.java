@@ -26,6 +26,8 @@ public class Cell {
 	private double K = 0.04;
 	private double time = 0.0;
 	
+	private PinkNoise pinkNoiseGenerator;
+	
 	
 	public Cell(CellDelegate delegate)
 	{
@@ -45,6 +47,11 @@ public class Cell {
 	public void setCellType(CellType cellType)
 	{
 		this.cellType = cellType;
+		
+		if (cellType == CellType.CellTypeGeneratorCell) {
+			pinkNoiseGenerator = new PinkNoise();
+		}
+		
 	}
 	
 	public void setIdNr(int idNr) 
@@ -128,8 +135,17 @@ public class Cell {
 			nextPressure = 0;
 		}else if(cellType == CellType.CellTypeGeneratorCell)
 		{
-			nextPressure = 0.05;
-			time++;
+			//nextPressure = Math.sin( 100 * time/delegate.getTimeH());
+			//time++;
+			
+			//nextPressure = pinkNoiseGenerator.nextValue();
+			nextPressure = Math.sin( time) * 2;
+			time = time + (880 * 2 * Math.PI * delegate.getTimeH());
+			if(time > 2 * Math.PI)
+			{
+				time = -1 * 2 * Math.PI;
+			}
+			
 		}
 		
 	}

@@ -23,6 +23,7 @@ import javax.swing.JTextField;
 import javax.swing.JLabel;
 import javax.swing.JCheckBox;
 import javax.swing.JRadioButton;
+import java.awt.event.MouseMotionAdapter;
 
 
 public class MainWindow {
@@ -43,6 +44,7 @@ public class MainWindow {
 	private JRadioButton drawMode_gen;
 	private JRadioButton drawMode_nil;
 	private JTextField timeField;
+	private JRadioButton drawMode_rohr;
 
 	/**
 	 * Launch the application.
@@ -77,11 +79,25 @@ public class MainWindow {
 		frame.getContentPane().setLayout(null);
 		
 		simulationFieldCanvas = new Canvas();
+		simulationFieldCanvas.addMouseMotionListener(new MouseMotionAdapter() {
+			@Override
+			public void mouseMoved(MouseEvent event) {
+				mouseMovedOverCanvas(event);
+			}
+
+
+		});
 		simulationFieldCanvas.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent event) {
 				
 				mouseClickInSimulationField(event);
+				
+			}
+			@Override
+			public void mouseExited(MouseEvent arg0) {
+				
+				
 				
 			}
 		});
@@ -154,7 +170,7 @@ public class MainWindow {
 		frame.getContentPane().add(resField);
 		
 		lblNewLabel_1 = new JLabel("Draw Mode");
-		lblNewLabel_1.setBounds(16, 239, 97, 16);
+		lblNewLabel_1.setBounds(16, 208, 97, 16);
 		frame.getContentPane().add(lblNewLabel_1);
 		
 		drawMode_luft = new JRadioButton("luft");
@@ -165,11 +181,12 @@ public class MainWindow {
 				drawMode_solid.setSelected(false);
 				drawMode_nil.setSelected(false);
 				drawMode_gen.setSelected(false);
+				drawMode_rohr.setSelected(false);
 				
 			}
 		});
 		drawMode_luft.setSelected(true);
-		drawMode_luft.setBounds(29, 267, 72, 23);
+		drawMode_luft.setBounds(16, 230, 72, 23);
 		frame.getContentPane().add(drawMode_luft);
 		
 		drawMode_solid = new JRadioButton("wand");
@@ -180,10 +197,11 @@ public class MainWindow {
 				drawMode_solid.setSelected(true);
 				drawMode_nil.setSelected(false);
 				drawMode_gen.setSelected(false);
+				drawMode_rohr.setSelected(false);
 				
 			}
 		});
-		drawMode_solid.setBounds(29, 293, 72, 23);
+		drawMode_solid.setBounds(16, 256, 72, 23);
 		frame.getContentPane().add(drawMode_solid);
 		
 		drawMode_gen = new JRadioButton("generator");
@@ -194,9 +212,10 @@ public class MainWindow {
 				drawMode_solid.setSelected(false);
 				drawMode_nil.setSelected(false);
 				drawMode_gen.setSelected(true);
+				drawMode_rohr.setSelected(false);
 			}
 		});
-		drawMode_gen.setBounds(29, 320, 117, 23);
+		drawMode_gen.setBounds(16, 283, 117, 23);
 		frame.getContentPane().add(drawMode_gen);
 		
 		drawMode_nil = new JRadioButton("nil");
@@ -206,10 +225,25 @@ public class MainWindow {
 				drawMode_solid.setSelected(false);
 				drawMode_nil.setSelected(true);
 				drawMode_gen.setSelected(false);
+				drawMode_rohr.setSelected(false);
 			}
 		});
-		drawMode_nil.setBounds(29, 347, 117, 23);
+		drawMode_nil.setBounds(16, 310, 117, 23);
 		frame.getContentPane().add(drawMode_nil);
+		
+		drawMode_rohr = new JRadioButton("rohr");
+		drawMode_rohr.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				drawMode_luft.setSelected(false);
+				drawMode_solid.setSelected(false);
+				drawMode_nil.setSelected(false);
+				drawMode_gen.setSelected(false);
+				drawMode_rohr.setSelected(true);
+				
+			}
+		});
+		drawMode_rohr.setBounds(16, 334, 117, 23);
+		frame.getContentPane().add(drawMode_rohr);
 		
 		JButton btnSaveMesh = new JButton("save mesh");
 		btnSaveMesh.addActionListener(new ActionListener() {
@@ -261,21 +295,20 @@ public class MainWindow {
 		JButton btnClearSim = new JButton("clear sim");
 		btnClearSim.setBounds(6, 175, 117, 29);
 		frame.getContentPane().add(btnClearSim);
+		
+
 	}
 	
 	protected void loadMesh() throws IOException, ClassNotFoundException {
 		
 		simulationField.readFromFile(new File("simulationField.csv"));
-
 		simulationField.attatchCanvasElement(simulationFieldCanvas);
 		simulationField.updateCanvas();
 
-		
 	}
 
 	protected void saveMesh() throws IOException {
 
-		
 		simulationField.dumpToFile(new File("simulationField.csv"));
 		
 	}
@@ -300,9 +333,15 @@ public class MainWindow {
 			simulationField.mouseClickInFieldWithCellType(event.getX(), event.getY(), CellType.CellTypeSolidCell);
 		}else if (drawMode_gen.isSelected()) {
 			simulationField.mouseClickInFieldWithCellType(event.getX(), event.getY(), CellType.CellTypeGeneratorCell);
-			
+		}else if (drawMode_rohr.isSelected()){
+			simulationField.mouseClickInFieldCreateRohr(event.getX(), event.getY());
 		}
 		
+	}
+	
+	private void mouseMovedOverCanvas(MouseEvent event) {
+		
+		simulationField.mouseMovedOverField(event.getX(), event.getY());
 	}
 	
 	private void stepSimulation()
