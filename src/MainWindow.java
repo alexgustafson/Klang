@@ -45,6 +45,8 @@ public class MainWindow {
 	private JRadioButton drawMode_nil;
 	private JTextField timeField;
 	private JRadioButton drawMode_rohr;
+	private JRadioButton drawMode_sensor;
+	private Canvas scopeCanvas;
 
 	/**
 	 * Launch the application.
@@ -74,7 +76,7 @@ public class MainWindow {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 546, 448);
+		frame.setBounds(100, 100, 546, 504);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
@@ -117,7 +119,7 @@ public class MainWindow {
 
 		});
 		runButton.setBackground(Color.GREEN);
-		runButton.setBounds(119, 391, 117, 29);
+		runButton.setBounds(6, 447, 117, 29);
 		frame.getContentPane().add(runButton);
 		
 		JButton btnSetupSim = new JButton("setup sim");
@@ -136,7 +138,7 @@ public class MainWindow {
 				stepSimulation();
 			}
 		});
-		btnStep.setBounds(6, 391, 117, 29);
+		btnStep.setBounds(6, 417, 117, 29);
 		frame.getContentPane().add(btnStep);
 		
 		widthField = new JTextField();
@@ -182,7 +184,7 @@ public class MainWindow {
 				drawMode_nil.setSelected(false);
 				drawMode_gen.setSelected(false);
 				drawMode_rohr.setSelected(false);
-				
+				drawMode_sensor.setSelected(false);
 			}
 		});
 		drawMode_luft.setSelected(true);
@@ -198,7 +200,7 @@ public class MainWindow {
 				drawMode_nil.setSelected(false);
 				drawMode_gen.setSelected(false);
 				drawMode_rohr.setSelected(false);
-				
+				drawMode_sensor.setSelected(false);
 			}
 		});
 		drawMode_solid.setBounds(16, 256, 72, 23);
@@ -213,6 +215,7 @@ public class MainWindow {
 				drawMode_nil.setSelected(false);
 				drawMode_gen.setSelected(true);
 				drawMode_rohr.setSelected(false);
+				drawMode_sensor.setSelected(false);
 			}
 		});
 		drawMode_gen.setBounds(16, 283, 117, 23);
@@ -226,6 +229,7 @@ public class MainWindow {
 				drawMode_nil.setSelected(true);
 				drawMode_gen.setSelected(false);
 				drawMode_rohr.setSelected(false);
+				drawMode_sensor.setSelected(false);
 			}
 		});
 		drawMode_nil.setBounds(16, 310, 117, 23);
@@ -239,11 +243,27 @@ public class MainWindow {
 				drawMode_nil.setSelected(false);
 				drawMode_gen.setSelected(false);
 				drawMode_rohr.setSelected(true);
-				
+				drawMode_sensor.setSelected(false);
 			}
 		});
 		drawMode_rohr.setBounds(16, 334, 117, 23);
 		frame.getContentPane().add(drawMode_rohr);
+		
+		drawMode_sensor = new JRadioButton("sensor");
+		drawMode_sensor.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				drawMode_luft.setSelected(false);
+				drawMode_solid.setSelected(false);
+				drawMode_nil.setSelected(false);
+				drawMode_gen.setSelected(false);
+				drawMode_rohr.setSelected(false);
+				drawMode_sensor.setSelected(true);
+				
+			}
+		});
+		drawMode_sensor.setBounds(16, 359, 117, 23);
+		frame.getContentPane().add(drawMode_sensor);
 		
 		JButton btnSaveMesh = new JButton("save mesh");
 		btnSaveMesh.addActionListener(new ActionListener() {
@@ -259,7 +279,7 @@ public class MainWindow {
 			}
 		});
 		btnSaveMesh.setBackground(Color.GREEN);
-		btnSaveMesh.setBounds(311, 391, 117, 29);
+		btnSaveMesh.setBounds(176, 447, 117, 29);
 		frame.getContentPane().add(btnSaveMesh);
 		
 		JButton btnLoadMesh = new JButton("load mesh");
@@ -279,7 +299,7 @@ public class MainWindow {
 			}
 		});
 		btnLoadMesh.setBackground(Color.GREEN);
-		btnLoadMesh.setBounds(423, 391, 117, 29);
+		btnLoadMesh.setBounds(176, 417, 117, 29);
 		frame.getContentPane().add(btnLoadMesh);
 		
 		JLabel lblTimeH = new JLabel("time h");
@@ -295,6 +315,13 @@ public class MainWindow {
 		JButton btnClearSim = new JButton("clear sim");
 		btnClearSim.setBounds(6, 175, 117, 29);
 		frame.getContentPane().add(btnClearSim);
+		
+		scopeCanvas = new Canvas();
+		scopeCanvas.setBackground(Color.BLACK);
+		scopeCanvas.setBounds(436, 376, 100, 100);
+		frame.getContentPane().add(scopeCanvas);
+		
+
 		
 
 	}
@@ -335,6 +362,9 @@ public class MainWindow {
 			simulationField.mouseClickInFieldWithCellType(event.getX(), event.getY(), CellType.CellTypeGeneratorCell);
 		}else if (drawMode_rohr.isSelected()){
 			simulationField.mouseClickInFieldCreateRohr(event.getX(), event.getY());
+		}else if (drawMode_sensor.isSelected()){
+			simulationField.setScopeCanvas(scopeCanvas);
+			simulationField.mouseClickPositionSensor(event.getX(), event.getY());
 		}
 		
 	}

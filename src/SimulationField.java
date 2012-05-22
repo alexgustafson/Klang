@@ -43,6 +43,10 @@ public class SimulationField implements CellDelegate, Runnable{
 	private float xPixelCellRatio;
 	private float yPixelCellRatio;
 	
+	private Canvas scopeCanvas;
+	
+
+
 	private float timeH;
 	private float spaceH;
 	
@@ -52,6 +56,10 @@ public class SimulationField implements CellDelegate, Runnable{
 	private Boolean drawModeActive = false;
 	private int drawStartXCoordinate;
 	private int drawStartYCoordinate;
+	
+	private Boolean sensorActive = false;
+	private int sensorX_Coordinate;
+	private int sensorY_Coordinate;
 	
 	public void createNewField(int sizex_cm, int sizey_cm, int resolution, float timeH)
 	{
@@ -203,7 +211,17 @@ public class SimulationField implements CellDelegate, Runnable{
 		Cell cell = field.get(cellNumber);
 		cell.setCellType(type);
 
+		updateCanvas();
+	}
+	
+	public void mouseClickPositionSensor(int x, int y)
+	{
+		//System.out.println("click x:" + x + " y:" + y);
 		
+		sensorActive = true;
+		sensorX_Coordinate = x;
+		sensorY_Coordinate = y;
+
 		updateCanvas();
 	}
 	
@@ -215,15 +233,6 @@ public class SimulationField implements CellDelegate, Runnable{
 		
 		if(drawModeActive){
 			
-			for (int i = (drawStartYCoordinate * ycount) + drawStartXCoordinate; i < (drawStartYCoordinate * ycount) + xCellCoordinate; i++) {
-				
-				
-			}
-			
-			for (int i = (yCellCoordinate * ycount) + drawStartXCoordinate; i <(yCellCoordinate * ycount) + xCellCoordinate; i++) {
-				
-				
-			}
 			
 
 			Color c;
@@ -309,7 +318,7 @@ public class SimulationField implements CellDelegate, Runnable{
 				}else if(cell.getCellType() == CellType.CellTypeGeneratorCell)
 				{
 					
-					circle_color = new Color(  Color.HSBtoRGB((float)(cell.getPressure(0.0) + 1.8), (float)0.8, (float)0.8) );
+					circle_color =  Color.MAGENTA ;
 					g.setColor(circle_color);
 
 					circle_left = (int)Math.ceil(width * (i%xcount)) - 10;
@@ -321,8 +330,32 @@ public class SimulationField implements CellDelegate, Runnable{
 
 			}
 			
-			g.setColor(circle_color);
-			g.drawOval(circle_left, circle_top, 20, 20);
+			if (scopeCanvas != null) {
+				
+				
+				
+				int xCellCoordinate = (int) Math.floor(sensorX_Coordinate / xPixelCellRatio);
+				int yCellCoordinate = (int) Math.floor(sensorY_Coordinate / yPixelCellRatio);
+				int cellNumber = (yCellCoordinate * ycount) + xCellCoordinate;
+				double pressureAtSensor = field.get(cellNumber).getPressure(0);
+				Graphics gs = scopeCanvas.getGraphics();
+				int y = (int) ((scopeCanvas.getHeight()/2.0) - pressureAtSensor*60);
+				Color cs = Color.red;
+				gs.setColor(Color.BLACK);
+				gs.copyArea(0, 0, 100, 100, -1, 0);
+				gs.fillRect(99, 0, 1, 99);
+				
+				
+				
+				//System.out.println("pressure at sensor:" +y);
+				gs.setColor(cs);
+				gs.fillRect(98, y, 2, 2);
+				
+				g.setColor(Color.ORANGE);
+				g.drawOval(sensorX_Coordinate - 5, sensorY_Coordinate - 5, 10, 10);
+			}
+			
+
 			
 		}
 	}
@@ -461,6 +494,15 @@ public class SimulationField implements CellDelegate, Runnable{
 			e.printStackTrace();
 		}
 
+	}
+	
+	public Canvas getScopeCanvas() {
+		return scopeCanvas;
+	}
+
+
+	public void setScopeCanvas(Canvas scopeCanvas) {
+		this.scopeCanvas = scopeCanvas;
 	}
 	
 }
