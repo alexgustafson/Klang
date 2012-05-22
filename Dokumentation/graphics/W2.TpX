@@ -1,0 +1,20 @@
+%<TpX v="5" ArrowsSize="0.7" StarsSize="1" DefaultFontHeight="5" DefaultSymbolSize="30" ApproximationPrecision="0.01" PicScale="1" Border="2" BitmapRes="20000" HatchingStep="2" DottedSize="0.5" DashSize="1" LineWidth="0.3">
+%  <line x1="-9.94905" y1="90.1399" x2="30.1003" y2="90.1447"/>
+%  <line x1="-10.0286" y1="79.7843" x2="30.0208" y2="79.7891"/>
+%  <bezier lc="green">-10.1577,89.8562 -2.52547,88.9393 2.1888,79.9603 10.007,79.9532 17.8409,79.9461 22.5802,89.0264 30.2382,89.8929</bezier>
+%  <bezier lc="green">-10.104,80.1334 -2.47175,81.0503 2.1888,89.9829 10.007,89.99 17.8409,89.9971 22.5483,80.8898 30.2063,80.0233</bezier>
+%</TpX>
+\begin{figure}
+\centering
+\ifpdf
+  \setlength{\unitlength}{1bp}%
+  \begin{picture}(125.85, 40.71)(0,0)
+  \put(0,0){\includegraphics{W2.pdf}}
+  \end{picture}%
+\else
+  \setlength{\unitlength}{1bp}%
+  \begin{picture}(125.85, 40.71)(0,0)
+  \put(0,0){\includegraphics{W2}}
+  \end{picture}%
+\fi
+\end{figure}

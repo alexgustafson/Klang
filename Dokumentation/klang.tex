@@ -10,15 +10,18 @@
 \cleardoublepage
 \tableofcontents			%Inhaltsverzeichnis
 \cleardoublepage
-\input{preface}
+%\input{preface}
 \cleardoublepage
 \pagestyle{headings}
 \pagenumbering{arabic}  % 1, 2, 3, 4, ...
 \setcounter{page}{1}
-\input{phys_grundlagen}				%alle Kapitel kommen nun da rein
+\input{kap_abstract}
+\input{kap_projektinformationen}
+\input{kap_phys_grundlagen}
+\input{kap_programmierung}
 \clearpage{\pagestyle{empty}\cleardoublepage}
 \bibliographystyle{alphadin} %oder plainnatDeutsch (alphadin geht nicht mit natbib)amsalpha
-%\bibliography{literatur}
+\bibliography{literatur}
 %\clearpage{\pagestyle{empty}\cleardoublepage}
 %\printindex										%fuer den Index
 \end{document}
