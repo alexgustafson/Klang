@@ -1,0 +1,25 @@
+%<TpX v="5" ArrowsSize="0.7" StarsSize="1" DefaultFontHeight="5" DefaultSymbolSize="30" ApproximationPrecision="0.01" PicScale="1" Border="2" BitmapRes="20000" HatchingStep="2" DottedSize="0.5" DashSize="1" LineWidth="0.3">
+%  <line x1="30" y1="90" x2="-10" y2="90"/>
+%  <line x1="-10" y1="80" x2="30" y2="80"/>
+%  <bezier li="none">-10.0006,104.986 -12.1548,81.2426 20.7632,73.0193 30.0281,94.9867 45.9133,132.651 -13.5632,134.3 -5.00083,104.986 -4.29938,102.585 -2.42862,100.703 -0.0315417,99.9865</bezier>
+%  <arc x="-9.97793" y="90.0537" d="0" a1="0" a2="0"/>
+%  <bezier lc="green">-9.97793,78.2525 3.87013,77.5558 16.1365,68.9159 29.9861,68.238</bezier>
+%  <bezier li="dot" lc="green">-9.97793,68.2405 3.87013,68.9372 16.1365,77.5771 29.9861,78.255</bezier>
+%  <text x="30.7854" y="83.8475" t="\lambda = 2L" tex="\Lambda = 2L" h="5" li="dot" lc="teal"/>
+%</TpX>
+\begin{figure}
+\centering
+\ifpdf
+  \setlength{\unitlength}{1bp}%
+  \begin{picture}(203.73, 173.07)(0,0)
+  \put(0,0){\includegraphics{1harm.pdf}}
+  \put(121.57,49.92){\fontsize{14.23}{17.07}\selectfont \textcolor[rgb]{0, 0.50196, 0.50196}{\Lambda = 2L}}
+  \end{picture}%
+\else
+  \setlength{\unitlength}{1bp}%
+  \begin{picture}(203.73, 173.07)(0,0)
+  \put(0,0){\includegraphics{1harm}}
+  \put(121.57,49.92){\fontsize{14.23}{17.07}\selectfont \textcolor[rgb]{0, 0.50196, 0.50196}{\Lambda = 2L}}
+  \end{picture}%
+\fi
+\end{figure}

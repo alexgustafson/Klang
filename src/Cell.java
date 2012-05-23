@@ -118,7 +118,7 @@ public class Cell {
 			for (Cell neighbor : neighbors) {
 				
 				if ((i%2) == 0) {
-					//nextPressure += neighbor.getPressure()  ;
+					//nextPressure += 0.1 * neighbor.getPressure(previousY)  ;
 				}else
 				{
 					neightborValues +=  neighbor.getPressure( previousY);
@@ -130,22 +130,26 @@ public class Cell {
 			}
 			
 			nextPressure = (2 * pressure) - previousY + (K*( neightborValues - (4 * currentY)));
+			//System.out.println("K value: " + K);
+			
 		}else if(cellType == CellType.CellTypeSolidCell)
 		{
 			nextPressure = 0;
 		}else if(cellType == CellType.CellTypeGeneratorCell)
 		{
-			//nextPressure = Math.sin( 100 * time/delegate.getTimeH());
-			//time++;
+
+
 			
 			//nextPressure = pinkNoiseGenerator.nextValue();
+		
 			nextPressure = Math.sin( time) * 2;
-			time = time + (880 * 2 * Math.PI * delegate.getTimeH());
+			time = time + (480 * 2 * Math.PI * delegate.getTimeH());
 			if(time > 2 * Math.PI)
 			{
 				time = -1 * 2 * Math.PI;
 			}
 			
+
 		}
 		
 	}
