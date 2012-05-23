@@ -5,6 +5,8 @@ import javax.swing.JFrame;
 import javax.swing.SpringLayout;
 import java.awt.Canvas;
 import java.awt.Color;
+import java.awt.Graphics;
+
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -47,6 +49,10 @@ public class MainWindow {
 	private JRadioButton drawMode_rohr;
 	private JRadioButton drawMode_sensor;
 	private Canvas scopeCanvas;
+	
+	private Boolean drawModeActive = false;
+	private int drawStartXCoordinate;
+	private int drawStartYCoordinate;
 
 	/**
 	 * Launch the application.
@@ -321,7 +327,7 @@ public class MainWindow {
 		scopeCanvas.setBounds(436, 376, 100, 100);
 		frame.getContentPane().add(scopeCanvas);
 		
-
+		
 		
 
 	}
@@ -361,17 +367,54 @@ public class MainWindow {
 		}else if (drawMode_gen.isSelected()) {
 			simulationField.mouseClickInFieldWithCellType(event.getX(), event.getY(), CellType.CellTypeGeneratorCell);
 		}else if (drawMode_rohr.isSelected()){
-			simulationField.mouseClickInFieldCreateRohr(event.getX(), event.getY());
+			
+			if (drawModeActive) {
+				
+				drawModeActive = false;
+				simulationField.mouseClickInFieldCreateRohr(drawStartXCoordinate,drawStartYCoordinate, event.getX(), event.getY());
+				
+			}else{
+				
+				drawModeActive = true;
+				drawStartXCoordinate = event.getX();
+				drawStartYCoordinate = event.getY();
+				
+			}
+			
 		}else if (drawMode_sensor.isSelected()){
+			
 			simulationField.setScopeCanvas(scopeCanvas);
 			simulationField.mouseClickPositionSensor(event.getX(), event.getY());
+			
+		}else if (drawMode_nil.isSelected()){
+			
+			if (drawModeActive) {
+				
+				drawModeActive = false;
+				simulationField.mouseClickInFieldCreateNil(drawStartXCoordinate,drawStartYCoordinate, event.getX(), event.getY());
+				
+			}else{
+				
+				drawModeActive = true;
+				drawStartXCoordinate = event.getX();
+				drawStartYCoordinate = event.getY();
+			}
+			
 		}
 		
 	}
 	
 	private void mouseMovedOverCanvas(MouseEvent event) {
 		
-		simulationField.mouseMovedOverField(event.getX(), event.getY());
+		if (drawModeActive) {
+			
+			Graphics g = simulationFieldCanvas.getGraphics();
+			Color c = Color.gray;
+			
+			g.setColor(c);
+			g.drawRect(drawStartXCoordinate, drawStartYCoordinate, event.getX() - drawStartXCoordinate, event.getY() - drawStartYCoordinate);
+		}
+		
 	}
 	
 	private void stepSimulation()

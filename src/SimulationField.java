@@ -52,9 +52,7 @@ public class SimulationField implements CellDelegate, Runnable{
 	private int generator_x_coord;
 	private int generator_y_coord;
 	private Boolean generator;
-	private Boolean drawModeActive = false;
-	private int drawStartXCoordinate;
-	private int drawStartYCoordinate;
+
 	
 	private Boolean sensorActive = false;
 	private int sensorX_Coordinate;
@@ -224,57 +222,54 @@ public class SimulationField implements CellDelegate, Runnable{
 		updateCanvas();
 	}
 	
-	public void mouseMovedOverField(int x, int y)
-	{
-		
-		int xCellCoordinate = (int) Math.floor(x / xPixelCellRatio);
-		int yCellCoordinate = (int) Math.floor(y / yPixelCellRatio);
-		
-		if(drawModeActive){
-			
-			
 
-			Color c;
-			Graphics g = canvasField.getGraphics();
-					
-			c =  Color.BLACK ;
-			g.setColor(c);
-			g.drawLine((int)(drawStartXCoordinate / xPixelCellRatio),(int)( drawStartYCoordinate/ yPixelCellRatio), x, (int)(drawStartYCoordinate/ yPixelCellRatio));
-			g.drawLine((int)(drawStartXCoordinate / xPixelCellRatio), y, x, y);
-					
-		}
-	}
 	
-	public void mouseClickInFieldCreateRohr(int x, int y)
+	public void mouseClickInFieldCreateRohr(int startX, int startY, int endX, int endY)
 	{
 		//System.out.println("click x:" + x + " y:" + y);
 		
-		int xCellCoordinate = (int) Math.floor(x / xPixelCellRatio);
-		int yCellCoordinate = (int) Math.floor(y / yPixelCellRatio);
+		endX = (int) Math.floor(endX / xPixelCellRatio);
+		endY = (int) Math.floor(endY / yPixelCellRatio);
 		
+		startX =(int)Math.floor(startX / xPixelCellRatio);
+		startY =(int)Math.floor(startY / yPixelCellRatio);
 
-		if(drawModeActive){
 			
-			drawModeActive = false;
-			
-			for (int i = (drawStartYCoordinate * ycount) + drawStartXCoordinate; i < (drawStartYCoordinate * ycount) + xCellCoordinate; i++) {
+			for (int i = (startY * ycount) + startX; i < (startY * ycount) + endX; i++) {
 				
 				field.get(i).setCellType(CellType.CellTypeSolidCell);
 			}
 			
-			for (int i = (yCellCoordinate * ycount) + drawStartXCoordinate; i <(yCellCoordinate * ycount) + xCellCoordinate; i++) {
+			for (int i = (endY * ycount) + startX; i <(endY * ycount) + endX; i++) {
 				
 				field.get(i).setCellType(CellType.CellTypeSolidCell);
 			}
 			
-		}else{
-			drawModeActive = true;
+
+		updateCanvas();
+	}
+	
+	public void mouseClickInFieldCreateNil(int startX, int startY, int endX, int endY)
+	{
+		//System.out.println("click x:" + x + " y:" + y);
+		
+		endX = (int) Math.floor(endX / xPixelCellRatio);
+		endY = (int) Math.floor(endY / yPixelCellRatio);
+		
+		startX =(int)Math.floor(startX / xPixelCellRatio);
+		startY =(int)Math.floor(startY / yPixelCellRatio);
+		for (int j = startY; j < endY + 1;j++){
+		for (int i = (j * ycount) + startX; i < (j * ycount) + endX; i++) {
 			
-			drawStartXCoordinate = xCellCoordinate;
-			drawStartYCoordinate = yCellCoordinate;
+			field.get(i).setCellType(CellType.CellTypeBeyondEdgeCell);
 			
 		}
+		}
 		
+
+			
+
+			
 
 		updateCanvas();
 	}
@@ -324,6 +319,13 @@ public class SimulationField implements CellDelegate, Runnable{
 					circle_top = (int)Math.ceil(height * (i/xcount)) - 10;
 					
 
+				}else if(cell.getCellType() == CellType.CellTypeBeyondEdgeCell)
+				{
+					
+					g.setColor(Color.ORANGE);
+					g.fillRect((int)Math.ceil(width * (i%xcount)), (int)Math.ceil(height * (i/xcount)), (int)Math.ceil(width), (int)Math.ceil(height));
+		
+
 				}
 				i++;
 
@@ -367,6 +369,7 @@ public class SimulationField implements CellDelegate, Runnable{
 		}
 		for (Cell cell : field) 
 		{
+
 			cell.update();
 		}
 		updateCanvas();

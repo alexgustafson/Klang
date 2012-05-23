@@ -126,7 +126,6 @@ public class Cell {
 				
 				i++;
 				
-
 			}
 			
 			nextPressure = (2 * pressure) - previousY + (K*( neightborValues - (4 * currentY)));
