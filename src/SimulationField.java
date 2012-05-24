@@ -14,21 +14,14 @@ import java.util.ArrayList;
 
 
 
-public class SimulationField implements CellDelegate, Runnable{
+public class SimulationField implements Runnable{
 	
 	private Thread runner;
 	private Boolean runningSim;
 	
-
-
-	//arraylist mit alle zellen
-	private ArrayList<Cell> field;
-	
-	//arraylist mit zellen die "touched" sind, das
-	//heisst, zellen die beeinflusst worden sind.
-	//es sollen nur zellen berechnet werden die 
-	//aktiv sind
-	private ArrayList<Cell> activeCells;
+	float mesh[];
+	boolean walls[];
+	boolean boarder[];
 	
 	// gibt an wie viele zellen pro cm existieren ( simulations auflšsung )
 	private int resolution;
@@ -36,7 +29,6 @@ public class SimulationField implements CellDelegate, Runnable{
 	private int xcount;
 	private int ycount;
 	
-	private Cell beyondEdgeCell;
 	
 	private Canvas canvasField;
 	private float xPixelCellRatio;
@@ -44,8 +36,6 @@ public class SimulationField implements CellDelegate, Runnable{
 	
 	private Canvas scopeCanvas;
 	
-
-
 	private float timeH;
 	private float spaceH;
 	
@@ -53,7 +43,6 @@ public class SimulationField implements CellDelegate, Runnable{
 	private int generator_y_coord;
 	private Boolean generator;
 
-	
 	private Boolean sensorActive = false;
 	private int sensorX_Coordinate;
 	private int sensorY_Coordinate;
@@ -70,109 +59,31 @@ public class SimulationField implements CellDelegate, Runnable{
 		xcount = sizex_cm * resolution;
 		ycount = sizey_cm * resolution;
 		
-		beyondEdgeCell = new Cell((CellDelegate)this);
-		beyondEdgeCell.setCellType(CellType.CellTypeBeyondEdgeCell);
-		beyondEdgeCell.setIdNr(-1);
-		field = new ArrayList<Cell>();
-		
-		for (int i = 0; i < (sizex_cm * sizey_cm * resolution * resolution); i++) {
-			
-			Cell cell = new Cell((CellDelegate)this);
-			cell.setCellType(CellType.CellTypeSimulationCell);
-			field.add(cell);
-			cell.setIdNr(i);
-			
-		}
-		
-		for (Cell cell : field) {
-			
-			cell.setupNeighbors();
-			
-		}
+		mesh = new float[xcount * ycount];
+		walls = new boolean[xcount * ycount];
+		boarder = new boolean[xcount * ycount];
 		
 		runningSim = false;
 		
+		for (int x = 1; x < xcount-1; x++)
+		{
+		    for (int y = 1; y < ycount-1; y++) 
+		    {
+		    	int cell = x+xcount*y;
+
+		    	if (x == 1 || x == xcount-2) 
+		    	{
+		    		boarder[cell] = true;
+		    	}
+		    
+		    	if (y == 1 || y == ycount - 2)
+		    	{
+		    		boarder[cell] = true;
+		    	}
+		    }
+	    }
 	}
 
-
-	// Cell Delegate Methods
-	@Override
-	public ArrayList<Cell> getNeighbors(int idNr) {
-		
-		ArrayList<Cell> neighbors = new ArrayList<Cell>();
-		
-		// eine zelle hat 8 nachbarn wenn es nicht am rand des feldes sich befindet
-		int distanceFromLeft = (idNr % xcount);
-		int distanceFromRight = xcount - (idNr % xcount);
-		int distanceFromBottom = (int) (ycount - Math.floor((float)(idNr / xcount)));
-		
-		//links oben
-		if (idNr > xcount && distanceFromLeft > 0 ) {
-			neighbors.add(field.get((idNr - 1)-xcount));
-		}else
-		{
-			neighbors.add(beyondEdgeCell);
-		}
-		
-		//oben
-		if (idNr > xcount) {
-			neighbors.add(field.get((idNr )-xcount));
-		}else
-		{
-			neighbors.add(beyondEdgeCell);
-		}
-		
-		//rechts oben
-		if (idNr > xcount && distanceFromRight > 1 ) 
-		{
-			neighbors.add(field.get((idNr + 1) -xcount));
-		}else
-		{
-			neighbors.add(beyondEdgeCell);
-		}
-		
-		//links
-		if (distanceFromRight > 1) {
-			neighbors.add(field.get((idNr + 1)));
-		}else
-		{
-			neighbors.add(beyondEdgeCell);
-		}
-		
-		//links unten
-		if (distanceFromRight > 1 && distanceFromBottom > 1) {
-			neighbors.add(field.get((idNr + 1) +xcount));
-		}else
-		{
-			neighbors.add(beyondEdgeCell);
-		}
-		
-		//unten
-		if ( distanceFromBottom > 1) {
-			neighbors.add(field.get((idNr ) +xcount));
-		}else
-		{
-			neighbors.add(beyondEdgeCell);
-		}
-		
-		//rechts unten
-		if ( distanceFromBottom > 1 && distanceFromLeft > 0 ) {
-			neighbors.add(field.get((idNr -1 ) +xcount));
-		}else
-		{
-			neighbors.add(beyondEdgeCell);
-		}
-		
-		//rechts
-		if ( distanceFromLeft > 0 ) {
-			neighbors.add( field.get(idNr -1) );
-		}else
-		{
-			neighbors.add(beyondEdgeCell);
-		}
-		
-		return neighbors;
-	}
 	
 	public void attatchCanvasElement(Canvas canvas)
 	{
@@ -191,9 +102,6 @@ public class SimulationField implements CellDelegate, Runnable{
 		int cellNumber = (yCellCoordinate * ycount) + xCellCoordinate;
 		System.out.println("zelle nummer:" + cellNumber);
 		
-		Cell cell = field.get(cellNumber);
-		cell.changePressure(1.0);
-		
 		updateCanvas();
 	}
 	
@@ -207,9 +115,6 @@ public class SimulationField implements CellDelegate, Runnable{
 		int cellNumber = (yCellCoordinate * ycount) + xCellCoordinate;
 		System.out.println("zelle nummer:" + cellNumber);
 		
-		Cell cell = field.get(cellNumber);
-		cell.setCellType(type);
-
 		updateCanvas();
 	}
 	
@@ -239,12 +144,13 @@ public class SimulationField implements CellDelegate, Runnable{
 			
 			for (int i = (startY * ycount) + startX; i < (startY * ycount) + endX; i++) {
 				
-				field.get(i).setCellType(CellType.CellTypeSolidCell);
+				walls[i] = true;
 			}
 			
 			for (int i = (endY * ycount) + startX; i <(endY * ycount) + endX; i++) {
 				
-				field.get(i).setCellType(CellType.CellTypeSolidCell);
+				walls[i] = true;
+				
 			}
 			
 
@@ -263,7 +169,7 @@ public class SimulationField implements CellDelegate, Runnable{
 		for (int j = startY; j < endY + 1;j++){
 		for (int i = (j * ycount) + startX; i < (j * ycount) + endX; i++) {
 			
-			field.get(i).setCellType(CellType.CellTypeBeyondEdgeCell);
+			
 			
 		}
 		}
@@ -289,10 +195,34 @@ public class SimulationField implements CellDelegate, Runnable{
 			
 			Graphics g = canvasField.getGraphics();
 			
+			for (int y = 0; y < canvasField.getHeight() -1; y++){
+				
+				int yOffset = (int) (y * canvasField.getWidth() );
+				
+				for (int x = 0; x < canvasField.getWidth() - 1; x++) {
+					
+					int cellNr = (x + yOffset);
+					
+					
+					if(boarder[cellNr]){
+					
+						g.setColor(Color.black);
+						
+					}else{
+						g.setColor(Color.MAGENTA);
+					}
+					
+					g.drawRect(x, y, 2, 2);
+				
+				}
+			}
+			
+			
+			
+			
+			/*
 			for (Cell cell : field) {
 			
-				
-				
 				if (cell.getCellType() == CellType.CellTypeSimulationCell ) {
 					
 					c = new Color(  Color.HSBtoRGB((float)(cell.getDisplacement(0.0) + 1.8), (float)0.8, (float)0.8) );
@@ -327,10 +257,11 @@ public class SimulationField implements CellDelegate, Runnable{
 				i++;
 
 			}
+			*/
 			
 			if (scopeCanvas != null) {
 				
-
+				/*
 				int xCellCoordinate = (int) Math.floor(sensorX_Coordinate / xPixelCellRatio);
 				int yCellCoordinate = (int) Math.floor(sensorY_Coordinate / yPixelCellRatio);
 				int cellNumber = (yCellCoordinate * ycount) + xCellCoordinate;
@@ -350,6 +281,7 @@ public class SimulationField implements CellDelegate, Runnable{
 				g.drawOval(sensorX_Coordinate - 5, sensorY_Coordinate - 5, 10, 10);
 				
 				sensorRecorder.saveValue(valueAtSensor);
+				*/
 			}
 			
 
@@ -359,15 +291,26 @@ public class SimulationField implements CellDelegate, Runnable{
 	
 	public void step()
 	{
-		for (Cell cell : field) 
+		
+		int iStart = 1;
+		int jStart = 1;
+		
+		for (int j = jStart; j < ycount - 1; j++) 
 		{
-			cell.prepareUpdate();
+			
+			int i = j * xcount + iStart;
+			
+			for (; i < xcount - 1; i++)
+			{
+				
+				
+				
+				
+			}
+			
 		}
-		for (Cell cell : field) 
-		{
-
-			cell.update();
-		}
+		
+		
 		updateCanvas();
 	}
 	
@@ -401,18 +344,9 @@ public class SimulationField implements CellDelegate, Runnable{
 	}
 
 
-	@Override
-	public float getTimeH() {
-		
-		return timeH;
-	}
 
 
-	@Override
-	public float getSpaceH() {
-		
-		return spaceH;
-	}
+
 	
 	public void dumpToFile(File aFile)
 	{
@@ -422,11 +356,12 @@ public class SimulationField implements CellDelegate, Runnable{
 			
 			output.write("" + xcount + "," + ycount + "," + resolution + "," + timeH);
 			output.newLine();
+			/*
 			for (Cell cell : field) {
 				output.write( cell.getCellType().toString() + "," + cell.getDisplacement(0.0) );
 				output.newLine();
 			}
-			
+			*/
 			
 			output.close();
 		} catch (IOException e) {
@@ -459,8 +394,8 @@ public class SimulationField implements CellDelegate, Runnable{
 			
 			int i = 0;
 			Cell cell;
-			
-			while ((thisLine = br.readLine()) != null && i < field.size()) { // while loop begins here
+			/*
+			while ((thisLine = br.readLine()) != null && i < field.size()) { 
       
 		         cell = field.get(i);
 		         
@@ -483,7 +418,7 @@ public class SimulationField implements CellDelegate, Runnable{
 		         i++;
 		         
 		       } // end while 
-			
+			*/
 			br.close();
 			
 		} catch (FileNotFoundException e) {
