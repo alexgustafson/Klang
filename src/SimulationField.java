@@ -58,6 +58,8 @@ public class SimulationField implements CellDelegate, Runnable{
 	private int sensorX_Coordinate;
 	private int sensorY_Coordinate;
 	
+	private SensorRecorder sensorRecorder;
+	
 	public void createNewField(int sizex_cm, int sizey_cm, int resolution, float timeH)
 	{
 		this.resolution = resolution;
@@ -266,11 +268,6 @@ public class SimulationField implements CellDelegate, Runnable{
 		}
 		}
 		
-
-			
-
-			
-
 		updateCanvas();
 	}
 	
@@ -333,8 +330,7 @@ public class SimulationField implements CellDelegate, Runnable{
 			
 			if (scopeCanvas != null) {
 				
-				
-				
+
 				int xCellCoordinate = (int) Math.floor(sensorX_Coordinate / xPixelCellRatio);
 				int yCellCoordinate = (int) Math.floor(sensorY_Coordinate / yPixelCellRatio);
 				int cellNumber = (yCellCoordinate * ycount) + xCellCoordinate;
@@ -354,6 +350,8 @@ public class SimulationField implements CellDelegate, Runnable{
 				
 				g.setColor(Color.ORANGE);
 				g.drawOval(sensorX_Coordinate - 5, sensorY_Coordinate - 5, 10, 10);
+				
+				sensorRecorder.saveValue(pressureAtSensor);
 			}
 			
 
@@ -379,9 +377,11 @@ public class SimulationField implements CellDelegate, Runnable{
 	{
 		if (runningSim) 
 		{
+
 			runningSim = false;
 		}else
 		{
+			sensorRecorder = new SensorRecorder();
 			runningSim = true;
 			runner = new Thread(this);
 			runner.start();
@@ -505,6 +505,15 @@ public class SimulationField implements CellDelegate, Runnable{
 
 	public void setScopeCanvas(Canvas scopeCanvas) {
 		this.scopeCanvas = scopeCanvas;
+	}
+	
+	public void shutDownSimulation(){
+		
+		if (sensorRecorder != null) {
+			sensorRecorder.close();
+		}
+		
+		
 	}
 	
 }

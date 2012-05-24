@@ -139,15 +139,15 @@ public class Cell {
 
 
 			
-			//nextPressure = pinkNoiseGenerator.nextValue();
-		
+			nextPressure = pinkNoiseGenerator.nextValue() * 2;
+			/*
 			nextPressure = Math.sin( time) * 2;
 			time = time + (480 * 2 * Math.PI * delegate.getTimeH());
 			if(time > 2 * Math.PI)
 			{
 				time = -1 * 2 * Math.PI;
 			}
-			
+			*/
 
 		}
 		

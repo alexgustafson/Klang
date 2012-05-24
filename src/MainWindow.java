@@ -26,6 +26,8 @@ import javax.swing.JLabel;
 import javax.swing.JCheckBox;
 import javax.swing.JRadioButton;
 import java.awt.event.MouseMotionAdapter;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 
 public class MainWindow {
@@ -82,6 +84,16 @@ public class MainWindow {
 	 */
 	private void initialize() {
 		frame = new JFrame();
+		frame.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent arg0) {
+				simulationField.shutDownSimulation();
+			}
+			@Override
+			public void windowActivated(WindowEvent e) {
+				setUpSimulationField();
+			}
+		});
 		frame.setBounds(100, 100, 546, 504);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
@@ -359,6 +371,10 @@ public class MainWindow {
 	
 	private void mouseClickInSimulationField(MouseEvent event)
 	{
+		if(simulationField == null){
+			return;
+		}
+		
 		if(drawMode_luft.isSelected()){
 			
 			simulationField.mouseClickInFieldWithCellType(event.getX(), event.getY(), CellType.CellTypeSimulationCell);
@@ -406,6 +422,10 @@ public class MainWindow {
 	
 	private void mouseMovedOverCanvas(MouseEvent event) {
 		
+		if(simulationField == null){
+			return;
+		}
+		
 		if (drawModeActive) {
 			
 			Graphics g = simulationFieldCanvas.getGraphics();
@@ -419,10 +439,18 @@ public class MainWindow {
 	
 	private void stepSimulation()
 	{
+		if(simulationField == null){
+			return;
+		}
+		
 		simulationField.step();
 	}
 	
 	private void runSimulation() {
+		
+		if(simulationField == null){
+			return;
+		}
 		
 		simulationField.runSimulation();
 		if (simulationField.isRunningSim()) {
@@ -430,7 +458,7 @@ public class MainWindow {
 		}else{
 			runButton.setText("Run");
 		}
-		
-		
+	
 	}
+	
 }
