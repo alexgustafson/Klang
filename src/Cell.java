@@ -5,15 +5,11 @@ import java.util.Random;
 
 public class Cell {
 	
-	private double pressure;
-	private double[] acceleration;
+	private double displacement;
+	private double nextDisplacement;
+	private double previousDisplacement = 0;
+
 	private int idNr;
-	
-	private double nextPressure;
-	
-	private double previousY = 0;
-	private double nextY = 0;
-	private double currentY = 0;
 	
 	private CellType cellType;
 	
@@ -34,11 +30,8 @@ public class Cell {
 		
 		this.delegate = delegate;
 		
-		pressure = 0;
-		acceleration = new double[2];
-		acceleration[0] = 0;
-		acceleration[1] = 0;
-		nextPressure = 0;
+		displacement = 0;
+		nextDisplacement = 0;
 		
 		K = 343.0 * 343.0 * delegate.getTimeH() * delegate.getTimeH() / (delegate.getSpaceH() * delegate.getSpaceH());
 		
@@ -66,18 +59,10 @@ public class Cell {
 	
 	public void changePressure(double d)
 	{
-		pressure = pressure + d;
+		displacement = displacement + d;
 	}
 	
-	public double getPressure(double externalPrevious)
-	{
-		if(cellType == CellType.CellTypeBeyondEdgeCell)
-		{
-			return externalPrevious ;
-		}
-		
-		return pressure;
-	}
+
 	
 	public Cell getFirstNeighbor()
 	{
@@ -102,8 +87,8 @@ public class Cell {
 	
 	public void update(){
 		
-		previousY = pressure;
-		pressure = (nextPressure) - pressure;
+		previousDisplacement = displacement;
+		displacement = (nextDisplacement) - displacement;
 		
 	}
 	
@@ -111,7 +96,7 @@ public class Cell {
 	{
 		if (cellType == CellType.CellTypeSimulationCell) {
 			
-			nextPressure = 0;
+			nextDisplacement = 0;
 			double neightborValues = 0;
 			
 			int i = 0;
@@ -121,25 +106,23 @@ public class Cell {
 					//nextPressure += 0.1 * neighbor.getPressure(previousY)  ;
 				}else
 				{
-					neightborValues +=  neighbor.getPressure( previousY);
+					neightborValues +=  neighbor.getDisplacement( previousDisplacement);
 				}
 				
 				i++;
 				
 			}
 			
-			nextPressure = (2 * pressure) - previousY + (K*( neightborValues - (4 * currentY)));
+			nextDisplacement = (2 * displacement) - previousDisplacement + (K*( neightborValues - (4 * displacement)));
 			//System.out.println("K value: " + K);
 			
 		}else if(cellType == CellType.CellTypeSolidCell)
 		{
-			nextPressure = 0;
+			nextDisplacement = 0;
 		}else if(cellType == CellType.CellTypeGeneratorCell)
 		{
 
-
-			
-			nextPressure = pinkNoiseGenerator.nextValue() * 2;
+			nextDisplacement = pinkNoiseGenerator.nextValue() * 2;
 			/*
 			nextPressure = Math.sin( time) * 2;
 			time = time + (480 * 2 * Math.PI * delegate.getTimeH());
@@ -153,12 +136,22 @@ public class Cell {
 		
 	}
 
-	public double getPressure() {
-		return pressure;
+	public double getDisplacement() {
+		return displacement;
+	}
+	
+	public double getDisplacement(double externalPrevious)
+	{
+		if(cellType == CellType.CellTypeBeyondEdgeCell)
+		{
+			return externalPrevious ;
+		}
+		
+		return displacement;
 	}
 
-	public void setPressure(double pressure) {
-		this.pressure = pressure;
+	public void setDisplacement(double displacement) {
+		this.displacement = displacement;
 	}
 
 	public CellType getCellType() {

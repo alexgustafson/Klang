@@ -295,7 +295,7 @@ public class SimulationField implements CellDelegate, Runnable{
 				
 				if (cell.getCellType() == CellType.CellTypeSimulationCell ) {
 					
-					c = new Color(  Color.HSBtoRGB((float)(cell.getPressure(0.0) + 1.8), (float)0.8, (float)0.8) );
+					c = new Color(  Color.HSBtoRGB((float)(cell.getDisplacement(0.0) + 1.8), (float)0.8, (float)0.8) );
 					g.setColor(c);
 					g.fillRect((int)Math.ceil(width * (i%xcount)), (int)Math.ceil(height * (i/xcount)), (int)Math.ceil(width), (int)Math.ceil(height));
 					
@@ -334,15 +334,13 @@ public class SimulationField implements CellDelegate, Runnable{
 				int xCellCoordinate = (int) Math.floor(sensorX_Coordinate / xPixelCellRatio);
 				int yCellCoordinate = (int) Math.floor(sensorY_Coordinate / yPixelCellRatio);
 				int cellNumber = (yCellCoordinate * ycount) + xCellCoordinate;
-				double pressureAtSensor = field.get(cellNumber).getPressure(0);
+				double valueAtSensor = field.get(cellNumber).getDisplacement(0);
 				Graphics gs = scopeCanvas.getGraphics();
-				int y = (int) ((scopeCanvas.getHeight()/2.0) - pressureAtSensor*60);
+				int y = (int) ((scopeCanvas.getHeight()/2.0) - valueAtSensor*60);
 				Color cs = Color.red;
 				gs.setColor(Color.BLACK);
 				gs.copyArea(0, 0, 100, 100, -1, 0);
 				gs.fillRect(99, 0, 1, 99);
-				
-				
 				
 				//System.out.println("pressure at sensor:" +y);
 				gs.setColor(cs);
@@ -351,7 +349,7 @@ public class SimulationField implements CellDelegate, Runnable{
 				g.setColor(Color.ORANGE);
 				g.drawOval(sensorX_Coordinate - 5, sensorY_Coordinate - 5, 10, 10);
 				
-				sensorRecorder.saveValue(pressureAtSensor);
+				sensorRecorder.saveValue(valueAtSensor);
 			}
 			
 
@@ -425,7 +423,7 @@ public class SimulationField implements CellDelegate, Runnable{
 			output.write("" + xcount + "," + ycount + "," + resolution + "," + timeH);
 			output.newLine();
 			for (Cell cell : field) {
-				output.write( cell.getCellType().toString() + "," + cell.getPressure(0.0) );
+				output.write( cell.getCellType().toString() + "," + cell.getDisplacement(0.0) );
 				output.newLine();
 			}
 			
@@ -473,7 +471,7 @@ public class SimulationField implements CellDelegate, Runnable{
 				}
 		         
 		         if (tokens[0].equalsIgnoreCase("CellTypeSimulationCell")) {
-					cell.setPressure(Double.parseDouble(tokens[1]));
+					cell.setDisplacement(Double.parseDouble(tokens[1]));
 				 }else if (tokens[0].equalsIgnoreCase("CellTypeSolidCell")) {
 					cell.setCellType(CellType.CellTypeSolidCell);
 				}else if (tokens[0].equalsIgnoreCase("CellTypeGeneratorCell")) {
