@@ -1,6 +1,8 @@
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.image.MemoryImageSource;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -60,6 +62,9 @@ public class SimulationField implements CellDelegate, Runnable{
 	
 	private SensorRecorder sensorRecorder;
 	
+	private MemoryImageSource memoryImageSource;
+	private int pixelBuffer[];
+	
 	public void createNewField(int sizex_cm, int sizey_cm, int resolution, float timeH)
 	{
 		this.resolution = resolution;
@@ -69,6 +74,10 @@ public class SimulationField implements CellDelegate, Runnable{
 		
 		xcount = sizex_cm * resolution;
 		ycount = sizey_cm * resolution;
+		
+		pixelBuffer = new int[xcount * ycount];
+		memoryImageSource = new MemoryImageSource(xcount, ycount, pixelBuffer, 0, xcount);
+		
 		
 		beyondEdgeCell = new Cell((CellDelegate)this);
 		beyondEdgeCell.setCellType(CellType.CellTypeBeyondEdgeCell);
@@ -179,6 +188,7 @@ public class SimulationField implements CellDelegate, Runnable{
 		this.canvasField = canvas;
 		xPixelCellRatio = this.canvasField.getWidth() / xcount;
 		yPixelCellRatio = this.canvasField.getHeight() / ycount;
+		
 	}
 	
 	public void mouseClickInField(int x, int y)
@@ -296,31 +306,28 @@ public class SimulationField implements CellDelegate, Runnable{
 				if (cell.getCellType() == CellType.CellTypeSimulationCell ) {
 					
 					c = new Color(  Color.HSBtoRGB((float)(cell.getDisplacement(0.0) + 1.8), (float)0.8, (float)0.8) );
-					g.setColor(c);
-					g.fillRect((int)Math.ceil(width * (i%xcount)), (int)Math.ceil(height * (i/xcount)), (int)Math.ceil(width), (int)Math.ceil(height));
-					
+					pixelBuffer[i] = c.getRGB();
 					
 				}else if(cell.getCellType() == CellType.CellTypeSolidCell)
 				{
 					
-					g.setColor(Color.BLACK);
-					g.fillRect((int)Math.ceil(width * (i%xcount)), (int)Math.ceil(height * (i/xcount)), (int)Math.ceil(width), (int)Math.ceil(height));
+					pixelBuffer[i] = Color.BLACK.getRGB();
 					
 				}else if(cell.getCellType() == CellType.CellTypeGeneratorCell)
 				{
 					
-					circle_color =  Color.MAGENTA ;
-					g.setColor(circle_color);
+					//circle_color =  Color.MAGENTA ;
+					//g.setColor(circle_color);
 
-					circle_left = (int)Math.ceil(width * (i%xcount)) - 10;
-					circle_top = (int)Math.ceil(height * (i/xcount)) - 10;
+					//circle_left = (int)Math.ceil(width * (i%xcount)) - 10;
+					//circle_top = (int)Math.ceil(height * (i/xcount)) - 10;
 					
 
 				}else if(cell.getCellType() == CellType.CellTypeBeyondEdgeCell)
 				{
 					
-					g.setColor(Color.ORANGE);
-					g.fillRect((int)Math.ceil(width * (i%xcount)), (int)Math.ceil(height * (i/xcount)), (int)Math.ceil(width), (int)Math.ceil(height));
+					//g.setColor(Color.ORANGE);
+					//g.fillRect((int)Math.ceil(width * (i%xcount)), (int)Math.ceil(height * (i/xcount)), (int)Math.ceil(width), (int)Math.ceil(height));
 		
 
 				}
@@ -346,13 +353,16 @@ public class SimulationField implements CellDelegate, Runnable{
 				gs.setColor(cs);
 				gs.fillRect(98, y, 2, 2);
 				
-				g.setColor(Color.ORANGE);
-				g.drawOval(sensorX_Coordinate - 5, sensorY_Coordinate - 5, 10, 10);
+				//g.setColor(Color.ORANGE);
+				//g.drawOval(sensorX_Coordinate - 5, sensorY_Coordinate - 5, 10, 10);
 				
 				sensorRecorder.saveValue(valueAtSensor);
 			}
 			
-
+			memoryImageSource = new MemoryImageSource(xcount, ycount, pixelBuffer, 0, xcount);
+			memoryImageSource.setAnimated(true);
+			Image img = canvasField.createImage(memoryImageSource);
+			canvasField.getGraphics().drawImage(img, 0, 0, 360, 360, null);
 			
 		}
 	}
@@ -396,7 +406,16 @@ public class SimulationField implements CellDelegate, Runnable{
 	{
 		while (runningSim) 
 		{
+			
+			
+			try {
+				Thread.sleep(20);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			step();
+			
 		}
 	}
 
