@@ -23,11 +23,13 @@ public class SimulationField implements Runnable{
 	boolean walls[];
 	boolean boarder[];
 	
-	// gibt an wie viele zellen pro cm existieren ( simulations auflšsung )
+	// gibt an wie viele zellen pro cm existieren ( simulations auflï¿½sung )
 	private int resolution;
 	
 	private int xcount;
 	private int ycount;
+	private int cellCount;
+	private int pixelCount;
 	
 	
 	private Canvas canvasField;
@@ -59,9 +61,11 @@ public class SimulationField implements Runnable{
 		xcount = sizex_cm * resolution;
 		ycount = sizey_cm * resolution;
 		
-		mesh = new float[xcount * ycount];
-		walls = new boolean[xcount * ycount];
-		boarder = new boolean[xcount * ycount];
+		cellCount = xcount * ycount;
+		
+		mesh = new float[cellCount];
+		walls = new boolean[cellCount];
+		boarder = new boolean[cellCount];
 		
 		runningSim = false;
 		
@@ -90,6 +94,8 @@ public class SimulationField implements Runnable{
 		this.canvasField = canvas;
 		xPixelCellRatio = this.canvasField.getWidth() / xcount;
 		yPixelCellRatio = this.canvasField.getHeight() / ycount;
+		pixelCount = canvas.getWidth() * canvas.getHeight();
+		
 	}
 	
 	public void mouseClickInField(int x, int y)
@@ -180,12 +186,11 @@ public class SimulationField implements Runnable{
 	public void updateCanvas()
 	{
 
-		//prŸffe ob es mehr pixels als zellen hat
+		//prï¿½ffe ob es mehr pixels als zellen hat
 		if(xPixelCellRatio > 0){
 		
-			//falls ja wird fŸr jedes zelle ein 4eck gezeichnet
-			float width = xPixelCellRatio;
-			float height = yPixelCellRatio;
+			//falls ja wird fï¿½r jedes zelle ein 4eck gezeichnet
+
 			int i = 0;
 			
 			int circle_left = 0;
@@ -194,12 +199,14 @@ public class SimulationField implements Runnable{
 			Color c;
 			
 			Graphics g = canvasField.getGraphics();
+			int height = canvasField.getHeight() - 1;
+			int width = canvasField.getWidth() - 1;
 			
-			for (int y = 0; y < canvasField.getHeight() -1; y++){
+			for (int y = 0; y < height; y++){
 				
 				int yOffset = (int) (y * canvasField.getWidth() );
 				
-				for (int x = 0; x < canvasField.getWidth() - 1; x++) {
+				for (int x = 0; x < width; x++) {
 					
 					int cellNr = (x + yOffset);
 					
