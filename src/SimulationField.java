@@ -2,6 +2,7 @@ import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.image.ColorModel;
 import java.awt.image.MemoryImageSource;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -65,8 +66,20 @@ public class SimulationField implements CellDelegate, Runnable{
 	private MemoryImageSource memoryImageSource;
 	private int pixelBuffer[];
 	
+	private int refreshGraphicAfterSteps = 0;
+	private float generatorFrequency = 1;
+	
 	public void createNewField(int sizex_cm, int sizey_cm, int resolution, float timeH)
 	{
+		
+		this.timeH = timeH;
+		
+		spaceH = (float) (sizex_cm / ( 100.0 * resolution));
+
+		if ((340*timeH/spaceH) > 0.7071) {
+			System.out.println("time step is too large");
+		}
+		
 		this.resolution = resolution;
 		this.timeH = timeH;
 		
@@ -77,7 +90,7 @@ public class SimulationField implements CellDelegate, Runnable{
 		
 		pixelBuffer = new int[xcount * ycount];
 		memoryImageSource = new MemoryImageSource(xcount, ycount, pixelBuffer, 0, xcount);
-		
+		memoryImageSource.setAnimated(true);
 		
 		beyondEdgeCell = new Cell((CellDelegate)this);
 		beyondEdgeCell.setCellType(CellType.CellTypeBeyondEdgeCell);
@@ -305,7 +318,7 @@ public class SimulationField implements CellDelegate, Runnable{
 				
 				if (cell.getCellType() == CellType.CellTypeSimulationCell ) {
 					
-					c = new Color(  Color.HSBtoRGB((float)(cell.getDisplacement(0.0) + 1.8), (float)0.8, (float)0.8) );
+					c = new Color(  Color.HSBtoRGB((float)((cell.getDisplacement(0.0) * 50.0)+2.1), (float)0.8, (float)0.8) );
 					pixelBuffer[i] = c.getRGB();
 					
 				}else if(cell.getCellType() == CellType.CellTypeSolidCell)
@@ -359,10 +372,18 @@ public class SimulationField implements CellDelegate, Runnable{
 				sensorRecorder.saveValue(valueAtSensor);
 			}
 			
-			memoryImageSource = new MemoryImageSource(xcount, ycount, pixelBuffer, 0, xcount);
-			memoryImageSource.setAnimated(true);
-			Image img = canvasField.createImage(memoryImageSource);
-			canvasField.getGraphics().drawImage(img, 0, 0, 360, 360, null);
+			if (refreshGraphicAfterSteps == 0) {
+				//memoryImageSource "weiss" schon wo pixelBuffer ist, muss nicht bei jedem
+				//zyklus nochmal übergeben werden. memoryImageSource.newPixels() reicht für update
+				//memoryImageSource.newPixels(pixelBuffer, ColorModel.getRGBdefault(), 0, xcount);
+				memoryImageSource.newPixels();
+				Image img = canvasField.createImage(memoryImageSource);
+				canvasField.getGraphics().drawImage(img, 0, 0, 360, 360, null);
+				refreshGraphicAfterSteps = 5;
+			}else{
+				refreshGraphicAfterSteps = refreshGraphicAfterSteps - 1;
+			}
+
 			
 		}
 	}
@@ -407,13 +428,13 @@ public class SimulationField implements CellDelegate, Runnable{
 		while (runningSim) 
 		{
 			
-			
+			/*
 			try {
 				Thread.sleep(20);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
+			}*/
 			step();
 			
 		}
@@ -531,6 +552,20 @@ public class SimulationField implements CellDelegate, Runnable{
 		}
 		
 		
+	}
+
+
+	@Override
+	public float getGeneratorFrequency() {
+		
+		return (float)generatorFrequency;
+		
+	}
+
+
+	public void setGeneratorFrequency(float generatorFrequency) {
+		
+		this.generatorFrequency = generatorFrequency;
 	}
 	
 }

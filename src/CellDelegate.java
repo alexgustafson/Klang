@@ -15,5 +15,7 @@ public interface CellDelegate {
 	public float getTimeH();
 	
 	public float getSpaceH();
+	
+	public float getGeneratorFrequency();
 
 }

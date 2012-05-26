@@ -23,7 +23,9 @@ public class Cell {
 	private double time = 0.0;
 	
 	private PinkNoise pinkNoiseGenerator;
-	
+	private double r;
+	private double coef1;
+	private double coef2;
 	
 	public Cell(CellDelegate delegate)
 	{
@@ -34,6 +36,9 @@ public class Cell {
 		nextDisplacement = 0;
 		
 		K = 343.0 * 343.0 * delegate.getTimeH() * delegate.getTimeH() / (delegate.getSpaceH() * delegate.getSpaceH());
+		r = 340.0 * delegate.getTimeH() / delegate.getSpaceH();
+		coef1 = (2-4*(r*r));
+		coef2 = r*r;
 		
 	}
 	
@@ -116,21 +121,27 @@ public class Cell {
 			nextDisplacement = (2 * displacement) - previousDisplacement + (K*( neightborValues - (4 * displacement)));
 			//System.out.println("K value: " + K);
 			
+			// Explicit difference method
+			//nextDisplacement =  (coef1*displacement ) + (coef2*neightborValues) - previousDisplacement;
+			
+			//nextDisplacement =   (0.25*neightborValues) ;
+					
+			
 		}else if(cellType == CellType.CellTypeSolidCell)
 		{
 			nextDisplacement = 0;
 		}else if(cellType == CellType.CellTypeGeneratorCell)
 		{
 
-			nextDisplacement = pinkNoiseGenerator.nextValue() * 2;
-			/*
-			nextPressure = Math.sin( time) * 2;
-			time = time + (480 * 2 * Math.PI * delegate.getTimeH());
+			//nextDisplacement = pinkNoiseGenerator.nextValue() * 2;
+			
+			nextDisplacement = Math.sin( time) * 2;
+			time = time + (480 * delegate.getGeneratorFrequency() * 2 * Math.PI * delegate.getTimeH());
 			if(time > 2 * Math.PI)
 			{
 				time = -1 * 2 * Math.PI;
 			}
-			*/
+			
 
 		}
 		
@@ -156,6 +167,11 @@ public class Cell {
 
 	public CellType getCellType() {
 		return cellType;
+	}
+	
+	public double getPressure(){
+		return (displacement - previousDisplacement)/delegate.getSpaceH();
+		
 	}
 
 }

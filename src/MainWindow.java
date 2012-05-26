@@ -28,6 +28,9 @@ import javax.swing.JRadioButton;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import javax.swing.JSlider;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeEvent;
 
 
 public class MainWindow {
@@ -55,6 +58,8 @@ public class MainWindow {
 	private Boolean drawModeActive = false;
 	private int drawStartXCoordinate;
 	private int drawStartYCoordinate;
+	
+	private int genFrequency;
 
 	/**
 	 * Launch the application.
@@ -339,6 +344,20 @@ public class MainWindow {
 		scopeCanvas.setBounds(436, 376, 100, 100);
 		frame.getContentPane().add(scopeCanvas);
 		
+		final JSlider slider_genFrequency = new JSlider();
+		slider_genFrequency.setMinimum(1);
+		slider_genFrequency.addPropertyChangeListener(new PropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent arg0) {
+				
+				if (simulationField != null) {
+					simulationField.setGeneratorFrequency((float)(slider_genFrequency.getValue()/25.0));
+				}
+				
+			}
+		});
+		slider_genFrequency.setBounds(163, 376, 190, 29);
+		frame.getContentPane().add(slider_genFrequency);
+		
 		
 		
 
@@ -460,5 +479,4 @@ public class MainWindow {
 		}
 	
 	}
-	
 }
