@@ -318,7 +318,21 @@ public class SimulationField implements CellDelegate, Runnable{
 				
 				if (cell.getCellType() == CellType.CellTypeSimulationCell ) {
 					
-					c = new Color(  Color.HSBtoRGB((float)((cell.getDisplacement(0.0) * 50.0)+2.1), (float)0.8, (float)0.8) );
+					if(cell.getDisplacement(0.0) > 0.0005){
+						
+						c = Color.red;
+						
+					}else if (cell.getDisplacement(0.0) < -0.0005 ) {
+						
+						c = Color.BLUE;
+						
+					}else{
+						
+						c = Color.WHITE;
+						
+					}
+					
+					
 					pixelBuffer[i] = c.getRGB();
 					
 				}else if(cell.getCellType() == CellType.CellTypeSolidCell)
@@ -379,7 +393,7 @@ public class SimulationField implements CellDelegate, Runnable{
 				memoryImageSource.newPixels();
 				Image img = canvasField.createImage(memoryImageSource);
 				canvasField.getGraphics().drawImage(img, 0, 0, 360, 360, null);
-				refreshGraphicAfterSteps = 5;
+				refreshGraphicAfterSteps = 4;
 			}else{
 				refreshGraphicAfterSteps = refreshGraphicAfterSteps - 1;
 			}
