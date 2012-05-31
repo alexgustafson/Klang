@@ -82,18 +82,18 @@ public class SimulationField implements Runnable{
 		
 		runningSim = false;
 		
-		for (int x = 1; x < xcount-1; x++)
+		for (int x = 0; x < xcount; x++)
 		{
-		    for (int y = 1; y < ycount-1; y++) 
+		    for (int y = 0; y < ycount; y++) 
 		    {
 		    	int cell = x+xcount*y;
 
-		    	if (x == 1 || x == xcount-2) 
+		    	if (x == 0 || x == xcount-1) 
 		    	{
 		    		boarder[cell] = true;
 		    	}
 		    
-		    	if (y == 1 || y == ycount - 2)
+		    	if (y == 0 || y == ycount-1)
 		    	{
 		    		boarder[cell] = true;
 		    	}
@@ -225,7 +225,7 @@ public class SimulationField implements Runnable{
 						
 					}else{
 					
-						c = new Color(  Color.HSBtoRGB((float)mesh[i], (float)0.8, (float)0.8) );
+						c = new Color(  Color.HSBtoRGB((float)mesh[i] * 20.0f, (float)0.8, (float)0.8) );
 						
 					}
 					
@@ -304,8 +304,8 @@ public class SimulationField implements Runnable{
 			memoryImageSource.newPixels();
 			memoryImageSource.setAnimated(true);
 			memoryImageSource.setFullBufferUpdates(true);
-			Image img = canvasField.createImage(memoryImageSource);
-			canvasField.getGraphics().drawImage(img, 0, 0, 360, 360, null);
+			
+			canvasField.getGraphics().drawImage(canvasField.createImage(memoryImageSource), 0, 0, 360, 360, null);
 			
 
 			
@@ -315,14 +315,16 @@ public class SimulationField implements Runnable{
 	public void step()
 	{
 		
-		int north;
-		int south;
-		int east;
-		int west;
+		float north;
+		float south;
+		float east;
+		float west;
+		float center;
 		
 		int n;
 		
-		mesh[11100] = (float) ( 20.2f * Math.sin(stepCount / 200.0));
+		//this is just test source 
+		mesh[11100] = (float) ( 1.2f * Math.sin(stepCount / 100.0));
 		
 		for(int y = 1; y < ycount -1; y++){
 			
@@ -332,14 +334,21 @@ public class SimulationField implements Runnable{
 			{
 			
 				n = x + yOffset;
-				north = n - xcount;
-				south = n + xcount;
-				west = n-1;
-				east = n+1;
 				
-				//nextDisplacement = (2 * displacement) - previousDisplacement + (K*( neightborValues - (4 * displacement)));
+				north = walls[n - xcount] ? 0 : mesh[n - xcount];
+				south = walls[n + xcount] ? 0 : mesh[n + xcount];
+				west = walls[n -1] ? 0 : mesh[n - 1];
+				east = walls[n +1] ? 0 : mesh[n + 1];
 				
-				newMesh[n] = cSquared*(mesh[north]+mesh[south]+mesh[east]+mesh[west] - (4 * mesh[n]))  + 2*mesh[n] - oldMesh[n];
+				center = walls[n] ? 0 : mesh[n];
+				
+				north = boarder[n - xcount] ? oldMesh[n] : north;
+				south = boarder[n + xcount] ? oldMesh[n] : south;
+				west = boarder[n -1] ? oldMesh[n] : west;
+				east = boarder[n +1] ? oldMesh[n] : east;
+				
+				
+				newMesh[n] = cSquared*(north+south+east+west - (4 * center))  + 2*center - oldMesh[n];
 				oldMesh[n] = mesh[n];
 				
 			}
