@@ -1,6 +1,8 @@
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.image.MemoryImageSource;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -12,18 +14,23 @@ import java.io.Serializable;
 import java.io.Writer;
 import java.util.ArrayList;
 
-
-
 public class SimulationField implements Runnable{
+	
+	float cSquared;
+	int stepCount;
 	
 	private Thread runner;
 	private Boolean runningSim;
 	
+	float oldMesh[];
 	float mesh[];
+	float newMesh[];
 	boolean walls[];
 	boolean boarder[];
 	
-	// gibt an wie viele zellen pro cm existieren ( simulations aufl�sung )
+	private MemoryImageSource memoryImageSource;
+	private int pixelBuffer[];
+	private int refreshGraphicAfterSteps = 0;
 	private int resolution;
 	
 	private int xcount;
@@ -64,8 +71,14 @@ public class SimulationField implements Runnable{
 		cellCount = xcount * ycount;
 		
 		mesh = new float[cellCount];
+		newMesh = new float[cellCount];
 		walls = new boolean[cellCount];
 		boarder = new boolean[cellCount];
+		oldMesh = new float[cellCount];
+		
+		pixelBuffer = new int[cellCount];
+		memoryImageSource = new MemoryImageSource(xcount, ycount, pixelBuffer, 0, xcount);
+		memoryImageSource.setAnimated(true);
 		
 		runningSim = false;
 		
@@ -86,6 +99,10 @@ public class SimulationField implements Runnable{
 		    	}
 		    }
 	    }
+		
+
+		cSquared = (float) (343.0 * 343.0 * (timeH * timeH) / (spaceH * spaceH));
+	
 	}
 
 	
@@ -186,42 +203,35 @@ public class SimulationField implements Runnable{
 	public void updateCanvas()
 	{
 
-		//pr�ffe ob es mehr pixels als zellen hat
-		if(xPixelCellRatio > 0){
-		
-			//falls ja wird f�r jedes zelle ein 4eck gezeichnet
 
-			int i = 0;
-			
+		
 			int circle_left = 0;
 			int circle_top = 0;
 			Color circle_color = Color.red;
-			Color c;
+			Color c = Color.MAGENTA;
 			
-			Graphics g = canvasField.getGraphics();
-			int height = canvasField.getHeight() - 1;
-			int width = canvasField.getWidth() - 1;
+
 			
-			for (int y = 0; y < height; y++){
-				
-				int yOffset = (int) (y * canvasField.getWidth() );
-				
-				for (int x = 0; x < width; x++) {
+			for (int i = 0; i < mesh.length; i++){
+			
 					
-					int cellNr = (x + yOffset);
+					if(boarder[i]){
 					
-					
-					if(boarder[cellNr]){
-					
-						g.setColor(Color.black);
+						c = Color.GRAY;
+						
+					}else if(walls[i]){
+						
+						c = Color.BLACK;
 						
 					}else{
-						g.setColor(Color.MAGENTA);
+					
+						c = new Color(  Color.HSBtoRGB((float)mesh[i], (float)0.8, (float)0.8) );
+						
 					}
 					
-					g.drawRect(x, y, 2, 2);
+					
+					pixelBuffer[i] = c.getRGB();
 				
-				}
 			}
 			
 			
@@ -291,34 +301,54 @@ public class SimulationField implements Runnable{
 				*/
 			}
 			
+			memoryImageSource.newPixels();
+			memoryImageSource.setAnimated(true);
+			memoryImageSource.setFullBufferUpdates(true);
+			Image img = canvasField.createImage(memoryImageSource);
+			canvasField.getGraphics().drawImage(img, 0, 0, 360, 360, null);
+			
 
 			
-		}
+		
 	}
 	
 	public void step()
 	{
 		
-		int iStart = 1;
-		int jStart = 1;
+		int north;
+		int south;
+		int east;
+		int west;
 		
-		for (int j = jStart; j < ycount - 1; j++) 
-		{
+		int n;
+		
+		mesh[11100] = (float) ( 20.2f * Math.sin(stepCount / 200.0));
+		
+		for(int y = 1; y < ycount -1; y++){
 			
-			int i = j * xcount + iStart;
-			
-			for (; i < xcount - 1; i++)
+			int yOffset = y * xcount;
+		
+			for (int x = 1; x < xcount -1; x++) 
 			{
+			
+				n = x + yOffset;
+				north = n - xcount;
+				south = n + xcount;
+				west = n-1;
+				east = n+1;
 				
+				//nextDisplacement = (2 * displacement) - previousDisplacement + (K*( neightborValues - (4 * displacement)));
 				
-				
+				newMesh[n] = cSquared*(mesh[north]+mesh[south]+mesh[east]+mesh[west] - (4 * mesh[n]))  + 2*mesh[n] - oldMesh[n];
+				oldMesh[n] = mesh[n];
 				
 			}
-			
 		}
 		
+		oldMesh = mesh;
+		mesh = newMesh;
+		stepCount++;
 		
-		updateCanvas();
 	}
 	
 	public void runSimulation()
@@ -347,6 +377,17 @@ public class SimulationField implements Runnable{
 		while (runningSim) 
 		{
 			step();
+			if (refreshGraphicAfterSteps < 1) {
+				
+				updateCanvas();
+
+				
+
+				refreshGraphicAfterSteps = 20;
+				
+			}else{
+				refreshGraphicAfterSteps = refreshGraphicAfterSteps - 1;
+			}
 		}
 	}
 
