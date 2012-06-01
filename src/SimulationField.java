@@ -48,6 +48,7 @@ public class SimulationField implements Runnable{
 	
 	private float timeH;
 	private float spaceH;
+	private float time;
 	
 	private int generator_x_coord;
 	private int generator_y_coord;
@@ -242,7 +243,7 @@ public class SimulationField implements Runnable{
 						
 					}else{
 					
-						c = new Color(  Color.HSBtoRGB((float)mesh[i] * 100.0f, (float)0.8, (float)0.8) );
+						c = new Color(  Color.HSBtoRGB((float)(mesh[i]*52f) +1.8f, (float)0.8, (float)0.8) );
 						
 					}
 					
@@ -297,9 +298,6 @@ public class SimulationField implements Runnable{
 			memoryImageSource.setFullBufferUpdates(true);
 			
 			canvasField.getGraphics().drawImage(canvasField.createImage(memoryImageSource), 0, 0, 360, 360, null);
-			
-
-			
 		
 	}
 	
@@ -342,11 +340,19 @@ public class SimulationField implements Runnable{
 				//falls hauptelement selber ein wand element ist 
 				center = walls[n] ? 0 : mesh[n];
 				
+				/*
 				//falls nachbarelement ein rand element ist 
 				north = boarder[n - xcount] ? ((mesh[n] - mesh[n + xcount])*spaceH) + mesh[n] : north;
 				south = boarder[n + xcount] ? ((mesh[n] - mesh[n - xcount])*spaceH) + mesh[n] : south;
 				west = boarder[n -1] ? ((mesh[n] - mesh[n +1])*spaceH) + mesh[n] : west;
 				east = boarder[n +1] ? ((mesh[n] - mesh[n -1])*spaceH) + mesh[n] : east;
+				*/
+				
+				//falls nachbarelement ein rand element ist 
+				north = boarder[n - xcount] ? oldMesh[n] : north;
+				south = boarder[n + xcount] ? oldMesh[n] : south;
+				west = boarder[n -1] ? oldMesh[n] : west;
+				east = boarder[n +1] ? oldMesh[n] : east;
 				
 				center = generators[n] ? generatorFunction() : center;
 				
@@ -510,15 +516,15 @@ public class SimulationField implements Runnable{
 	
 	public float generatorFunction(){
 		
-		float nextValue = (float) (pinkNoiseGenerator.nextValue() * 2);
-		/*
-		nextValue = Math.sin( time) * 2;
-		time = time + (480 * 2 * Math.PI * delegate.getTimeH());
+		//float nextValue = (float) (pinkNoiseGenerator.nextValue() * 2);
+		
+		float nextValue = (float) (Math.sin( time) * 2);
+		time = (float) (time + (480 * 2 * Math.PI * timeH));
 		if(time > 2 * Math.PI)
 		{
-			time = -1 * 2 * Math.PI;
+			time = (float) (-1 * 2 * Math.PI);
 		}
-		*/
+		
 		
 		return nextValue;
 	}
