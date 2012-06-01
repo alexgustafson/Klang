@@ -55,6 +55,7 @@ public class MainWindow {
 	private Boolean drawModeActive = false;
 	private int drawStartXCoordinate;
 	private int drawStartYCoordinate;
+	private JRadioButton drawMode_disturb;
 
 	/**
 	 * Launch the application.
@@ -203,6 +204,7 @@ public class MainWindow {
 				drawMode_gen.setSelected(false);
 				drawMode_rohr.setSelected(false);
 				drawMode_sensor.setSelected(false);
+				drawMode_disturb.setSelected(false);
 			}
 		});
 		drawMode_luft.setSelected(true);
@@ -219,6 +221,7 @@ public class MainWindow {
 				drawMode_gen.setSelected(false);
 				drawMode_rohr.setSelected(false);
 				drawMode_sensor.setSelected(false);
+				drawMode_disturb.setSelected(false);
 			}
 		});
 		drawMode_solid.setBounds(16, 256, 72, 23);
@@ -234,6 +237,7 @@ public class MainWindow {
 				drawMode_gen.setSelected(true);
 				drawMode_rohr.setSelected(false);
 				drawMode_sensor.setSelected(false);
+				drawMode_disturb.setSelected(false);
 			}
 		});
 		drawMode_gen.setBounds(16, 283, 117, 23);
@@ -248,6 +252,7 @@ public class MainWindow {
 				drawMode_gen.setSelected(false);
 				drawMode_rohr.setSelected(false);
 				drawMode_sensor.setSelected(false);
+				drawMode_disturb.setSelected(false);
 			}
 		});
 		drawMode_nil.setBounds(16, 310, 117, 23);
@@ -262,6 +267,7 @@ public class MainWindow {
 				drawMode_gen.setSelected(false);
 				drawMode_rohr.setSelected(true);
 				drawMode_sensor.setSelected(false);
+				drawMode_disturb.setSelected(false);
 			}
 		});
 		drawMode_rohr.setBounds(16, 334, 117, 23);
@@ -277,11 +283,28 @@ public class MainWindow {
 				drawMode_gen.setSelected(false);
 				drawMode_rohr.setSelected(false);
 				drawMode_sensor.setSelected(true);
-				
+				drawMode_disturb.setSelected(false);
 			}
 		});
 		drawMode_sensor.setBounds(16, 359, 117, 23);
 		frame.getContentPane().add(drawMode_sensor);
+		
+		drawMode_disturb = new JRadioButton("disturb");
+		drawMode_disturb.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				drawMode_luft.setSelected(false);
+				drawMode_solid.setSelected(false);
+				drawMode_nil.setSelected(false);
+				drawMode_gen.setSelected(false);
+				drawMode_rohr.setSelected(false);
+				drawMode_sensor.setSelected(false);
+				drawMode_disturb.setSelected(true);
+				
+			}
+		});
+		drawMode_disturb.setBounds(16, 382, 117, 23);
+		frame.getContentPane().add(drawMode_disturb);
 		
 		JButton btnSaveMesh = new JButton("save mesh");
 		btnSaveMesh.addActionListener(new ActionListener() {
@@ -338,6 +361,8 @@ public class MainWindow {
 		scopeCanvas.setBackground(Color.BLACK);
 		scopeCanvas.setBounds(436, 376, 100, 100);
 		frame.getContentPane().add(scopeCanvas);
+		
+
 		
 		
 		
@@ -416,6 +441,10 @@ public class MainWindow {
 				drawStartYCoordinate = event.getY();
 			}
 			
+		}else if (drawMode_disturb.isSelected()){
+			
+			simulationField.mouseClickInField(event.getX(),	event.getY());
+
 		}
 		
 	}
@@ -460,5 +489,4 @@ public class MainWindow {
 		}
 	
 	}
-	
 }

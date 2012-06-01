@@ -27,6 +27,7 @@ public class SimulationField implements Runnable{
 	float newMesh[];
 	boolean walls[];
 	boolean boarder[];
+	boolean generators[];
 	
 	private MemoryImageSource memoryImageSource;
 	private int pixelBuffer[];
@@ -57,6 +58,7 @@ public class SimulationField implements Runnable{
 	private int sensorY_Coordinate;
 	
 	private SensorRecorder sensorRecorder;
+	PinkNoise pinkNoiseGenerator;
 	
 	public void createNewField(int sizex_cm, int sizey_cm, int resolution, float timeH)
 	{
@@ -75,6 +77,7 @@ public class SimulationField implements Runnable{
 		walls = new boolean[cellCount];
 		boarder = new boolean[cellCount];
 		oldMesh = new float[cellCount];
+		generators = new boolean[cellCount];
 		
 		pixelBuffer = new int[cellCount];
 		memoryImageSource = new MemoryImageSource(xcount, ycount, pixelBuffer, 0, xcount);
@@ -102,7 +105,14 @@ public class SimulationField implements Runnable{
 		
 
 		cSquared = (float) (343.0 * 343.0 * (timeH * timeH) / (spaceH * spaceH));
+		
 	
+		if ((340*timeH/spaceH) > 0.7071) {
+			System.out.println("time step is too large");
+		}
+		
+		pinkNoiseGenerator = new PinkNoise();
+		
 	}
 
 	
@@ -123,7 +133,8 @@ public class SimulationField implements Runnable{
 		int yCellCoordinate = (int) Math.floor(y / yPixelCellRatio);
 		
 		int cellNumber = (yCellCoordinate * ycount) + xCellCoordinate;
-		System.out.println("zelle nummer:" + cellNumber);
+		mesh[cellNumber] = 10.0f;
+		
 		
 		updateCanvas();
 	}
@@ -137,6 +148,12 @@ public class SimulationField implements Runnable{
 		
 		int cellNumber = (yCellCoordinate * ycount) + xCellCoordinate;
 		System.out.println("zelle nummer:" + cellNumber);
+		
+		if (type == CellType.CellTypeGeneratorCell) {
+			
+			generators[cellNumber] = true;
+			
+		}
 		
 		updateCanvas();
 	}
@@ -225,7 +242,7 @@ public class SimulationField implements Runnable{
 						
 					}else{
 					
-						c = new Color(  Color.HSBtoRGB((float)mesh[i] * 20.0f, (float)0.8, (float)0.8) );
+						c = new Color(  Color.HSBtoRGB((float)mesh[i] * 100.0f, (float)0.8, (float)0.8) );
 						
 					}
 					
@@ -247,42 +264,16 @@ public class SimulationField implements Runnable{
 					g.fillRect((int)Math.ceil(width * (i%xcount)), (int)Math.ceil(height * (i/xcount)), (int)Math.ceil(width), (int)Math.ceil(height));
 					
 					
-				}else if(cell.getCellType() == CellType.CellTypeSolidCell)
-				{
-					
-					g.setColor(Color.BLACK);
-					g.fillRect((int)Math.ceil(width * (i%xcount)), (int)Math.ceil(height * (i/xcount)), (int)Math.ceil(width), (int)Math.ceil(height));
-					
-				}else if(cell.getCellType() == CellType.CellTypeGeneratorCell)
-				{
-					
-					circle_color =  Color.MAGENTA ;
-					g.setColor(circle_color);
-
-					circle_left = (int)Math.ceil(width * (i%xcount)) - 10;
-					circle_top = (int)Math.ceil(height * (i/xcount)) - 10;
-					
-
-				}else if(cell.getCellType() == CellType.CellTypeBeyondEdgeCell)
-				{
-					
-					g.setColor(Color.ORANGE);
-					g.fillRect((int)Math.ceil(width * (i%xcount)), (int)Math.ceil(height * (i/xcount)), (int)Math.ceil(width), (int)Math.ceil(height));
-		
-
 				}
-				i++;
-
-			}
 			*/
 			
 			if (scopeCanvas != null) {
 				
-				/*
+				
 				int xCellCoordinate = (int) Math.floor(sensorX_Coordinate / xPixelCellRatio);
 				int yCellCoordinate = (int) Math.floor(sensorY_Coordinate / yPixelCellRatio);
 				int cellNumber = (yCellCoordinate * ycount) + xCellCoordinate;
-				double valueAtSensor = field.get(cellNumber).getDisplacement(0);
+				double valueAtSensor = mesh[cellNumber];
 				Graphics gs = scopeCanvas.getGraphics();
 				int y = (int) ((scopeCanvas.getHeight()/2.0) - valueAtSensor*60);
 				Color cs = Color.red;
@@ -294,11 +285,11 @@ public class SimulationField implements Runnable{
 				gs.setColor(cs);
 				gs.fillRect(98, y, 2, 2);
 				
-				g.setColor(Color.ORANGE);
-				g.drawOval(sensorX_Coordinate - 5, sensorY_Coordinate - 5, 10, 10);
+				//g.setColor(Color.ORANGE);
+				//g.drawOval(sensorX_Coordinate - 5, sensorY_Coordinate - 5, 10, 10);
 				
 				sensorRecorder.saveValue(valueAtSensor);
-				*/
+				
 			}
 			
 			memoryImageSource.newPixels();
@@ -314,6 +305,12 @@ public class SimulationField implements Runnable{
 	
 	public void step()
 	{
+		updateMesh();
+		updateCanvas();
+		
+	}
+	
+	public void updateMesh(){
 		
 		float north;
 		float south;
@@ -324,7 +321,8 @@ public class SimulationField implements Runnable{
 		int n;
 		
 		//this is just test source 
-		mesh[11100] = (float) ( 1.2f * Math.sin(stepCount / 100.0));
+		//mesh[11100] = (float) ( 2.2f * Math.sin(stepCount / 600.0));
+		//mesh[21100] = (float) ( 1.2f );
 		
 		for(int y = 1; y < ycount -1; y++){
 			
@@ -335,26 +333,31 @@ public class SimulationField implements Runnable{
 			
 				n = x + yOffset;
 				
+				//falls nachbarelement ein wand element ist 
 				north = walls[n - xcount] ? 0 : mesh[n - xcount];
 				south = walls[n + xcount] ? 0 : mesh[n + xcount];
 				west = walls[n -1] ? 0 : mesh[n - 1];
 				east = walls[n +1] ? 0 : mesh[n + 1];
 				
+				//falls hauptelement selber ein wand element ist 
 				center = walls[n] ? 0 : mesh[n];
 				
-				north = boarder[n - xcount] ? oldMesh[n] : north;
-				south = boarder[n + xcount] ? oldMesh[n] : south;
-				west = boarder[n -1] ? oldMesh[n] : west;
-				east = boarder[n +1] ? oldMesh[n] : east;
+				//falls nachbarelement ein rand element ist 
+				north = boarder[n - xcount] ? ((mesh[n] - mesh[n + xcount])*spaceH) + mesh[n] : north;
+				south = boarder[n + xcount] ? ((mesh[n] - mesh[n - xcount])*spaceH) + mesh[n] : south;
+				west = boarder[n -1] ? ((mesh[n] - mesh[n +1])*spaceH) + mesh[n] : west;
+				east = boarder[n +1] ? ((mesh[n] - mesh[n -1])*spaceH) + mesh[n] : east;
 				
+				center = generators[n] ? generatorFunction() : center;
 				
-				newMesh[n] = cSquared*(north+south+east+west - (4 * center))  + 2*center - oldMesh[n];
+				newMesh[n] = (2.0f*center) - oldMesh[n] + cSquared*( north+south+east+west - (4.0f * center) )  ;
+				
 				oldMesh[n] = mesh[n];
 				
 			}
 		}
 		
-		oldMesh = mesh;
+		
 		mesh = newMesh;
 		stepCount++;
 		
@@ -385,14 +388,14 @@ public class SimulationField implements Runnable{
 	{
 		while (runningSim) 
 		{
-			step();
+			updateMesh();
 			if (refreshGraphicAfterSteps < 1) {
 				
 				updateCanvas();
 
 				
 
-				refreshGraphicAfterSteps = 20;
+				refreshGraphicAfterSteps = 35;
 				
 			}else{
 				refreshGraphicAfterSteps = refreshGraphicAfterSteps - 1;
@@ -503,7 +506,21 @@ public class SimulationField implements Runnable{
 			sensorRecorder.close();
 		}
 		
+	}
+	
+	public float generatorFunction(){
 		
+		float nextValue = (float) (pinkNoiseGenerator.nextValue() * 2);
+		/*
+		nextValue = Math.sin( time) * 2;
+		time = time + (480 * 2 * Math.PI * delegate.getTimeH());
+		if(time > 2 * Math.PI)
+		{
+			time = -1 * 2 * Math.PI;
+		}
+		*/
+		
+		return nextValue;
 	}
 	
 }
