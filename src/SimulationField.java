@@ -346,7 +346,7 @@ public class SimulationField implements Runnable{
 					east = walls[n +1] ? 0 : mesh[n + 1];
 
 					//falls hauptelement selber ein wand element ist 
-					center = walls[n] ? 0 : mesh[n];
+					center =  mesh[n];
 
 
 					//falls nachbarelement ein rand element ist
@@ -358,12 +358,19 @@ public class SimulationField implements Runnable{
 
 					center = generators[n] ? generatorFunction() : center;
 
-					//laplacian = (north + south + east + west - (4.0f * center) ) / ( spaceH * spaceH );
-					//newMesh[n] = (2.0f*center) - oldMesh[n] + cSquared*laplacian*(timeH* timeH)   ;
-
-					newMesh[n] = (2 - 4*(r*r))*center + r*r*(north + south) + r*r*(east + west) - oldMesh[n];
+					laplacian = (north + south + east + west - (4.0f * center) ) / ( spaceH * spaceH );
 					
+					newMesh[n] = (2.0f*center) - oldMesh[n] + cSquared*laplacian*(timeH* timeH)   ;
 
+					//newMesh[n] = (2 - 4*(r*r))*center + r*r*(north + south) + r*r*(east + west) - oldMesh[n];
+					
+					float xnewMesh = (2 - 4*(r*r))*center + r*r*(north + south) + r*r*(east + west) - oldMesh[n];
+
+					if (xnewMesh != newMesh[n]) {
+						//System.out.println("not equal newMesh: " + newMesh[n] + " xnewMesh:"+ xnewMesh);
+					}
+					
+					
 				}
 
 			}
