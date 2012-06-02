@@ -15,41 +15,42 @@ import java.io.Writer;
 import java.util.ArrayList;
 
 public class SimulationField implements Runnable{
-	
+
 	float cSquared;
 	int stepCount;
-	
+
 	private Thread runner;
-	private Boolean runningSim;
-	
+	private Boolean runningSim = false;
+
 	float oldMesh[];
 	float mesh[];
 	float newMesh[];
 	boolean walls[];
 	boolean boarder[];
 	boolean generators[];
-	
+
 	private MemoryImageSource memoryImageSource;
 	private int pixelBuffer[];
 	private int refreshGraphicAfterSteps = 0;
 	private int resolution;
-	
+	private Image image;
+
 	private int xcount;
 	private int ycount;
 	private int cellCount;
 	private int pixelCount;
-	
-	
+
+
 	private Canvas canvasField;
 	private float xPixelCellRatio;
 	private float yPixelCellRatio;
-	
+
 	private Canvas scopeCanvas;
-	
+
 	private float timeH;
 	private float spaceH;
 	private float time;
-	
+
 	private int generator_x_coord;
 	private int generator_y_coord;
 	private Boolean generator;
@@ -57,318 +58,323 @@ public class SimulationField implements Runnable{
 	private Boolean sensorActive = false;
 	private int sensorX_Coordinate;
 	private int sensorY_Coordinate;
-	
+
 	private SensorRecorder sensorRecorder;
 	PinkNoise pinkNoiseGenerator;
-	
+
 	public void createNewField(int sizex_cm, int sizey_cm, int resolution, float timeH)
 	{
+
+		if (runningSim) 
+		{
+
+			runningSim = false;
+		}
+
 		this.resolution = resolution;
 		this.timeH = timeH;
-		
-		spaceH = (float) (sizex_cm / ( 100.0 * resolution));
-		
+
+		spaceH = (float) (sizex_cm / ( 100.0f * resolution));
+
 		xcount = sizex_cm * resolution;
 		ycount = sizey_cm * resolution;
-		
+
 		cellCount = xcount * ycount;
-		
+
 		mesh = new float[cellCount];
 		newMesh = new float[cellCount];
+		oldMesh = new float[cellCount];
 		walls = new boolean[cellCount];
 		boarder = new boolean[cellCount];
-		oldMesh = new float[cellCount];
+
 		generators = new boolean[cellCount];
-		
-		pixelBuffer = new int[cellCount];
-		memoryImageSource = new MemoryImageSource(xcount, ycount, pixelBuffer, 0, xcount);
-		memoryImageSource.setAnimated(true);
-		
-		runningSim = false;
-		
+
+
 		for (int x = 0; x < xcount; x++)
 		{
-		    for (int y = 0; y < ycount; y++) 
-		    {
-		    	int cell = x+xcount*y;
+			for (int y = 0; y < ycount; y++) 
+			{
+				int cell = x+xcount*y;
 
-		    	if (x == 0 || x == xcount-1) 
-		    	{
-		    		boarder[cell] = true;
-		    	}
-		    
-		    	if (y == 0 || y == ycount-1)
-		    	{
-		    		boarder[cell] = true;
-		    	}
-		    }
-	    }
+				if (x == 0 || x == xcount-1) 
+				{
+					boarder[cell] = true;
+				}
+
+				if (y == 0 || y == ycount-1)
+				{
+					boarder[cell] = true;
+				}
+
+				mesh[cell] = 0f;
+				oldMesh[cell] = 0f;
+			}
+		}
+
+
 		
 
-		cSquared = (float) (343.0 * 343.0 * (timeH * timeH) / (spaceH * spaceH));
-		
-	
+
 		if ((340*timeH/spaceH) > 0.7071) {
 			System.out.println("time step is too large");
 		}
-		
+
 		pinkNoiseGenerator = new PinkNoise();
-		
+
 	}
 
-	
+
 	public void attatchCanvasElement(Canvas canvas)
 	{
 		this.canvasField = canvas;
 		xPixelCellRatio = this.canvasField.getWidth() / xcount;
 		yPixelCellRatio = this.canvasField.getHeight() / ycount;
 		pixelCount = canvas.getWidth() * canvas.getHeight();
-		
+
+		pixelBuffer = new int[cellCount];
+		memoryImageSource = new MemoryImageSource(xcount, ycount, pixelBuffer, 0, xcount);
+		image = canvasField.createImage(memoryImageSource);
+		canvasField.getGraphics().drawImage(image, 0, 0, 360, 360, null);
+		memoryImageSource.setAnimated(true);
+
 	}
-	
+
 	public void mouseClickInField(int x, int y)
 	{
 		//System.out.println("click x:" + x + " y:" + y);
-		
+
 		int xCellCoordinate = (int) Math.floor(x / xPixelCellRatio);
 		int yCellCoordinate = (int) Math.floor(y / yPixelCellRatio);
-		
+
 		int cellNumber = (yCellCoordinate * ycount) + xCellCoordinate;
-		mesh[cellNumber] = 10.0f;
-		
-		
+		mesh[cellNumber] = -200.0f;
+		oldMesh[cellNumber] = -200.0f;
+
+
 		updateCanvas();
 	}
-	
+
 	public void mouseClickInFieldWithCellType(int x, int y, CellType type)
 	{
 		//System.out.println("click x:" + x + " y:" + y);
-		
+
 		int xCellCoordinate = (int) Math.floor(x / xPixelCellRatio);
 		int yCellCoordinate = (int) Math.floor(y / yPixelCellRatio);
-		
+
 		int cellNumber = (yCellCoordinate * ycount) + xCellCoordinate;
 		System.out.println("zelle nummer:" + cellNumber);
-		
+
 		if (type == CellType.CellTypeGeneratorCell) {
-			
+
 			generators[cellNumber] = true;
-			
+
 		}
-		
+
 		updateCanvas();
 	}
-	
+
 	public void mouseClickPositionSensor(int x, int y)
 	{
 		//System.out.println("click x:" + x + " y:" + y);
-		
+
 		sensorActive = true;
 		sensorX_Coordinate = x;
 		sensorY_Coordinate = y;
 
 		updateCanvas();
 	}
-	
 
-	
+
+
 	public void mouseClickInFieldCreateRohr(int startX, int startY, int endX, int endY)
 	{
 		//System.out.println("click x:" + x + " y:" + y);
-		
+
 		endX = (int) Math.floor(endX / xPixelCellRatio);
 		endY = (int) Math.floor(endY / yPixelCellRatio);
-		
+
 		startX =(int)Math.floor(startX / xPixelCellRatio);
 		startY =(int)Math.floor(startY / yPixelCellRatio);
 
-			
-			for (int i = (startY * ycount) + startX; i < (startY * ycount) + endX; i++) {
-				
-				walls[i] = true;
-			}
-			
-			for (int i = (endY * ycount) + startX; i <(endY * ycount) + endX; i++) {
-				
-				walls[i] = true;
-				
-			}
-			
+
+		for (int i = (startY * ycount) + startX; i < (startY * ycount) + endX; i++) {
+
+			walls[i] = true;
+		}
+
+		for (int i = (endY * ycount) + startX; i <(endY * ycount) + endX; i++) {
+
+			walls[i] = true;
+
+		}
+
 
 		updateCanvas();
 	}
-	
+
 	public void mouseClickInFieldCreateNil(int startX, int startY, int endX, int endY)
 	{
 		//System.out.println("click x:" + x + " y:" + y);
-		
+
 		endX = (int) Math.floor(endX / xPixelCellRatio);
 		endY = (int) Math.floor(endY / yPixelCellRatio);
-		
+
 		startX =(int)Math.floor(startX / xPixelCellRatio);
 		startY =(int)Math.floor(startY / yPixelCellRatio);
 		for (int j = startY; j < endY + 1;j++){
-		for (int i = (j * ycount) + startX; i < (j * ycount) + endX; i++) {
-			
-			
-			
+			for (int i = (j * ycount) + startX; i < (j * ycount) + endX; i++) {
+
+
+
+			}
 		}
-		}
-		
+
 		updateCanvas();
 	}
-	
+
 	public void updateCanvas()
 	{
 
 
-		
-			int circle_left = 0;
-			int circle_top = 0;
-			Color circle_color = Color.red;
-			Color c = Color.MAGENTA;
-			
 
-			
-			for (int i = 0; i < mesh.length; i++){
-			
-					
-					if(boarder[i]){
-					
-						c = Color.GRAY;
-						
-					}else if(walls[i]){
-						
-						c = Color.BLACK;
-						
-					}else{
-					
-						c = new Color(  Color.HSBtoRGB((float)(mesh[i]*52f) +1.8f, (float)0.8, (float)0.8) );
-						
-					}
-					
-					
-					pixelBuffer[i] = c.getRGB();
-				
+		int circle_left = 0;
+		int circle_top = 0;
+		Color circle_color = Color.red;
+		Color c = Color.MAGENTA;
+
+
+
+		for (int i = 0; i < mesh.length; i++){
+
+
+			if(boarder[i]){
+
+				c = Color.GRAY;
+
+			}else if(walls[i]){
+
+				c = Color.BLACK;
+
+			}else{
+
+				c = new Color(  Color.HSBtoRGB((float)(mesh[i]*2f) +1.8f, (float)0.8, (float)0.8) );
+
 			}
-			
-			
-			
-			
-			/*
-			for (Cell cell : field) {
-			
-				if (cell.getCellType() == CellType.CellTypeSimulationCell ) {
-					
-					c = new Color(  Color.HSBtoRGB((float)(cell.getDisplacement(0.0) + 1.8), (float)0.8, (float)0.8) );
-					g.setColor(c);
-					g.fillRect((int)Math.ceil(width * (i%xcount)), (int)Math.ceil(height * (i/xcount)), (int)Math.ceil(width), (int)Math.ceil(height));
-					
-					
-				}
-			*/
-			
-			if (scopeCanvas != null) {
-				
-				
-				int xCellCoordinate = (int) Math.floor(sensorX_Coordinate / xPixelCellRatio);
-				int yCellCoordinate = (int) Math.floor(sensorY_Coordinate / yPixelCellRatio);
-				int cellNumber = (yCellCoordinate * ycount) + xCellCoordinate;
-				double valueAtSensor = mesh[cellNumber];
-				Graphics gs = scopeCanvas.getGraphics();
-				int y = (int) ((scopeCanvas.getHeight()/2.0) - valueAtSensor*60);
-				Color cs = Color.red;
-				gs.setColor(Color.BLACK);
-				gs.copyArea(0, 0, 100, 100, -1, 0);
-				gs.fillRect(99, 0, 1, 99);
-				
-				//System.out.println("pressure at sensor:" +y);
-				gs.setColor(cs);
-				gs.fillRect(98, y, 2, 2);
-				
-				//g.setColor(Color.ORANGE);
-				//g.drawOval(sensorX_Coordinate - 5, sensorY_Coordinate - 5, 10, 10);
-				
-				sensorRecorder.saveValue(valueAtSensor);
-				
-			}
-			
-			memoryImageSource.newPixels();
-			memoryImageSource.setAnimated(true);
-			memoryImageSource.setFullBufferUpdates(true);
-			
-			canvasField.getGraphics().drawImage(canvasField.createImage(memoryImageSource), 0, 0, 360, 360, null);
-		
+
+
+			pixelBuffer[i] = c.getRGB();
+
+		}
+
+
+
+
+		if (scopeCanvas != null) {
+
+
+			int xCellCoordinate = (int) Math.floor(sensorX_Coordinate / xPixelCellRatio);
+			int yCellCoordinate = (int) Math.floor(sensorY_Coordinate / yPixelCellRatio);
+			int cellNumber = (yCellCoordinate * ycount) + xCellCoordinate;
+			double valueAtSensor = mesh[cellNumber];
+			Graphics gs = scopeCanvas.getGraphics();
+			int y = (int) ((scopeCanvas.getHeight()/2.0) - valueAtSensor*60);
+			Color cs = Color.red;
+			gs.setColor(Color.BLACK);
+			gs.copyArea(0, 0, 100, 100, -1, 0);
+			gs.fillRect(99, 0, 1, 99);
+
+			//System.out.println("pressure at sensor:" +y);
+			gs.setColor(cs);
+			gs.fillRect(98, y, 2, 2);
+
+			//g.setColor(Color.ORANGE);
+			//g.drawOval(sensorX_Coordinate - 5, sensorY_Coordinate - 5, 10, 10);
+
+			sensorRecorder.saveValue(valueAtSensor);
+
+		}
+
+		memoryImageSource.newPixels();
+		image = canvasField.createImage(memoryImageSource);
+		canvasField.getGraphics().drawImage(image, 0, 0, 360, 360, null);
+
+
+
+
 	}
-	
+
 	public void step()
 	{
 		updateMesh();
 		updateCanvas();
-		
+
 	}
-	
+
 	public void updateMesh(){
-		
+
 		float north;
 		float south;
 		float east;
 		float west;
 		float center;
-		
+
 		int n;
 		
-		//this is just test source 
-		//mesh[11100] = (float) ( 2.2f * Math.sin(stepCount / 600.0));
-		//mesh[21100] = (float) ( 1.2f );
+		float laplacian;
+		cSquared = (340.0f * 340.0f ) ;
 		
+		float r = 340.0f * timeH / spaceH;
+
 		for(int y = 1; y < ycount -1; y++){
-			
+
 			int yOffset = y * xcount;
-		
+
 			for (int x = 1; x < xcount -1; x++) 
 			{
-			
+
 				n = x + yOffset;
-				
-				//falls nachbarelement ein wand element ist 
-				north = walls[n - xcount] ? 0 : mesh[n - xcount];
-				south = walls[n + xcount] ? 0 : mesh[n + xcount];
-				west = walls[n -1] ? 0 : mesh[n - 1];
-				east = walls[n +1] ? 0 : mesh[n + 1];
-				
-				//falls hauptelement selber ein wand element ist 
-				center = walls[n] ? 0 : mesh[n];
-				
-				/*
-				//falls nachbarelement ein rand element ist 
-				north = boarder[n - xcount] ? ((mesh[n] - mesh[n + xcount])*spaceH) + mesh[n] : north;
-				south = boarder[n + xcount] ? ((mesh[n] - mesh[n - xcount])*spaceH) + mesh[n] : south;
-				west = boarder[n -1] ? ((mesh[n] - mesh[n +1])*spaceH) + mesh[n] : west;
-				east = boarder[n +1] ? ((mesh[n] - mesh[n -1])*spaceH) + mesh[n] : east;
-				*/
-				
-				//falls nachbarelement ein rand element ist 
-				north = boarder[n - xcount] ? oldMesh[n] : north;
-				south = boarder[n + xcount] ? oldMesh[n] : south;
-				west = boarder[n -1] ? oldMesh[n] : west;
-				east = boarder[n +1] ? oldMesh[n] : east;
-				
-				center = generators[n] ? generatorFunction() : center;
-				
-				newMesh[n] = (2.0f*center) - oldMesh[n] + cSquared*( north+south+east+west - (4.0f * center) )  ;
-				
-				oldMesh[n] = mesh[n];
-				
+
+				if (boarder[n] || walls[n]) {
+
+
+				}else{
+
+					//falls nachbarelement ein wand element ist 
+					north = walls[n - xcount ] ? 0 : mesh[n - xcount];
+					south = walls[n + xcount] ? 0 : mesh[n + xcount ];
+					west = walls[n -1] ? 0 : mesh[n - 1];
+					east = walls[n +1] ? 0 : mesh[n + 1];
+
+					//falls hauptelement selber ein wand element ist 
+					center = walls[n] ? 0 : mesh[n];
+
+
+					//falls nachbarelement ein rand element ist
+					//simple approximation
+					north = boarder[n - xcount] ? oldMesh[n] : north;
+					south = boarder[n + xcount] ? oldMesh[n] : south;
+					west = boarder[n -1] ? oldMesh[n] : west;
+					east = boarder[n +1] ? oldMesh[n] : east;
+
+					center = generators[n] ? generatorFunction() : center;
+
+					//laplacian = (north + south + east + west - (4.0f * center) ) / ( spaceH * spaceH );
+					//newMesh[n] = (2.0f*center) - oldMesh[n] + cSquared*laplacian*(timeH* timeH)   ;
+
+					newMesh[n] = (2 - 4*(r*r))*center + r*r*(north + south) + r*r*(east + west) - oldMesh[n];
+					
+
+				}
+
 			}
 		}
-		
-		
+
+		oldMesh = mesh;
 		mesh = newMesh;
 		stepCount++;
-		
+
 	}
-	
+
 	public void runSimulation()
 	{
 		if (runningSim) 
@@ -396,13 +402,11 @@ public class SimulationField implements Runnable{
 		{
 			updateMesh();
 			if (refreshGraphicAfterSteps < 1) {
-				
+
 				updateCanvas();
 
-				
+				refreshGraphicAfterSteps = 20;
 
-				refreshGraphicAfterSteps = 35;
-				
 			}else{
 				refreshGraphicAfterSteps = refreshGraphicAfterSteps - 1;
 			}
@@ -411,15 +415,12 @@ public class SimulationField implements Runnable{
 
 
 
-
-
-	
 	public void dumpToFile(File aFile)
 	{
-		
+
 		try {
 			BufferedWriter output = new BufferedWriter(new FileWriter(aFile));
-			
+
 			output.write("" + xcount + "," + ycount + "," + resolution + "," + timeH);
 			output.newLine();
 			/*
@@ -427,50 +428,50 @@ public class SimulationField implements Runnable{
 				output.write( cell.getCellType().toString() + "," + cell.getDisplacement(0.0) );
 				output.newLine();
 			}
-			*/
-			
+			 */
+
 			output.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 	}
-	
+
 	public void readFromFile(File aFile)
 	{
 		String thisLine;
-		
+
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(aFile));
-			
+
 			//SimulationField simulationField = new SimulationField();
-			
+
 			String delim = "[,]";
 			String[] tokens = br.readLine().split(delim);
 			String x = tokens[0];
 			String y = tokens[1];
 			String res = tokens[2];
 			String tH = tokens[3];
-			
+
 			createNewField(Integer.parseInt(x) / Integer.parseInt(res),
 					Integer.parseInt(y) / Integer.parseInt(res), 
 					Integer.parseInt(res), 
 					Float.parseFloat(tH));
-			
+
 			int i = 0;
 			Cell cell;
 			/*
 			while ((thisLine = br.readLine()) != null && i < field.size()) { 
-      
+
 		         cell = field.get(i);
-		         
+
 		         tokens = thisLine.split(delim);
-		         
+
 		         if (tokens.length < 1) {
 					return;
 				}
-		         
+
 		         if (tokens[0].equalsIgnoreCase("CellTypeSimulationCell")) {
 					cell.setDisplacement(Double.parseDouble(tokens[1]));
 				 }else if (tokens[0].equalsIgnoreCase("CellTypeSolidCell")) {
@@ -480,13 +481,13 @@ public class SimulationField implements Runnable{
 				}else if (tokens[0].equalsIgnoreCase("CellTypeBeyondEdgeCell")) {
 					cell.setCellType(CellType.CellTypeBeyondEdgeCell);
 				}
-		         
+
 		         i++;
-		         
+
 		       } // end while 
-			*/
+			 */
 			br.close();
-			
+
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -496,7 +497,7 @@ public class SimulationField implements Runnable{
 		}
 
 	}
-	
+
 	public Canvas getScopeCanvas() {
 		return scopeCanvas;
 	}
@@ -505,28 +506,28 @@ public class SimulationField implements Runnable{
 	public void setScopeCanvas(Canvas scopeCanvas) {
 		this.scopeCanvas = scopeCanvas;
 	}
-	
+
 	public void shutDownSimulation(){
-		
+
 		if (sensorRecorder != null) {
 			sensorRecorder.close();
 		}
-		
+
 	}
-	
+
 	public float generatorFunction(){
-		
+
 		//float nextValue = (float) (pinkNoiseGenerator.nextValue() * 2);
-		
-		float nextValue = (float) (Math.sin( time) * 2);
+
+		float nextValue = (float) (Math.sin( time) * 200);
 		time = (float) (time + (480 * 2 * Math.PI * timeH));
 		if(time > 2 * Math.PI)
 		{
 			time = (float) (-1 * 2 * Math.PI);
 		}
-		
-		
+
+
 		return nextValue;
 	}
-	
+
 }
