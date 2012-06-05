@@ -28,6 +28,9 @@ import javax.swing.JRadioButton;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import javax.swing.JSlider;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeEvent;
 
 
 public class MainWindow {
@@ -56,6 +59,7 @@ public class MainWindow {
 	private int drawStartXCoordinate;
 	private int drawStartYCoordinate;
 	private JRadioButton drawMode_disturb;
+	private JSlider slider_1;
 
 	/**
 	 * Launch the application.
@@ -95,7 +99,7 @@ public class MainWindow {
 				setUpSimulationField();
 			}
 		});
-		frame.setBounds(100, 100, 546, 504);
+		frame.setBounds(100, 100, 546, 521);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
@@ -138,7 +142,7 @@ public class MainWindow {
 
 		});
 		runButton.setBackground(Color.GREEN);
-		runButton.setBounds(6, 447, 117, 29);
+		runButton.setBounds(6, 464, 117, 29);
 		frame.getContentPane().add(runButton);
 		
 		JButton btnSetupSim = new JButton("setup sim");
@@ -157,7 +161,7 @@ public class MainWindow {
 				stepSimulation();
 			}
 		});
-		btnStep.setBounds(6, 417, 117, 29);
+		btnStep.setBounds(6, 434, 117, 29);
 		frame.getContentPane().add(btnStep);
 		
 		widthField = new JTextField();
@@ -320,7 +324,7 @@ public class MainWindow {
 			}
 		});
 		btnSaveMesh.setBackground(Color.GREEN);
-		btnSaveMesh.setBounds(176, 447, 117, 29);
+		btnSaveMesh.setBounds(176, 464, 117, 29);
 		frame.getContentPane().add(btnSaveMesh);
 		
 		JButton btnLoadMesh = new JButton("load mesh");
@@ -340,7 +344,7 @@ public class MainWindow {
 			}
 		});
 		btnLoadMesh.setBackground(Color.GREEN);
-		btnLoadMesh.setBounds(176, 417, 117, 29);
+		btnLoadMesh.setBounds(176, 434, 117, 29);
 		frame.getContentPane().add(btnLoadMesh);
 		
 		JLabel lblTimeH = new JLabel("time h");
@@ -361,6 +365,40 @@ public class MainWindow {
 		scopeCanvas.setBackground(Color.BLACK);
 		scopeCanvas.setBounds(436, 376, 100, 100);
 		frame.getContentPane().add(scopeCanvas);
+		
+		final JSlider slider = new JSlider();
+		slider.addMouseMotionListener(new MouseMotionAdapter() {
+			@Override
+			public void mouseDragged(MouseEvent arg0) {
+				if (simulationField != null) {
+					simulationField.setFrequency(slider.getValue());
+				}
+				
+			}
+		});
+		
+		slider.setValue(400);
+		slider.setMinimum(1);
+		slider.setMaximum(800);
+		slider.setBounds(162, 376, 190, 29);
+		frame.getContentPane().add(slider);
+		
+		slider_1 = new JSlider();
+		slider_1.addMouseMotionListener(new MouseMotionAdapter() {
+			@Override
+			public void mouseDragged(MouseEvent e) {
+				
+				if (simulationField != null) {
+					simulationField.setSpeed(slider_1.getValue());
+				}
+				
+			}
+		});
+		slider_1.setValue(100);
+		slider_1.setMinimum(1);
+		slider_1.setMaximum(100);
+		slider_1.setBounds(162, 399, 190, 29);
+		frame.getContentPane().add(slider_1);
 		
 
 		
