@@ -334,7 +334,7 @@ public class SimulationField implements Runnable{
 		
 			for (int x = 1; x < xcount -1; x++) 
 			{
-			
+				float damping = 0.0008f;
 				n = x + yOffset;
 				
 				//falls nachbarelement ein wand element ist 
@@ -346,7 +346,8 @@ public class SimulationField implements Runnable{
 				//falls hauptelement selber ein wand element ist 
 				center = walls[n] ? 0 : mesh[n];
 				
-
+				
+				
 				
 				//falls nachbarelement ein rand element ist 
 				
@@ -357,15 +358,25 @@ public class SimulationField implements Runnable{
 				
 				center = boarder[n] ? (north + south + west + east)/4 : center;
 				
-				center = ((2.0f*center) - oldMesh[n] ) + cSquared*( north+south+east+west - (4.0f * center) )  ;
+				if (boarder[n - xcount] || boarder[n + xcount] || boarder[n -1] || boarder[n +1] ) {
+					//damping = 0.1f;
+				}
 				
 				
+				float dp = ( (north - south) + (west - east) ) / ( 2 * spaceH);
+				//System.out.println("p':" + dp);
+				//center = ((2.0f*center) - oldMesh[n] ) + cSquared*( north+south+east+west - (4.0f * center) ) - (dp) ;
 				
-				center = center - center*0.0005f;
+				center =  ((2.0f*center) - oldMesh[n] ) + cSquared*( north+south+east+west - (4.0f * center) )  ;
+				
+				
+				center = center - center*damping;
 				newMesh[n] = generators[n] ? generatorFunction() : center;
 				
 				
 				oldMesh[n] = mesh[n];
+				
+				
 				
 			}
 		}
