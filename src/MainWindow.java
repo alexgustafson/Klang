@@ -621,6 +621,16 @@ public class MainWindow {
 			
 			g.setColor(c);
 			g.drawRect(drawStartXCoordinate, drawStartYCoordinate, event.getX() - drawStartXCoordinate, event.getY() - drawStartYCoordinate);
+			
+			float length =  (event.getX() - drawStartXCoordinate)*Float.parseFloat(widthField.getText())/simulationFieldCanvas.getWidth();
+			
+			rohrLengthLabel.setText(Float.toString( length   ));
+			
+			
+			float frequency = chckbxGeschlossen.isSelected() ?  343.0f /  (4*length/100 )  :  343.0f /  (2*length/100 )  ;
+			rohrFundamentalFreq.setText(Float.toString( frequency ));
+			
+			
 		}
 		
 	}

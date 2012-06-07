@@ -37,9 +37,7 @@ public class SimulationField implements Runnable{
 	boolean boarder[];
 	boolean generators[];
 	
-	private MemoryImageSource memoryImageSource;
 	private BufferedImage dbimage;
-	private int[] pixels;
 	private int pixelBuffer[];
 	private int refreshGraphicAfterSteps = 0;
 	private int resolution;
@@ -172,7 +170,6 @@ public class SimulationField implements Runnable{
 	
 	public void mouseClickInFieldWithCellType(int x, int y, CellType type)
 	{
-		//System.out.println("click x:" + x + " y:" + y);
 		
 		int xCellCoordinate = (int) Math.floor(x / xPixelCellRatio);
 		int yCellCoordinate = (int) Math.floor(y / yPixelCellRatio);
@@ -188,6 +185,10 @@ public class SimulationField implements Runnable{
 			
 			walls[cellNumber] = true;
 			
+		}else if(type == CellType.CellTypeSimulationCell){
+			
+			walls[cellNumber] = false;
+			
 		}
 		
 		
@@ -196,12 +197,10 @@ public class SimulationField implements Runnable{
 	public void mouseClickPositionSensor(int x, int y)
 	{
 		
-		
 		sensorActive = true;
 		sensorX_Coordinate = x;
 		sensorY_Coordinate = y;
 
-		
 	}
 	
 
