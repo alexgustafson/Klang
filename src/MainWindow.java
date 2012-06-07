@@ -62,6 +62,10 @@ public class MainWindow {
 	private int drawStartYCoordinate;
 	private JRadioButton drawMode_disturb;
 	private JSlider slider_1;
+	
+	private JSlider frequencySlider ;
+	private JSlider frequencyFineTuneSlider;
+	private JTextField frequencyTextField;
 
 	/**
 	 * Launch the application.
@@ -101,7 +105,7 @@ public class MainWindow {
 				setUpSimulationField();
 			}
 		});
-		frame.setBounds(100, 100, 787, 521);
+		frame.setBounds(100, 100, 787, 554);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
@@ -352,7 +356,7 @@ public class MainWindow {
 			}
 		});
 		btnSaveMesh.setBackground(Color.GREEN);
-		btnSaveMesh.setBounds(176, 464, 117, 29);
+		btnSaveMesh.setBounds(664, 497, 117, 29);
 		frame.getContentPane().add(btnSaveMesh);
 		
 		JButton btnLoadMesh = new JButton("load mesh");
@@ -372,7 +376,7 @@ public class MainWindow {
 			}
 		});
 		btnLoadMesh.setBackground(Color.GREEN);
-		btnLoadMesh.setBounds(176, 434, 117, 29);
+		btnLoadMesh.setBounds(548, 497, 117, 29);
 		frame.getContentPane().add(btnLoadMesh);
 		
 		JLabel lblTimeH = new JLabel("time h");
@@ -394,25 +398,28 @@ public class MainWindow {
 		scopeCanvas.setBounds(676, 376, 100, 100);
 		frame.getContentPane().add(scopeCanvas);
 		
-		final JSlider slider = new JSlider();
-		slider.addMouseMotionListener(new MouseMotionAdapter() {
+		frequencySlider = new JSlider();
+		frequencySlider.addMouseMotionListener(new MouseMotionAdapter() {
 			@Override
 			public void mouseDragged(MouseEvent arg0) {
 				if (simulationField != null) {
-					simulationField.setFrequency(slider.getValue());
+					simulationField.setFrequency(frequencySlider.getValue() - ( 50 - frequencyFineTuneSlider.getValue())/10f);
+					frequencyTextField.setText(Float.toString(frequencySlider.getValue() - ( 50 - frequencyFineTuneSlider.getValue())/10f));
 				}
 				
 			}
 		});
 		
-		slider.setValue(400);
-		slider.setMinimum(1);
-		slider.setMaximum(800);
-		slider.setBounds(162, 376, 246, 29);
-		frame.getContentPane().add(slider);
+		frequencySlider.setValue(400);
+		frequencySlider.setMinimum(1);
+		frequencySlider.setMaximum(800);
+		frequencySlider.setBounds(176, 389, 246, 29);
+		frame.getContentPane().add(frequencySlider);
 		
 		slider_1 = new JSlider();
 		slider_1.addMouseMotionListener(new MouseMotionAdapter() {
+			
+
 			@Override
 			public void mouseDragged(MouseEvent e) {
 				
@@ -425,8 +432,40 @@ public class MainWindow {
 		slider_1.setValue(100);
 		slider_1.setMinimum(1);
 		slider_1.setMaximum(100);
-		slider_1.setBounds(162, 399, 246, 29);
+		slider_1.setBounds(419, 389, 246, 29);
 		frame.getContentPane().add(slider_1);
+		
+		JLabel lblNewLabel_2 = new JLabel("Generator Frequency Hz");
+		lblNewLabel_2.setBounds(186, 376, 150, 16);
+		frame.getContentPane().add(lblNewLabel_2);
+		
+		frequencyFineTuneSlider = new JSlider();
+		frequencyFineTuneSlider.addMouseMotionListener(new MouseMotionAdapter() {
+			@Override
+			public void mouseDragged(MouseEvent arg0) {
+				
+				if (simulationField != null) {
+					simulationField.setFrequency(frequencySlider.getValue() - ( 50 - frequencyFineTuneSlider.getValue())/10f);
+					frequencyTextField.setText(Float.toString(frequencySlider.getValue() - ( 50 - frequencyFineTuneSlider.getValue())/10f));
+				}
+				
+			}
+		});
+		frequencyFineTuneSlider.setBounds(176, 434, 246, 29);
+		frame.getContentPane().add(frequencyFineTuneSlider);
+		
+		JLabel lblSimulationSpeed = new JLabel("Simulation Speed");
+		lblSimulationSpeed.setBounds(431, 376, 170, 16);
+		frame.getContentPane().add(lblSimulationSpeed);
+		
+		frequencyTextField = new JTextField();
+		frequencyTextField.setBounds(291, 475, 117, 28);
+		frame.getContentPane().add(frequencyTextField);
+		frequencyTextField.setColumns(10);
+		
+		JLabel lblFine = new JLabel("Fine");
+		lblFine.setBounds(186, 421, 150, 16);
+		frame.getContentPane().add(lblFine);
 		
 
 		

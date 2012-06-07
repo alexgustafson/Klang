@@ -113,13 +113,13 @@ public class SimulationField implements Runnable{
 		    	if (x < boarderWidth || x > xcount- boarderWidth ) 
 		    	{
 		    		boarder[cell] = true;
-		    		damping[cell] = x < boarderWidth ? (float)(variableDampingCoeff/(x + 1f)):(float)(variableDampingCoeff/(xcount - (x - 1f)));
+		    		damping[cell] = x < boarderWidth ? (float)(dampingValue*(boarderWidth - x)):(dampingValue*(boarderWidth - (xcount -  x)));
 		    	}
 		    
 		    	if (y < boarderWidth || y > ycount- boarderWidth)
 		    	{
 		    		boarder[cell] = true;
-		    		damping[cell] = y < boarderWidth ? (float)(variableDampingCoeff/(y + 1f)):(float)(variableDampingCoeff/(ycount - (y - 1f)));
+		    		damping[cell] = y < boarderWidth ? (float)(dampingValue*(boarderWidth - y)):(dampingValue*(boarderWidth - (ycount -  y)));
 		    	}
 		    }
 	    }
@@ -166,7 +166,7 @@ public class SimulationField implements Runnable{
 		
 		System.out.println("cell:" + xCellCoordinate + " y:" + yCellCoordinate);
 		
-		//updateCanvas();
+		
 	}
 	
 	public void mouseClickInFieldWithCellType(int x, int y, CellType type)
@@ -183,27 +183,31 @@ public class SimulationField implements Runnable{
 			
 			generators[cellNumber] = true;
 			
+		}else if(type == CellType.CellTypeSolidCell){
+			
+			walls[cellNumber] = true;
+			
 		}
 		
-		//updateCanvas();
+		
 	}
 	
 	public void mouseClickPositionSensor(int x, int y)
 	{
-		//System.out.println("click x:" + x + " y:" + y);
+		
 		
 		sensorActive = true;
 		sensorX_Coordinate = x;
 		sensorY_Coordinate = y;
 
-		//updateCanvas();
+		
 	}
 	
 
 	
 	public void mouseClickInFieldCreateRohr(int startX, int startY, int endX, int endY)
 	{
-		//System.out.println("click x:" + x + " y:" + y);
+		
 		
 		endX = (int) Math.floor(endX / xPixelCellRatio);
 		endY = (int) Math.floor(endY / yPixelCellRatio);
@@ -224,7 +228,7 @@ public class SimulationField implements Runnable{
 			}
 			
 
-		//updateCanvas();
+		
 	}
 	
 	public void mouseClickInFieldCreateNil(int startX, int startY, int endX, int endY)
@@ -344,8 +348,13 @@ public class SimulationField implements Runnable{
 		
 			for (int x = 1; x < xcount -1; x++) 
 			{
-
+				
 				n = x + yOffset;
+				
+				if(!walls[n]){
+
+					center = mesh[n];
+				
 				
 				//falls nachbarelement ein wand element ist 
 				north = walls[n - xcount] ? 0 : mesh[n - xcount];
@@ -353,17 +362,8 @@ public class SimulationField implements Runnable{
 				west = walls[n -1] ? 0 : mesh[n - 1];
 				east = walls[n +1] ? 0 : mesh[n + 1];
 				
-				//falls hauptelement selber ein wand element ist 
-				center = walls[n] ? 0 : mesh[n];
-				
-				//falls nachbarelement ein rand element ist 
-				/*
-				north = boarder[n - xcount] ? oldMesh[n] : north;
-				south = boarder[n + xcount] ? oldMesh[n] : south;
-				west = boarder[n -1] ? oldMesh[n] : west;
-				east = boarder[n +1] ? oldMesh[n] : east;
-				*/
-				//center = boarder[n] ? (north + south + west + east)/4 : center;
+
+
 				if (x == 1   ) 
 		    	{
 					west = oldMesh[n];
@@ -375,12 +375,12 @@ public class SimulationField implements Runnable{
 		    		south = oldMesh[n];
 		    	}
 		    
-				
 
 				center =  ((2.0f*center) - oldMesh[n] ) + cSquared*( north+south+east+west - (4.0f * center) )  ;
 				center = center - center*damping[n];
 				newMesh[n] = generators[n] ? generatorFunction() : center;
 				
+				}
 				
 				oldMesh[n] = mesh[n];
 				
@@ -562,39 +562,9 @@ public class SimulationField implements Runnable{
 		return nextValue;
 	}
 	
-	private BufferedImage toCompatibleImage(BufferedImage image)
-	{
-	        // obtain the current system graphical settings
-	        GraphicsConfiguration gfx_config = GraphicsEnvironment.
-	                getLocalGraphicsEnvironment().getDefaultScreenDevice().
-	                getDefaultConfiguration();
-
-	        /*
-	         * if image is already compatible and optimized for current system 
-	         * settings, simply return it
-	         */
-	        if (image.getColorModel().equals(gfx_config.getColorModel()))
-	                return image;
-
-	        // image is not optimized, so create a new image that is
-	        BufferedImage new_image = gfx_config.createCompatibleImage(
-	                        image.getWidth(), image.getHeight(), image.getTransparency());
-
-	        // get the graphics context of the new image to draw the old image on
-	        Graphics2D g2d = (Graphics2D) new_image.getGraphics();
-
-	        // actually draw the image and dispose of context no longer needed
-	        g2d.drawImage(image, 0, 0, null);
-	        g2d.dispose();
-
-	        // return the new optimized image
-	        return new_image; 
-	}
-
-
-	public void setFrequency(int value) {
+	public void setFrequency(float f) {
 	
-		frequency = (float)value;
+		frequency = (float)f;
 		
 	}
 
