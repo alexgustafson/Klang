@@ -296,7 +296,7 @@ public class SimulationField implements Runnable{
 						
 					}else{
 					
-						c = new Color(  Color.HSBtoRGB((float)(mesh[i]) +1.8f, (float)0.8, (float)0.8) );
+						c = new Color(  Color.HSBtoRGB((float)(mesh[i]/2) +1.8f, (float)0.8, (float)0.8) );
 						
 					}
 					
@@ -568,14 +568,12 @@ public class SimulationField implements Runnable{
 		
 		//float nextValue = (float) (pinkNoiseGenerator.nextValue() / 2f);
 		
-		float nextValue = (float) (Math.sin( time) * 2);
-		
-		time = (float) (time + (frequency * 2 * Math.PI * timeH));
-		if(time > 2 * Math.PI)
+		float nextValue = (float) (Math.sin( time * frequency * 2 * Math.PI ));
+		time = time + timeH;
+		if(time > 1f)
 		{
-			time = (float) (-1 * 2 * Math.PI);
+			time = 0f;
 		}
-		
 		return nextValue;
 	}
 	
