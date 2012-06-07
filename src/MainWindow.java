@@ -31,6 +31,8 @@ import java.awt.event.WindowEvent;
 import javax.swing.JSlider;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 
 public class MainWindow {
@@ -99,7 +101,7 @@ public class MainWindow {
 				setUpSimulationField();
 			}
 		});
-		frame.setBounds(100, 100, 546, 521);
+		frame.setBounds(100, 100, 787, 521);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
@@ -127,7 +129,7 @@ public class MainWindow {
 			}
 		});
 		simulationFieldCanvas.setBackground(Color.DARK_GRAY);
-		simulationFieldCanvas.setBounds(176, 10, 360, 360);
+		simulationFieldCanvas.setBounds(176, 10, 600, 360);
 		frame.getContentPane().add(simulationFieldCanvas);
 		
 		runButton = new JButton("run");
@@ -165,7 +167,23 @@ public class MainWindow {
 		frame.getContentPane().add(btnStep);
 		
 		widthField = new JTextField();
-		widthField.setText("36");
+
+		widthField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent arg0) {
+				
+				
+				
+			}
+			@Override
+			public void keyReleased(KeyEvent e) {
+				
+				if (widthField.getText() != "") {
+					heightField.setText( Integer.toString( (Integer.parseInt(widthField.getText()) * 36 / 60) ));
+				}
+			}
+		});
+		widthField.setText("60");
 		widthField.setBounds(83, 10, 87, 28);
 		frame.getContentPane().add(widthField);
 		widthField.setColumns(10);
@@ -179,6 +197,16 @@ public class MainWindow {
 		frame.getContentPane().add(lblHeight);
 		
 		heightField = new JTextField();
+		heightField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				
+				if (heightField.getText() != "") {
+					widthField.setText( Integer.toString( (Integer.parseInt(heightField.getText()) * 60 / 36) ));
+				}
+				
+			}
+		});
 		heightField.setText("36");
 		heightField.setColumns(10);
 		heightField.setBounds(83, 46, 87, 28);
@@ -363,7 +391,7 @@ public class MainWindow {
 		
 		scopeCanvas = new Canvas();
 		scopeCanvas.setBackground(Color.BLACK);
-		scopeCanvas.setBounds(436, 376, 100, 100);
+		scopeCanvas.setBounds(676, 376, 100, 100);
 		frame.getContentPane().add(scopeCanvas);
 		
 		final JSlider slider = new JSlider();
@@ -380,7 +408,7 @@ public class MainWindow {
 		slider.setValue(400);
 		slider.setMinimum(1);
 		slider.setMaximum(800);
-		slider.setBounds(162, 376, 190, 29);
+		slider.setBounds(162, 376, 246, 29);
 		frame.getContentPane().add(slider);
 		
 		slider_1 = new JSlider();
@@ -397,7 +425,7 @@ public class MainWindow {
 		slider_1.setValue(100);
 		slider_1.setMinimum(1);
 		slider_1.setMaximum(100);
-		slider_1.setBounds(162, 399, 190, 29);
+		slider_1.setBounds(162, 399, 246, 29);
 		frame.getContentPane().add(slider_1);
 		
 

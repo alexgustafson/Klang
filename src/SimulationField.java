@@ -32,6 +32,7 @@ public class SimulationField implements Runnable{
 	float oldMesh[];
 	float mesh[];
 	float newMesh[];
+	float damping[];
 	boolean walls[];
 	boolean boarder[];
 	boolean generators[];
@@ -71,6 +72,8 @@ public class SimulationField implements Runnable{
 	PinkNoise pinkNoiseGenerator;
 	float frequency;
 	private int speed;
+	float dampingValue = 0.004f;
+	int boarderWidth = 35;
 	
 	public void createNewField(int sizex_cm, int sizey_cm, int resolution, float timeH)
 	{
@@ -90,27 +93,33 @@ public class SimulationField implements Runnable{
 		boarder = new boolean[cellCount];
 		oldMesh = new float[cellCount];
 		generators = new boolean[cellCount];
+		damping = new float[cellCount];
 		
 		pixelBuffer = new int[cellCount];
-		memoryImageSource = new MemoryImageSource(xcount, ycount, pixelBuffer, 0, xcount);
-		memoryImageSource.setAnimated(true);
 		
 		runningSim = false;
+		
+		
+		float variableDampingCoeff = boarderWidth * dampingValue;
 		
 		for (int x = 0; x < xcount; x++)
 		{
 		    for (int y = 0; y < ycount; y++) 
 		    {
 		    	int cell = x+xcount*y;
+		    	
+		    	damping[cell] = dampingValue;
 
-		    	if (x == 0 || x == xcount-1 || x == 1 || x == xcount-2 ) 
+		    	if (x < boarderWidth || x > xcount- boarderWidth ) 
 		    	{
 		    		boarder[cell] = true;
+		    		damping[cell] = x < boarderWidth ? (float)(variableDampingCoeff/(x + 1f)):(float)(variableDampingCoeff/(xcount - (x - 1f)));
 		    	}
 		    
-		    	if (y == 0 || y == ycount-1 || y == 1 || y == ycount-2)
+		    	if (y < boarderWidth || y > ycount- boarderWidth)
 		    	{
 		    		boarder[cell] = true;
+		    		damping[cell] = y < boarderWidth ? (float)(variableDampingCoeff/(y + 1f)):(float)(variableDampingCoeff/(ycount - (y - 1f)));
 		    	}
 		    }
 	    }
@@ -134,20 +143,14 @@ public class SimulationField implements Runnable{
 		xPixelCellRatio = this.canvasField.getWidth() / xcount;
 		yPixelCellRatio = this.canvasField.getHeight() / ycount;
 		pixelCount = canvas.getWidth() * canvas.getHeight();
-		
-		memoryImageSource = new MemoryImageSource(xcount, ycount, pixelBuffer, 0,xcount);
-		memoryImageSource.setAnimated(true);
-		memoryImageSource.setFullBufferUpdates(true);
 		dbimage = new BufferedImage(xcount, ycount, BufferedImage.TYPE_INT_ARGB);
 		pixelBuffer = ((DataBufferInt) dbimage.getRaster().getDataBuffer()).getData();
-		
-
 		
 	}
 	
 	public void mouseClickInField(int x, int y)
 	{
-		//System.out.println("click x:" + x + " y:" + y);
+		System.out.println("click x:" + x + " y:" + y);
 		
 		int xCellCoordinate = (int) Math.floor(x / xPixelCellRatio);
 		int yCellCoordinate = (int) Math.floor(y / yPixelCellRatio);
@@ -155,6 +158,8 @@ public class SimulationField implements Runnable{
 		int cellNumber = (yCellCoordinate * ycount) + xCellCoordinate;
 		mesh[cellNumber] = 5.0f;
 		oldMesh[cellNumber] = 5.0f;
+		
+		System.out.println("cell:" + xCellCoordinate + " y:" + yCellCoordinate);
 		
 		//updateCanvas();
 	}
@@ -257,7 +262,7 @@ public class SimulationField implements Runnable{
 					
 					if(boarder[i]){
 					
-						c = Color.GRAY;
+						c = new Color(  Color.HSBtoRGB((float)(mesh[i]) +1.9f, (float)0.8, (float)0.8) );
 						
 					}else if(walls[i]){
 						
@@ -304,7 +309,7 @@ public class SimulationField implements Runnable{
 			
 
 			dbimage.setRGB(0, 0, xcount, ycount, pixelBuffer, 0, xcount);
-			g.drawImage(dbimage, 0, 0, 360,360,null);
+			g.drawImage(dbimage, 0, 0, canvasField.getWidth(),canvasField.getHeight(),null);
 			bs.show();
 		
 	}
@@ -334,7 +339,7 @@ public class SimulationField implements Runnable{
 		
 			for (int x = 1; x < xcount -1; x++) 
 			{
-				float damping = 0.0008f;
+
 				n = x + yOffset;
 				
 				//falls nachbarelement ein wand element ist 
@@ -346,31 +351,29 @@ public class SimulationField implements Runnable{
 				//falls hauptelement selber ein wand element ist 
 				center = walls[n] ? 0 : mesh[n];
 				
-				
-				
-				
 				//falls nachbarelement ein rand element ist 
-				
+				/*
 				north = boarder[n - xcount] ? oldMesh[n] : north;
 				south = boarder[n + xcount] ? oldMesh[n] : south;
 				west = boarder[n -1] ? oldMesh[n] : west;
 				east = boarder[n +1] ? oldMesh[n] : east;
+				*/
+				//center = boarder[n] ? (north + south + west + east)/4 : center;
+				if (x == 1   ) 
+		    	{
+					west = oldMesh[n];
+		    	}else if(x == xcount - 2){
+		    		east = oldMesh[n];
+		    	}else if(y == 1){
+		    		north = oldMesh[n];
+		    	}else if(y == ycount - 2){
+		    		south = oldMesh[n];
+		    	}
+		    
 				
-				center = boarder[n] ? (north + south + west + east)/4 : center;
-				
-				if (boarder[n - xcount] || boarder[n + xcount] || boarder[n -1] || boarder[n +1] ) {
-					//damping = 0.1f;
-				}
-				
-				
-				float dp = ( (north - south) + (west - east) ) / ( 2 * spaceH);
-				//System.out.println("p':" + dp);
-				//center = ((2.0f*center) - oldMesh[n] ) + cSquared*( north+south+east+west - (4.0f * center) ) - (dp) ;
-				
+
 				center =  ((2.0f*center) - oldMesh[n] ) + cSquared*( north+south+east+west - (4.0f * center) )  ;
-				
-				
-				center = center - center*damping;
+				center = center - center*damping[n];
 				newMesh[n] = generators[n] ? generatorFunction() : center;
 				
 				
