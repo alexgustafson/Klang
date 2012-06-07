@@ -72,7 +72,7 @@ public class SimulationField implements Runnable{
 	PinkNoise pinkNoiseGenerator;
 	float frequency;
 	private int speed;
-	float dampingValue = 0.004f;
+	float dampingValue = 0.001f;
 	int boarderWidth = 35;
 	
 	public void createNewField(int sizex_cm, int sizey_cm, int resolution, float timeH)
@@ -152,10 +152,15 @@ public class SimulationField implements Runnable{
 	{
 		System.out.println("click x:" + x + " y:" + y);
 		
-		int xCellCoordinate = (int) Math.floor(x / xPixelCellRatio);
-		int yCellCoordinate = (int) Math.floor(y / yPixelCellRatio);
+		float xfloat = (float)x;
+		float yfloat = (float)y;
+		float width = canvasField.getWidth();
+		float height = canvasField.getHeight();
 		
-		int cellNumber = (yCellCoordinate * ycount) + xCellCoordinate;
+		int xCellCoordinate = (int) (float)(xcount * (xfloat / width));
+		int yCellCoordinate = (int) (float)(ycount * (yfloat / height));
+		
+		int cellNumber = (yCellCoordinate * xcount) + xCellCoordinate;
 		mesh[cellNumber] = 5.0f;
 		oldMesh[cellNumber] = 5.0f;
 		
@@ -171,7 +176,7 @@ public class SimulationField implements Runnable{
 		int xCellCoordinate = (int) Math.floor(x / xPixelCellRatio);
 		int yCellCoordinate = (int) Math.floor(y / yPixelCellRatio);
 		
-		int cellNumber = (yCellCoordinate * ycount) + xCellCoordinate;
+		int cellNumber = (yCellCoordinate * xcount) + xCellCoordinate;
 		System.out.println("zelle nummer:" + cellNumber);
 		
 		if (type == CellType.CellTypeGeneratorCell) {
@@ -207,12 +212,12 @@ public class SimulationField implements Runnable{
 		startY =(int)Math.floor(startY / yPixelCellRatio);
 
 			
-			for (int i = (startY * ycount) + startX; i < (startY * ycount) + endX; i++) {
+			for (int i = (startY * xcount) + startX; i < (startY * xcount) + endX; i++) {
 				
 				walls[i] = true;
 			}
 			
-			for (int i = (endY * ycount) + startX; i <(endY * ycount) + endX; i++) {
+			for (int i = (endY * xcount) + startX; i <(endY * xcount) + endX; i++) {
 				
 				walls[i] = true;
 				
@@ -232,7 +237,7 @@ public class SimulationField implements Runnable{
 		startX =(int)Math.floor(startX / xPixelCellRatio);
 		startY =(int)Math.floor(startY / yPixelCellRatio);
 		for (int j = startY; j < endY + 1;j++){
-		for (int i = (j * ycount) + startX; i < (j * ycount) + endX; i++) {
+		for (int i = (j * xcount) + startX; i < (j * xcount) + endX; i++) {
 			
 			
 			
