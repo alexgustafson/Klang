@@ -33,6 +33,7 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import javax.swing.SwingConstants;
 
 
 public class MainWindow {
@@ -66,6 +67,12 @@ public class MainWindow {
 	private JSlider frequencySlider ;
 	private JSlider frequencyFineTuneSlider;
 	private JTextField frequencyTextField;
+	private JSlider slider;
+	private JLabel lblDamping;
+	private JLabel rohrLengthLabel;
+	private JLabel lblFreq;
+	private JLabel rohrFundamentalFreq;
+	private JCheckBox chckbxGeschlossen;
 
 	/**
 	 * Launch the application.
@@ -148,7 +155,7 @@ public class MainWindow {
 
 		});
 		runButton.setBackground(Color.GREEN);
-		runButton.setBounds(6, 464, 117, 29);
+		runButton.setBounds(6, 497, 117, 29);
 		frame.getContentPane().add(runButton);
 		
 		JButton btnSetupSim = new JButton("setup sim");
@@ -158,7 +165,7 @@ public class MainWindow {
 				setUpSimulationField();
 			}
 		});
-		btnSetupSim.setBounds(6, 146, 117, 29);
+		btnSetupSim.setBounds(6, 146, 87, 29);
 		frame.getContentPane().add(btnSetupSim);
 		
 		JButton btnStep = new JButton("step");
@@ -167,7 +174,7 @@ public class MainWindow {
 				stepSimulation();
 			}
 		});
-		btnStep.setBounds(6, 434, 117, 29);
+		btnStep.setBounds(6, 475, 117, 29);
 		frame.getContentPane().add(btnStep);
 		
 		widthField = new JTextField();
@@ -227,7 +234,7 @@ public class MainWindow {
 		frame.getContentPane().add(resField);
 		
 		lblNewLabel_1 = new JLabel("Draw Mode");
-		lblNewLabel_1.setBounds(16, 208, 97, 16);
+		lblNewLabel_1.setBounds(16, 182, 97, 16);
 		frame.getContentPane().add(lblNewLabel_1);
 		
 		drawMode_luft = new JRadioButton("luft");
@@ -244,7 +251,7 @@ public class MainWindow {
 			}
 		});
 		drawMode_luft.setSelected(true);
-		drawMode_luft.setBounds(16, 230, 72, 23);
+		drawMode_luft.setBounds(16, 204, 72, 23);
 		frame.getContentPane().add(drawMode_luft);
 		
 		drawMode_solid = new JRadioButton("wand");
@@ -260,7 +267,7 @@ public class MainWindow {
 				drawMode_disturb.setSelected(false);
 			}
 		});
-		drawMode_solid.setBounds(16, 256, 72, 23);
+		drawMode_solid.setBounds(16, 230, 72, 23);
 		frame.getContentPane().add(drawMode_solid);
 		
 		drawMode_gen = new JRadioButton("generator");
@@ -276,7 +283,7 @@ public class MainWindow {
 				drawMode_disturb.setSelected(false);
 			}
 		});
-		drawMode_gen.setBounds(16, 283, 117, 23);
+		drawMode_gen.setBounds(16, 257, 117, 23);
 		frame.getContentPane().add(drawMode_gen);
 		
 		drawMode_nil = new JRadioButton("nil");
@@ -291,7 +298,7 @@ public class MainWindow {
 				drawMode_disturb.setSelected(false);
 			}
 		});
-		drawMode_nil.setBounds(16, 310, 117, 23);
+		drawMode_nil.setBounds(16, 284, 117, 23);
 		frame.getContentPane().add(drawMode_nil);
 		
 		drawMode_rohr = new JRadioButton("rohr");
@@ -306,7 +313,7 @@ public class MainWindow {
 				drawMode_disturb.setSelected(false);
 			}
 		});
-		drawMode_rohr.setBounds(16, 334, 117, 23);
+		drawMode_rohr.setBounds(16, 308, 117, 23);
 		frame.getContentPane().add(drawMode_rohr);
 		
 		drawMode_sensor = new JRadioButton("sensor");
@@ -322,7 +329,7 @@ public class MainWindow {
 				drawMode_disturb.setSelected(false);
 			}
 		});
-		drawMode_sensor.setBounds(16, 359, 117, 23);
+		drawMode_sensor.setBounds(16, 417, 117, 23);
 		frame.getContentPane().add(drawMode_sensor);
 		
 		drawMode_disturb = new JRadioButton("disturb");
@@ -339,7 +346,7 @@ public class MainWindow {
 				
 			}
 		});
-		drawMode_disturb.setBounds(16, 382, 117, 23);
+		drawMode_disturb.setBounds(16, 440, 117, 23);
 		frame.getContentPane().add(drawMode_disturb);
 		
 		JButton btnSaveMesh = new JButton("save mesh");
@@ -390,7 +397,7 @@ public class MainWindow {
 		frame.getContentPane().add(timeField);
 		
 		JButton btnClearSim = new JButton("clear sim");
-		btnClearSim.setBounds(6, 175, 117, 29);
+		btnClearSim.setBounds(83, 146, 87, 29);
 		frame.getContentPane().add(btnClearSim);
 		
 		scopeCanvas = new Canvas();
@@ -467,6 +474,45 @@ public class MainWindow {
 		lblFine.setBounds(186, 421, 150, 16);
 		frame.getContentPane().add(lblFine);
 		
+		slider = new JSlider();
+		slider.addMouseMotionListener(new MouseMotionAdapter() {
+			@Override
+			public void mouseDragged(MouseEvent e) {
+				
+				simulationField.setVariableDampingValue(slider.getValue());
+			}
+		});
+		slider.setMinimum(1);
+		slider.setValue(1);
+		slider.setBounds(419, 434, 246, 29);
+		frame.getContentPane().add(slider);
+		
+		lblDamping = new JLabel("Damping");
+		lblDamping.setBounds(429, 421, 150, 16);
+		frame.getContentPane().add(lblDamping);
+		
+		chckbxGeschlossen = new JCheckBox("Geschlossen");
+		chckbxGeschlossen.setBounds(26, 330, 128, 23);
+		frame.getContentPane().add(chckbxGeschlossen);
+		
+		JLabel lblLngeCm = new JLabel("l\u00E4nge cm");
+		lblLngeCm.setBounds(32, 354, 61, 16);
+		frame.getContentPane().add(lblLngeCm);
+		
+		rohrLengthLabel = new JLabel("0");
+		rohrLengthLabel.setHorizontalAlignment(SwingConstants.LEFT);
+		rohrLengthLabel.setBounds(109, 354, 61, 16);
+		frame.getContentPane().add(rohrLengthLabel);
+		
+		lblFreq = new JLabel("freq Hz");
+		lblFreq.setBounds(32, 376, 61, 16);
+		frame.getContentPane().add(lblFreq);
+		
+		rohrFundamentalFreq = new JLabel("0");
+		rohrFundamentalFreq.setHorizontalAlignment(SwingConstants.LEFT);
+		rohrFundamentalFreq.setBounds(109, 376, 61, 16);
+		frame.getContentPane().add(rohrFundamentalFreq);
+		
 
 		
 		
@@ -517,7 +563,15 @@ public class MainWindow {
 			if (drawModeActive) {
 				
 				drawModeActive = false;
-				simulationField.mouseClickInFieldCreateRohr(drawStartXCoordinate,drawStartYCoordinate, event.getX(), event.getY());
+				simulationField.mouseClickInFieldCreateRohr(drawStartXCoordinate,drawStartYCoordinate, event.getX(), event.getY(), chckbxGeschlossen.isSelected() );
+				
+				float length =  (event.getX() - drawStartXCoordinate)*Float.parseFloat(widthField.getText())/simulationFieldCanvas.getWidth();
+				
+				rohrLengthLabel.setText(Float.toString( length   ));
+				
+				
+				float frequency = chckbxGeschlossen.isSelected() ?  343.0f /  (4*length/100 )  :  343.0f /  (2*length/100 )  ;
+				rohrFundamentalFreq.setText(Float.toString( frequency ));
 				
 			}else{
 				

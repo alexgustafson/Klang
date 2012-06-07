@@ -73,6 +73,7 @@ public class SimulationField implements Runnable{
 	float frequency;
 	private int speed;
 	float dampingValue = 0.001f;
+	float variableDampingCoeff;
 	int boarderWidth = 35;
 	
 	public void createNewField(int sizex_cm, int sizey_cm, int resolution, float timeH)
@@ -100,7 +101,7 @@ public class SimulationField implements Runnable{
 		runningSim = false;
 		
 		
-		float variableDampingCoeff = boarderWidth * dampingValue;
+		
 		
 		for (int x = 0; x < xcount; x++)
 		{
@@ -205,8 +206,13 @@ public class SimulationField implements Runnable{
 	
 
 	
-	public void mouseClickInFieldCreateRohr(int startX, int startY, int endX, int endY)
+	public void mouseClickInFieldCreateRohr(int startX, int startY, int endX, int endY, boolean geschlossen)
 	{
+		
+		
+		for (int i = 0; i < walls.length; i++) {
+			walls[i] = false;
+		}
 		
 		
 		endX = (int) Math.floor(endX / xPixelCellRatio);
@@ -216,6 +222,7 @@ public class SimulationField implements Runnable{
 		startY =(int)Math.floor(startY / yPixelCellRatio);
 
 			
+		
 			for (int i = (startY * xcount) + startX; i < (startY * xcount) + endX; i++) {
 				
 				walls[i] = true;
@@ -224,6 +231,16 @@ public class SimulationField implements Runnable{
 			for (int i = (endY * xcount) + startX; i <(endY * xcount) + endX; i++) {
 				
 				walls[i] = true;
+				
+			}
+			
+			if (geschlossen) {
+				
+				for (int i = (startY * xcount) + endX;  i <(endY * xcount) + endX ; i = i + xcount) {
+					
+					walls[i] = true;
+					
+				}
 				
 			}
 			
@@ -248,7 +265,7 @@ public class SimulationField implements Runnable{
 		}
 		}
 		
-		//updateCanvas();
+		
 	}
 	
 	public void updateCanvas()
@@ -296,23 +313,25 @@ public class SimulationField implements Runnable{
 				
 				int xCellCoordinate = (int) Math.floor(sensorX_Coordinate / xPixelCellRatio);
 				int yCellCoordinate = (int) Math.floor(sensorY_Coordinate / yPixelCellRatio);
-				int cellNumber = (yCellCoordinate * ycount) + xCellCoordinate;
+				int cellNumber = (yCellCoordinate * xcount) + xCellCoordinate;
 				double valueAtSensor = mesh[cellNumber];
+				
 				Graphics gs = scopeCanvas.getGraphics();
 				int y = (int) ((scopeCanvas.getHeight()/2.0) - valueAtSensor*60f);
 				Color cs = Color.red;
 				gs.setColor(Color.BLACK);
 				gs.copyArea(0, 0, 100, 100, -1, 0);
 				gs.fillRect(99, 0, 1, 99);
-				
+
 				//System.out.println("pressure at sensor:" +y);
 				gs.setColor(cs);
 				gs.fillRect(98, y, 2, 2);
 				
-				//g.setColor(Color.ORANGE);
-				//g.drawOval(sensorX_Coordinate - 5, sensorY_Coordinate - 5, 10, 10);
 				
 				sensorRecorder.saveValue(valueAtSensor);
+				
+				c = Color.ORANGE;
+				pixelBuffer[cellNumber] = c.getRGB();
 				
 			}
 			
@@ -361,11 +380,9 @@ public class SimulationField implements Runnable{
 				south = walls[n + xcount] ? 0 : mesh[n + xcount];
 				west = walls[n -1] ? 0 : mesh[n - 1];
 				east = walls[n +1] ? 0 : mesh[n + 1];
-				
+		
 
-
-				if (x == 1   ) 
-		    	{
+				if (x == 1   ) {
 					west = oldMesh[n];
 		    	}else if(x == xcount - 2){
 		    		east = oldMesh[n];
@@ -377,13 +394,12 @@ public class SimulationField implements Runnable{
 		    
 
 				center =  ((2.0f*center) - oldMesh[n] ) + cSquared*( north+south+east+west - (4.0f * center) )  ;
-				center = center - center*damping[n];
+				center = center - center*damping[n]*variableDampingCoeff;
 				newMesh[n] = generators[n] ? generatorFunction() : center;
 				
 				}
 				
 				oldMesh[n] = mesh[n];
-				
 				
 				
 			}
@@ -553,6 +569,7 @@ public class SimulationField implements Runnable{
 		//float nextValue = (float) (pinkNoiseGenerator.nextValue() / 2f);
 		
 		float nextValue = (float) (Math.sin( time) * 2);
+		
 		time = (float) (time + (frequency * 2 * Math.PI * timeH));
 		if(time > 2 * Math.PI)
 		{
@@ -572,6 +589,12 @@ public class SimulationField implements Runnable{
 	public void setSpeed(int value) {
 	
 		speed = (int) (50f - value/2.0f);
+		
+	}
+	
+	public void setVariableDampingValue(int value){
+		
+		variableDampingCoeff = (float)(value/30f);
 		
 	}
 
