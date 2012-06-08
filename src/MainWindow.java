@@ -417,9 +417,10 @@ public class MainWindow {
 			}
 		});
 		
-		frequencySlider.setValue(400);
+		
 		frequencySlider.setMinimum(1);
-		frequencySlider.setMaximum(800);
+		frequencySlider.setMaximum(1500);
+		frequencySlider.setValue(400);
 		frequencySlider.setBounds(176, 389, 246, 29);
 		frame.getContentPane().add(frequencySlider);
 		
@@ -438,7 +439,7 @@ public class MainWindow {
 		});
 		slider_1.setValue(100);
 		slider_1.setMinimum(1);
-		slider_1.setMaximum(100);
+		slider_1.setMaximum(200);
 		slider_1.setBounds(419, 389, 246, 29);
 		frame.getContentPane().add(slider_1);
 		
@@ -479,10 +480,10 @@ public class MainWindow {
 			@Override
 			public void mouseDragged(MouseEvent e) {
 				
-				simulationField.setVariableDampingValue(slider.getValue());
+				simulationField.setVariableDampingValue(slider.getValue()*20);
 			}
 		});
-		slider.setMinimum(1);
+		slider.setMinimum(0);
 		slider.setValue(1);
 		slider.setBounds(419, 434, 246, 29);
 		frame.getContentPane().add(slider);

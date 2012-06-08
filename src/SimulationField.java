@@ -70,16 +70,16 @@ public class SimulationField implements Runnable{
 	PinkNoise pinkNoiseGenerator;
 	float frequency;
 	private int speed;
-	float dampingValue = 0.001f;
+	float dampingValue = 0.0001f;
 	float variableDampingCoeff;
-	int boarderWidth = 35;
+	int boarderWidth = 25;
 	
 	public void createNewField(int sizex_cm, int sizey_cm, int resolution, float timeH)
 	{
 		this.resolution = resolution;
 		this.timeH = timeH;
 		
-		spaceH = (float) (sizex_cm / ( 100.0 * resolution));
+		spaceH = (float) (1.0 / ( 100.0 * resolution));
 		
 		xcount = sizex_cm * resolution;
 		ycount = sizey_cm * resolution;
@@ -127,7 +127,7 @@ public class SimulationField implements Runnable{
 		cSquared = (float) (343.0 * 343.0 * (timeH * timeH) / (spaceH * spaceH));
 		
 	
-		if ((340*timeH/spaceH) > 0.7071) {
+		if ((340*timeH*2/spaceH) > 0.7071) {
 			System.out.println("time step is too large");
 		}
 		
@@ -287,7 +287,7 @@ public class SimulationField implements Runnable{
 					
 					if(boarder[i]){
 					
-						c = new Color(  Color.HSBtoRGB((float)(mesh[i]) +1.9f, (float)0.8, (float)0.8) );
+						c = new Color(  Color.HSBtoRGB((float)(mesh[i]/5f) +1.9f, (float)0.8, (float)0.8) );
 						
 					}else if(walls[i]){
 						
@@ -295,7 +295,7 @@ public class SimulationField implements Runnable{
 						
 					}else{
 					
-						c = new Color(  Color.HSBtoRGB((float)(mesh[i]) +1.8f, (float)0.8, (float)0.8) );
+						c = new Color(  Color.HSBtoRGB((float)(mesh[i] / 5f) +1.8f, (float)0.8, (float)0.8) );
 						
 					}
 					
@@ -567,9 +567,9 @@ public class SimulationField implements Runnable{
 		
 		//float nextValue = (float) (pinkNoiseGenerator.nextValue() / 2f);
 		
-		float nextValue = (float) (Math.sin( time) * 2);
+		float nextValue = (float) (Math.sin( time) * 2f);
 		
-		time = (float) (time + (frequency * 2 * Math.PI * timeH));
+		time = (float) (time + (frequency * 2f * Math.PI * timeH));
 		if(time > 2 * Math.PI)
 		{
 			time = (float) (-1 * 2 * Math.PI);
