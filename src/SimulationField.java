@@ -57,12 +57,7 @@ public class SimulationField implements Runnable{
 	private float timeH;
 	private float spaceH;
 	private float time;
-	
-	private int generator_x_coord;
-	private int generator_y_coord;
-	private Boolean generator;
 
-	private Boolean sensorActive = false;
 	private int sensorX_Coordinate;
 	private int sensorY_Coordinate;
 	
@@ -72,7 +67,8 @@ public class SimulationField implements Runnable{
 	private int speed;
 	float dampingValue = 0.0001f;
 	float variableDampingCoeff;
-	int boarderWidth = 25;
+	int boarderWidth = 35;
+	private boolean pinkNoise;
 	
 	public void createNewField(int sizex_cm, int sizey_cm, int resolution, float timeH)
 	{
@@ -97,9 +93,6 @@ public class SimulationField implements Runnable{
 		pixelBuffer = new int[cellCount];
 		
 		runningSim = false;
-		
-		
-		
 		
 		for (int x = 0; x < xcount; x++)
 		{
@@ -165,7 +158,6 @@ public class SimulationField implements Runnable{
 		
 		System.out.println("cell:" + xCellCoordinate + " y:" + yCellCoordinate);
 		
-		
 	}
 	
 	public void mouseClickInFieldWithCellType(int x, int y, CellType type)
@@ -197,7 +189,6 @@ public class SimulationField implements Runnable{
 	public void mouseClickPositionSensor(int x, int y)
 	{
 		
-		sensorActive = true;
 		sensorX_Coordinate = x;
 		sensorY_Coordinate = y;
 
@@ -287,7 +278,7 @@ public class SimulationField implements Runnable{
 					
 					if(boarder[i]){
 					
-						c = new Color(  Color.HSBtoRGB((float)(mesh[i]/5f) +1.9f, (float)0.8, (float)0.8) );
+						c = new Color(  Color.HSBtoRGB((float)(mesh[i]/5f) +1.84f, (float)0.8, (float)0.8) );
 						
 					}else if(walls[i]){
 						
@@ -441,110 +432,24 @@ public class SimulationField implements Runnable{
 			if (refreshGraphicAfterSteps < 1) {
 				
 				updateCanvas();
-
-				
-
 				refreshGraphicAfterSteps = 30 - speed;
 				
 			}else{
+				
 				refreshGraphicAfterSteps = refreshGraphicAfterSteps - 1;
+				
 			}
 			try {
+				
 				Thread.sleep(speed);
+				
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
+				
 				e.printStackTrace();
 			}
 		}
 	}
-
-
-
-
-
 	
-	public void dumpToFile(File aFile)
-	{
-		
-		try {
-			BufferedWriter output = new BufferedWriter(new FileWriter(aFile));
-			
-			output.write("" + xcount + "," + ycount + "," + resolution + "," + timeH);
-			output.newLine();
-			/*
-			for (Cell cell : field) {
-				output.write( cell.getCellType().toString() + "," + cell.getDisplacement(0.0) );
-				output.newLine();
-			}
-			*/
-			
-			output.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-	}
-	
-	public void readFromFile(File aFile)
-	{
-		String thisLine;
-		
-		try {
-			BufferedReader br = new BufferedReader(new FileReader(aFile));
-			
-			//SimulationField simulationField = new SimulationField();
-			
-			String delim = "[,]";
-			String[] tokens = br.readLine().split(delim);
-			String x = tokens[0];
-			String y = tokens[1];
-			String res = tokens[2];
-			String tH = tokens[3];
-			
-			createNewField(Integer.parseInt(x) / Integer.parseInt(res),
-					Integer.parseInt(y) / Integer.parseInt(res), 
-					Integer.parseInt(res), 
-					Float.parseFloat(tH));
-			
-			int i = 0;
-			Cell cell;
-			/*
-			while ((thisLine = br.readLine()) != null && i < field.size()) { 
-      
-		         cell = field.get(i);
-		         
-		         tokens = thisLine.split(delim);
-		         
-		         if (tokens.length < 1) {
-					return;
-				}
-		         
-		         if (tokens[0].equalsIgnoreCase("CellTypeSimulationCell")) {
-					cell.setDisplacement(Double.parseDouble(tokens[1]));
-				 }else if (tokens[0].equalsIgnoreCase("CellTypeSolidCell")) {
-					cell.setCellType(CellType.CellTypeSolidCell);
-				}else if (tokens[0].equalsIgnoreCase("CellTypeGeneratorCell")) {
-					cell.setCellType(CellType.CellTypeGeneratorCell);
-				}else if (tokens[0].equalsIgnoreCase("CellTypeBeyondEdgeCell")) {
-					cell.setCellType(CellType.CellTypeBeyondEdgeCell);
-				}
-		         
-		         i++;
-		         
-		       } // end while 
-			*/
-			br.close();
-			
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-	}
 	
 	public Canvas getScopeCanvas() {
 		return scopeCanvas;
@@ -557,15 +462,19 @@ public class SimulationField implements Runnable{
 	
 	public void shutDownSimulation(){
 		
+		if (runningSim) {
+			runningSim = false;
+		}
+		
 		if (sensorRecorder != null) {
 			sensorRecorder.close();
 		}
-		
 	}
 	
 	public float generatorFunction(){
-		
-		//float nextValue = (float) (pinkNoiseGenerator.nextValue() / 2f);
+		if (pinkNoise) {
+			return (float) (pinkNoiseGenerator.nextValue() / 2f);
+		}
 		
 		float nextValue = (float) (Math.sin( time) * 2f);
 		
@@ -587,13 +496,35 @@ public class SimulationField implements Runnable{
 
 	public void setSpeed(int value) {
 	
-		speed = (int) (50f - value/2.0f);
+		speed = (int) (100f - value/2.0f);
 		
 	}
 	
 	public void setVariableDampingValue(int value){
 		
 		variableDampingCoeff = (float)(value/30f);
+		
+	}
+
+
+	public void clearGenerators() {
+		for (int i = 0; i < generators.length; i++) {
+			generators[i] = false;
+		}
+		
+	}
+
+
+	public void clearWalls() {
+		for (int i = 0; i < walls.length; i++) {
+			walls[i] = false;
+		}
+	}
+
+
+	public void setGeneratorToPinkNoise(boolean selected) {
+		
+		pinkNoise = selected;
 		
 	}
 

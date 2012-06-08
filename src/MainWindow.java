@@ -34,6 +34,7 @@ import java.beans.PropertyChangeEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import javax.swing.SwingConstants;
+import java.awt.Font;
 
 
 public class MainWindow {
@@ -73,6 +74,7 @@ public class MainWindow {
 	private JLabel lblFreq;
 	private JLabel rohrFundamentalFreq;
 	private JCheckBox chckbxGeschlossen;
+	private JButton button;
 
 	/**
 	 * Launch the application.
@@ -123,6 +125,11 @@ public class MainWindow {
 				mouseMovedOverCanvas(event);
 			}
 
+			@Override
+			public void mouseDragged(MouseEvent event) {
+				mouseDraggedOverCanvas(event);
+			}
+
 
 		});
 		simulationFieldCanvas.addMouseListener(new MouseAdapter() {
@@ -144,6 +151,7 @@ public class MainWindow {
 		frame.getContentPane().add(simulationFieldCanvas);
 		
 		runButton = new JButton("run");
+		runButton.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
 		runButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
@@ -159,6 +167,7 @@ public class MainWindow {
 		frame.getContentPane().add(runButton);
 		
 		JButton btnSetupSim = new JButton("setup sim");
+		btnSetupSim.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
 		btnSetupSim.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
@@ -169,6 +178,7 @@ public class MainWindow {
 		frame.getContentPane().add(btnSetupSim);
 		
 		JButton btnStep = new JButton("step");
+		btnStep.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
 		btnStep.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				stepSimulation();
@@ -178,6 +188,7 @@ public class MainWindow {
 		frame.getContentPane().add(btnStep);
 		
 		widthField = new JTextField();
+		widthField.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
 
 		widthField.addKeyListener(new KeyAdapter() {
 			@Override
@@ -199,15 +210,18 @@ public class MainWindow {
 		frame.getContentPane().add(widthField);
 		widthField.setColumns(10);
 		
-		JLabel lblNewLabel = new JLabel("width");
+		JLabel lblNewLabel = new JLabel("width cm");
+		lblNewLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
 		lblNewLabel.setBounds(16, 16, 61, 16);
 		frame.getContentPane().add(lblNewLabel);
 		
-		lblHeight = new JLabel("height");
-		lblHeight.setBounds(15, 52, 61, 16);
+		lblHeight = new JLabel("height cm");
+		lblHeight.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
+		lblHeight.setBounds(15, 52, 78, 16);
 		frame.getContentPane().add(lblHeight);
 		
 		heightField = new JTextField();
+		heightField.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
 		heightField.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
@@ -224,20 +238,57 @@ public class MainWindow {
 		frame.getContentPane().add(heightField);
 		
 		resLabel = new JLabel("resolution");
+		resLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
 		resLabel.setBounds(16, 85, 72, 16);
 		frame.getContentPane().add(resLabel);
 		
 		resField = new JTextField();
+		resField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent arg0) {
+				
+				// CFL Condition : ( 343 * deltaT * 2 / deltaXY ) > 0.7071
+				// http://en.wikipedia.org/wiki/Courant–Friedrichs–Lewy_condition
+				
+				Float deltaXY = (1/ (Float.parseFloat(resField.getText())*100) );
+				timeField.setText( Float.toString(  deltaXY * 0.7f / (2.0f * 343.0f))) ;
+				
+			}
+		});
+		resField.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
+		resField.setToolTipText("gibt an mit wie viele zellen pro cm gerechnet werden soll ( delta x und delta y )");
 		resField.setText("5");
 		resField.setColumns(10);
 		resField.setBounds(83, 79, 87, 28);
 		frame.getContentPane().add(resField);
 		
+		timeField = new JTextField();
+		timeField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				
+				// CFL Condition : ( 343 * deltaT * 2 / deltaXY ) > 0.7071
+				// http://en.wikipedia.org/wiki/Courant–Friedrichs–Lewy_condition
+				
+				float deltaXY = 340f*2f*( Float.parseFloat(timeField.getText() ))/0.7f ;
+				resField.setText( Integer.toString( (int)Math.ceil((double)1f/(deltaXY*100)) )  );
+				
+			}
+		});
+		timeField.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
+		timeField.setToolTipText("gibt an mit welcher zeit schritten gerechnet werden soll ( delta t )");
+		timeField.setText("0.0000020408165");
+		timeField.setColumns(10);
+		timeField.setBounds(83, 113, 87, 28);
+		frame.getContentPane().add(timeField);
+		
 		lblNewLabel_1 = new JLabel("Draw Mode");
+		lblNewLabel_1.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
 		lblNewLabel_1.setBounds(16, 182, 97, 16);
 		frame.getContentPane().add(lblNewLabel_1);
 		
 		drawMode_luft = new JRadioButton("luft");
+		drawMode_luft.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
 		drawMode_luft.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
@@ -255,6 +306,7 @@ public class MainWindow {
 		frame.getContentPane().add(drawMode_luft);
 		
 		drawMode_solid = new JRadioButton("wand");
+		drawMode_solid.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
 		drawMode_solid.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
@@ -271,6 +323,7 @@ public class MainWindow {
 		frame.getContentPane().add(drawMode_solid);
 		
 		drawMode_gen = new JRadioButton("generator");
+		drawMode_gen.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
 		drawMode_gen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
@@ -283,10 +336,12 @@ public class MainWindow {
 				drawMode_disturb.setSelected(false);
 			}
 		});
-		drawMode_gen.setBounds(16, 257, 117, 23);
+		drawMode_gen.setBounds(16, 257, 87, 23);
 		frame.getContentPane().add(drawMode_gen);
 		
 		drawMode_nil = new JRadioButton("nil");
+		drawMode_nil.setEnabled(false);
+		drawMode_nil.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
 		drawMode_nil.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				drawMode_luft.setSelected(false);
@@ -298,10 +353,11 @@ public class MainWindow {
 				drawMode_disturb.setSelected(false);
 			}
 		});
-		drawMode_nil.setBounds(16, 284, 117, 23);
+		drawMode_nil.setBounds(16, 310, 117, 23);
 		frame.getContentPane().add(drawMode_nil);
 		
 		drawMode_rohr = new JRadioButton("rohr");
+		drawMode_rohr.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
 		drawMode_rohr.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				drawMode_luft.setSelected(false);
@@ -313,10 +369,11 @@ public class MainWindow {
 				drawMode_disturb.setSelected(false);
 			}
 		});
-		drawMode_rohr.setBounds(16, 308, 117, 23);
+		drawMode_rohr.setBounds(16, 334, 117, 23);
 		frame.getContentPane().add(drawMode_rohr);
 		
 		drawMode_sensor = new JRadioButton("sensor");
+		drawMode_sensor.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
 		drawMode_sensor.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
@@ -329,10 +386,11 @@ public class MainWindow {
 				drawMode_disturb.setSelected(false);
 			}
 		});
-		drawMode_sensor.setBounds(16, 417, 117, 23);
+		drawMode_sensor.setBounds(16, 421, 117, 23);
 		frame.getContentPane().add(drawMode_sensor);
 		
 		drawMode_disturb = new JRadioButton("disturb");
+		drawMode_disturb.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
 		drawMode_disturb.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
@@ -346,20 +404,17 @@ public class MainWindow {
 				
 			}
 		});
-		drawMode_disturb.setBounds(16, 440, 117, 23);
+		drawMode_disturb.setBounds(16, 444, 117, 23);
 		frame.getContentPane().add(drawMode_disturb);
 		
 		JButton btnSaveMesh = new JButton("save mesh");
+		btnSaveMesh.setEnabled(false);
+		btnSaveMesh.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
 		btnSaveMesh.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
-				try {
-					saveMesh();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
+
+					//saveMesh();
+
 			}
 		});
 		btnSaveMesh.setBackground(Color.GREEN);
@@ -367,18 +422,14 @@ public class MainWindow {
 		frame.getContentPane().add(btnSaveMesh);
 		
 		JButton btnLoadMesh = new JButton("load mesh");
+		btnLoadMesh.setEnabled(false);
+		btnLoadMesh.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
 		btnLoadMesh.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				try {
-					loadMesh();
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (ClassNotFoundException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+	
+					//loadMesh();
+
 				
 			}
 		});
@@ -387,16 +438,15 @@ public class MainWindow {
 		frame.getContentPane().add(btnLoadMesh);
 		
 		JLabel lblTimeH = new JLabel("time h");
+		lblTimeH.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
 		lblTimeH.setBounds(16, 119, 72, 16);
 		frame.getContentPane().add(lblTimeH);
 		
-		timeField = new JTextField();
-		timeField.setText(".0001");
-		timeField.setColumns(10);
-		timeField.setBounds(83, 113, 87, 28);
-		frame.getContentPane().add(timeField);
+
 		
 		JButton btnClearSim = new JButton("clear sim");
+		btnClearSim.setEnabled(false);
+		btnClearSim.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
 		btnClearSim.setBounds(83, 146, 87, 29);
 		frame.getContentPane().add(btnClearSim);
 		
@@ -410,8 +460,7 @@ public class MainWindow {
 			@Override
 			public void mouseDragged(MouseEvent arg0) {
 				if (simulationField != null) {
-					simulationField.setFrequency(frequencySlider.getValue() - ( 50 - frequencyFineTuneSlider.getValue())/10f);
-					frequencyTextField.setText(Float.toString(frequencySlider.getValue() - ( 50 - frequencyFineTuneSlider.getValue())/10f));
+					setSimulationGeneratorFrequency();
 				}
 				
 			}
@@ -419,7 +468,7 @@ public class MainWindow {
 		
 		
 		frequencySlider.setMinimum(1);
-		frequencySlider.setMaximum(1500);
+		frequencySlider.setMaximum(9000);
 		frequencySlider.setValue(400);
 		frequencySlider.setBounds(176, 389, 246, 29);
 		frame.getContentPane().add(frequencySlider);
@@ -444,6 +493,7 @@ public class MainWindow {
 		frame.getContentPane().add(slider_1);
 		
 		JLabel lblNewLabel_2 = new JLabel("Generator Frequency Hz");
+		lblNewLabel_2.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
 		lblNewLabel_2.setBounds(186, 376, 150, 16);
 		frame.getContentPane().add(lblNewLabel_2);
 		
@@ -453,8 +503,9 @@ public class MainWindow {
 			public void mouseDragged(MouseEvent arg0) {
 				
 				if (simulationField != null) {
-					simulationField.setFrequency(frequencySlider.getValue() - ( 50 - frequencyFineTuneSlider.getValue())/10f);
-					frequencyTextField.setText(Float.toString(frequencySlider.getValue() - ( 50 - frequencyFineTuneSlider.getValue())/10f));
+					
+					
+					setSimulationGeneratorFrequency();
 				}
 				
 			}
@@ -463,15 +514,18 @@ public class MainWindow {
 		frame.getContentPane().add(frequencyFineTuneSlider);
 		
 		JLabel lblSimulationSpeed = new JLabel("Simulation Speed");
+		lblSimulationSpeed.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
 		lblSimulationSpeed.setBounds(431, 376, 170, 16);
 		frame.getContentPane().add(lblSimulationSpeed);
 		
 		frequencyTextField = new JTextField();
+		frequencyTextField.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
 		frequencyTextField.setBounds(291, 475, 117, 28);
 		frame.getContentPane().add(frequencyTextField);
 		frequencyTextField.setColumns(10);
 		
 		JLabel lblFine = new JLabel("Fine");
+		lblFine.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
 		lblFine.setBounds(186, 421, 150, 16);
 		frame.getContentPane().add(lblFine);
 		
@@ -489,38 +543,81 @@ public class MainWindow {
 		frame.getContentPane().add(slider);
 		
 		lblDamping = new JLabel("Damping");
+		lblDamping.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
 		lblDamping.setBounds(429, 421, 150, 16);
 		frame.getContentPane().add(lblDamping);
 		
 		chckbxGeschlossen = new JCheckBox("Geschlossen");
-		chckbxGeschlossen.setBounds(26, 330, 128, 23);
+		chckbxGeschlossen.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
+		chckbxGeschlossen.setBounds(26, 356, 128, 23);
 		frame.getContentPane().add(chckbxGeschlossen);
 		
 		JLabel lblLngeCm = new JLabel("l\u00E4nge cm");
-		lblLngeCm.setBounds(32, 354, 61, 16);
+		lblLngeCm.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
+		lblLngeCm.setBounds(32, 380, 61, 16);
 		frame.getContentPane().add(lblLngeCm);
 		
 		rohrLengthLabel = new JLabel("0");
+		rohrLengthLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
 		rohrLengthLabel.setHorizontalAlignment(SwingConstants.LEFT);
-		rohrLengthLabel.setBounds(109, 354, 61, 16);
+		rohrLengthLabel.setBounds(109, 380, 61, 16);
 		frame.getContentPane().add(rohrLengthLabel);
 		
 		lblFreq = new JLabel("freq Hz");
-		lblFreq.setBounds(32, 376, 61, 16);
+		lblFreq.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
+		lblFreq.setBounds(32, 402, 61, 16);
 		frame.getContentPane().add(lblFreq);
 		
 		rohrFundamentalFreq = new JLabel("0");
+		rohrFundamentalFreq.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
 		rohrFundamentalFreq.setHorizontalAlignment(SwingConstants.LEFT);
-		rohrFundamentalFreq.setBounds(109, 376, 61, 16);
+		rohrFundamentalFreq.setBounds(109, 402, 61, 16);
 		frame.getContentPane().add(rohrFundamentalFreq);
 		
+		JButton btnClear = new JButton("clear");
+		btnClear.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				
+				clearGenerators();
+				
+			}
+		});
+		btnClear.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
+		btnClear.setBounds(98, 255, 72, 29);
+		frame.getContentPane().add(btnClear);
+		
+		button = new JButton("clear");
+		button.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				
+				clearWalls();
+				
+			}
 
+
+		});
+		button.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
+		button.setBounds(98, 228, 72, 29);
+		frame.getContentPane().add(button);
 		
-		
-		
+		final JCheckBox chckbxPinkNoise = new JCheckBox("pink noise");
+		chckbxPinkNoise.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				
+				simulationField.setGeneratorToPinkNoise(chckbxPinkNoise.isSelected());
+				
+			}
+		});
+		chckbxPinkNoise.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
+		chckbxPinkNoise.setBounds(26, 285, 128, 23);
+		frame.getContentPane().add(chckbxPinkNoise);
 
 	}
 	
+	/*
 	protected void loadMesh() throws IOException, ClassNotFoundException {
 		
 		simulationField.readFromFile(new File("simulationField.csv"));
@@ -528,15 +625,19 @@ public class MainWindow {
 		simulationField.updateCanvas();
 
 	}
-
+	
 	protected void saveMesh() throws IOException {
 
 		simulationField.dumpToFile(new File("simulationField.csv"));
 		
-	}
+	}*/
 
 	private void setUpSimulationField()
 	{
+		if (simulationField != null) {
+			simulationField.shutDownSimulation();
+		}
+		
 		simulationField = new SimulationField();
 		simulationField.createNewField(Integer.parseInt(widthField.getText()), 
 				Integer.parseInt(heightField.getText()), 
@@ -544,6 +645,7 @@ public class MainWindow {
 				Float.parseFloat(timeField.getText()));
 		simulationField.attatchCanvasElement(simulationFieldCanvas);
 		simulationField.updateCanvas();
+		setSimulationGeneratorFrequency();
 	}
 	
 	private void mouseClickInSimulationField(MouseEvent event)
@@ -631,10 +733,28 @@ public class MainWindow {
 			float frequency = chckbxGeschlossen.isSelected() ?  343.0f /  (4*length/100 )  :  343.0f /  (2*length/100 )  ;
 			rohrFundamentalFreq.setText(Float.toString( frequency ));
 			
-			
 		}
 		
 	}
+	
+	private void mouseDraggedOverCanvas(MouseEvent event) {
+		if(simulationField == null){
+			return;
+		}
+		
+		if (drawModeActive) {
+			
+			
+		}
+		
+		if (drawMode_solid.isSelected()) {
+			simulationField.mouseClickInFieldWithCellType(event.getX(), event.getY(), CellType.CellTypeSolidCell);
+		}else if(drawMode_luft.isSelected()){
+			simulationField.mouseClickInFieldWithCellType(event.getX(), event.getY(), CellType.CellTypeSimulationCell);
+		}
+		
+	}
+	
 	
 	private void stepSimulation()
 	{
@@ -658,5 +778,19 @@ public class MainWindow {
 			runButton.setText("Run");
 		}
 	
+	}
+	
+	private void setSimulationGeneratorFrequency(){
+		simulationField.setFrequency(frequencySlider.getValue() - ( 50 - frequencyFineTuneSlider.getValue())/10f);
+		frequencyTextField.setText(Float.toString(frequencySlider.getValue() - ( 50 - frequencyFineTuneSlider.getValue())/10f));
+	}
+	
+	private void clearGenerators(){
+		simulationField.clearGenerators();
+	}
+	
+	private void clearWalls() {
+		simulationField.clearWalls();
+		
 	}
 }
