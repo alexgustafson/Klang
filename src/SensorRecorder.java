@@ -30,10 +30,10 @@ public class SensorRecorder {
 		
 	}
 	
-	public void saveValue(Double value){
+	public void saveValue(float mesh){
 		try {
 			if(isOpen){
-				outputFile.writeDouble(value);
+				outputFile.writeFloat(mesh);
 			}
 			
 		} catch (IOException e) {

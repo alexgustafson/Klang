@@ -58,10 +58,12 @@ public class SimulationField implements Runnable{
 	private float spaceH;
 	private float time;
 
-	private int sensorX_Coordinate;
-	private int sensorY_Coordinate;
+
 	
 	private SensorRecorder sensorRecorder;
+	private int sensorPosition;
+	
+	
 	PinkNoise pinkNoiseGenerator;
 	float frequency;
 	private int speed;
@@ -189,8 +191,10 @@ public class SimulationField implements Runnable{
 	public void mouseClickPositionSensor(int x, int y)
 	{
 		
-		sensorX_Coordinate = x;
-		sensorY_Coordinate = y;
+		
+		int xCellCoordinate = (int) Math.floor(x / xPixelCellRatio);
+		int yCellCoordinate = (int) Math.floor(y / yPixelCellRatio);
+		sensorPosition = (yCellCoordinate * xcount) + xCellCoordinate;
 
 	}
 	
@@ -300,11 +304,7 @@ public class SimulationField implements Runnable{
 			
 			if (scopeCanvas != null) {
 				
-				
-				int xCellCoordinate = (int) Math.floor(sensorX_Coordinate / xPixelCellRatio);
-				int yCellCoordinate = (int) Math.floor(sensorY_Coordinate / yPixelCellRatio);
-				int cellNumber = (yCellCoordinate * xcount) + xCellCoordinate;
-				double valueAtSensor = mesh[cellNumber];
+				double valueAtSensor = mesh[sensorPosition];
 				
 				Graphics gs = scopeCanvas.getGraphics();
 				int y = (int) ((scopeCanvas.getHeight()/2.0) - valueAtSensor*60f);
@@ -318,10 +318,10 @@ public class SimulationField implements Runnable{
 				gs.fillRect(98, y, 2, 2);
 				
 				
-				sensorRecorder.saveValue(valueAtSensor);
+				
 				
 				c = Color.ORANGE;
-				pixelBuffer[cellNumber] = c.getRGB();
+				pixelBuffer[sensorPosition] = c.getRGB();
 				
 			}
 			
@@ -398,6 +398,8 @@ public class SimulationField implements Runnable{
 		float tempMesh[] = mesh;
 		mesh = newMesh;
 		newMesh = tempMesh;
+		
+		sensorRecorder.saveValue(mesh[sensorPosition]);
 		
 		stepCount++;
 		
