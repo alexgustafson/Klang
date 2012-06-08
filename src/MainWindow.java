@@ -75,6 +75,8 @@ public class MainWindow {
 	private JLabel rohrFundamentalFreq;
 	private JCheckBox chckbxGeschlossen;
 	private JButton button;
+	
+	
 
 	/**
 	 * Launch the application.
@@ -103,16 +105,14 @@ public class MainWindow {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		
 		frame = new JFrame();
 		frame.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent arg0) {
 				simulationField.shutDownSimulation();
 			}
-			@Override
-			public void windowActivated(WindowEvent e) {
-				setUpSimulationField();
-			}
+
 		});
 		frame.setBounds(100, 100, 787, 554);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -646,6 +646,7 @@ public class MainWindow {
 		simulationField.attatchCanvasElement(simulationFieldCanvas);
 		simulationField.updateCanvas();
 		setSimulationGeneratorFrequency();
+		
 	}
 	
 	private void mouseClickInSimulationField(MouseEvent event)

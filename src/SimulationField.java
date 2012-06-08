@@ -265,7 +265,7 @@ public class SimulationField implements Runnable{
 	public void updateCanvas()
 	{
 
-
+		
 		
 			int circle_left = 0;
 			int circle_top = 0;
@@ -282,7 +282,7 @@ public class SimulationField implements Runnable{
 					
 					if(boarder[i]){
 					
-						c = new Color(  Color.HSBtoRGB((float)(mesh[i]/5f) +1.84f, (float)0.8, (float)0.8) );
+						c = new Color(  Color.HSBtoRGB((float)(mesh[i]/3f) +1.82f, (float)0.8, (float)0.8) );
 						
 					}else if(walls[i]){
 						
@@ -290,7 +290,7 @@ public class SimulationField implements Runnable{
 						
 					}else{
 					
-						c = new Color(  Color.HSBtoRGB((float)(mesh[i] / 5f) +1.8f, (float)0.8, (float)0.8) );
+						c = new Color(  Color.HSBtoRGB((float)(mesh[i] / 3f) +1.8f, (float)0.8, (float)0.8) );
 						
 					}
 					
@@ -431,6 +431,7 @@ public class SimulationField implements Runnable{
 		while (runningSim) 
 		{
 			updateMesh();
+
 			if (refreshGraphicAfterSteps < 1) {
 				
 				updateCanvas();

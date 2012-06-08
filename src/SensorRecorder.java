@@ -9,8 +9,11 @@ import java.sql.Timestamp;
 import java.util.Date;
 
 
-public class SensorRecorder {
 
+
+public class SensorRecorder {
+	
+	private AudioPlayerWindow audioPlayerWindow = new AudioPlayerWindow();
 	private DataOutputStream outputFile;
 	public Boolean isOpen;
 	
@@ -20,9 +23,12 @@ public class SensorRecorder {
 			
 			Date date= new java.util.Date();
 			Timestamp time = new Timestamp(date.getTime());
-			
-			outputFile = new DataOutputStream( new BufferedOutputStream(new FileOutputStream("sensorData" + time.getTime())));
+			File audioDataFile = new File("sensorData" + time.getTime());
+			outputFile = new DataOutputStream( new BufferedOutputStream(new FileOutputStream(audioDataFile)));
 			isOpen = true;
+			audioPlayerWindow.setVisible(true);
+			audioPlayerWindow.setAudioFile(audioDataFile);
+			
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -47,6 +53,8 @@ public class SensorRecorder {
 			if (isOpen) {
 				outputFile.close();
 				isOpen = false;
+				audioPlayerWindow.setVisible(false);
+				
 			}
 			
 		} catch (IOException e) {
