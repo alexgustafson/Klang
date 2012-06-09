@@ -8,6 +8,8 @@ import java.io.OutputStream;
 import java.sql.Timestamp;
 import java.util.Date;
 
+import com.jsyn.util.WaveFileWriter;
+
 
 
 
@@ -16,6 +18,7 @@ public class SensorRecorder {
 	private AudioPlayerWindow audioPlayerWindow = new AudioPlayerWindow();
 	private DataOutputStream outputFile;
 	public Boolean isOpen;
+	WaveFileWriter writer;
 	
 	public SensorRecorder(){
 		
@@ -24,7 +27,12 @@ public class SensorRecorder {
 			Date date= new java.util.Date();
 			Timestamp time = new Timestamp(date.getTime());
 			File audioDataFile = new File("sensorData" + time.getTime());
-			outputFile = new DataOutputStream( new BufferedOutputStream(new FileOutputStream(audioDataFile)));
+			
+			writer = new WaveFileWriter(audioDataFile);
+			
+			
+			
+			//outputFile = new DataOutputStream( new BufferedOutputStream(new FileOutputStream(audioDataFile)));
 			isOpen = true;
 			audioPlayerWindow.setVisible(true);
 			audioPlayerWindow.setAudioFile(audioDataFile);
@@ -39,7 +47,8 @@ public class SensorRecorder {
 	public void saveValue(float mesh){
 		try {
 			if(isOpen){
-				outputFile.writeFloat(mesh);
+				//outputFile.writeFloat(mesh);
+				writer.write(mesh);
 			}
 			
 		} catch (IOException e) {

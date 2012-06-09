@@ -1,5 +1,6 @@
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.DataInput;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -8,13 +9,17 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import javax.sound.sampled.UnsupportedAudioFileException;
+
+import com.jsyn.data.FloatSample;
 import com.jsyn.unitgen.UnitOscillator;
+import com.jsyn.util.SampleLoader;
 
 
 public class KlangQuelle extends UnitOscillator {
 
 	private double sampleCount = 0;
-	private DataInputStream inputFile;
+	private FloatSample inputFile;
 	
 	@Override
 	public void generate(int start, int limit) {
@@ -26,7 +31,7 @@ public class KlangQuelle extends UnitOscillator {
 				//float sample = inputFile.readFloat();
 				// test
 				try {
-					outputs[i] = (double)inputFile.readFloat();
+					outputs[i] = (double)((DataInput) inputFile).readFloat();
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -41,14 +46,18 @@ public class KlangQuelle extends UnitOscillator {
 	public void setAudioDataFile(File audioDataFile) {
 		
 
-		//outputFile = new DataOutputStream( new BufferedOutputStream(new FileOutputStream(audioDataFile)));
-		try {
-			inputFile = new DataInputStream(new BufferedInputStream(new FileInputStream(audioDataFile)));
 
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+			try {
+				inputFile = SampleLoader.loadFloatSample(audioDataFile);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (UnsupportedAudioFileException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+
 	}
 
 }

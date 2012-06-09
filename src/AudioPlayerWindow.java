@@ -1,6 +1,7 @@
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -8,15 +9,26 @@ import javax.swing.JButton;
 
 import com.jsyn.JSyn;
 import com.jsyn.Synthesizer;
+import com.jsyn.data.FloatSample;
 import com.jsyn.unitgen.LineOut;
 import com.jsyn.unitgen.UnitOscillator;
+import com.jsyn.unitgen.VariableRateDataReader;
+import com.jsyn.unitgen.VariableRateMonoReader;
+import com.jsyn.util.SampleLoader;
 
 import java.awt.Font;
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 
 public class AudioPlayerWindow extends JFrame {
@@ -25,6 +37,8 @@ public class AudioPlayerWindow extends JFrame {
 	float audioBuffer[];
 	Synthesizer synth;
 	UnitOscillator osc;
+	FloatSample sample;
+	VariableRateDataReader samplePlayer;
 	LineOut lineOut;
 	JButton btnNewButton;
 	private File audioDataFile;
@@ -63,6 +77,10 @@ public class AudioPlayerWindow extends JFrame {
 		
 	}
 	
+	public void playSample(){
+		
+	}
+	
 	public void playAudio()
 	{
 		// Create a context for the synthesizer.
@@ -72,10 +90,21 @@ public class AudioPlayerWindow extends JFrame {
 				synth.start();
 
 				// Add a tone generator.
-				KlangQuelle klangQuelle = new KlangQuelle();
-				klangQuelle.setAudioDataFile(audioDataFile);
+				try {
+					//outputFile = new DataOutputStream( new BufferedOutputStream(new FileOutputStream(audioDataFile)));
+					sample = SampleLoader.loadFloatSample(new DataInputStream(new BufferedInputStream(new FileInputStream(audioDataFile))));
+					
+				} catch (IOException e1) {
+					
+					e1.printStackTrace();
+				} catch (UnsupportedAudioFileException e1) {
+					
+					e1.printStackTrace();
+				}
+				samplePlayer = new VariableRateMonoReader();
+				samplePlayer.dataQueue.queueLoop( sample, 0, sample.getNumFrames() );
 				
-				synth.add( osc =  klangQuelle);
+				synth.add( samplePlayer);
 				// Add a stereo audio output unit.
 				synth.add( lineOut = new LineOut() );
 
