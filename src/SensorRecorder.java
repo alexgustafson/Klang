@@ -26,7 +26,7 @@ public class SensorRecorder {
 			
 			Date date= new java.util.Date();
 			Timestamp time = new Timestamp(date.getTime());
-			File audioDataFile = new File("sensorData" + time.getTime());
+			File audioDataFile = new File("sensorData" + time.getTime() + ".wav");
 			
 			writer = new WaveFileWriter(audioDataFile);
 			
