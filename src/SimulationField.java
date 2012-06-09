@@ -13,7 +13,7 @@ public class SimulationField implements Runnable, Serializable{
 	float cSquared;
 	int stepCount;
 
-	private Thread runner;
+	private transient Thread runner;
 	private Boolean runningSim;
 
 	float oldMesh[];
@@ -25,7 +25,7 @@ public class SimulationField implements Runnable, Serializable{
 	boolean generators[];
 
 
-	private BufferedImage dbimage;
+	private transient BufferedImage dbimage;
 
 	private int pixelBuffer[];
 	private int refreshGraphicAfterSteps = 0;
@@ -35,22 +35,21 @@ public class SimulationField implements Runnable, Serializable{
 	private int cellCount;
 	private int pixelCount;
 
-
-	private Canvas canvasField;
+	private transient Canvas canvasField;
 	private float xPixelCellRatio;
 	private float yPixelCellRatio;
 
-	private Canvas scopeCanvas;
+	private transient Canvas scopeCanvas;
 
 	private float timeH;
 	private float spaceH;
 	private float time;
 
-	private SensorRecorder sensorRecorder;
+	private transient SensorRecorder sensorRecorder;
 	private int sensorPosition;
 
 
-	PinkNoise pinkNoiseGenerator;
+	transient PinkNoise pinkNoiseGenerator;
 	float frequency;
 	private int speed;
 	float dampingValue = 0.0001f;
@@ -117,6 +116,11 @@ public class SimulationField implements Runnable, Serializable{
 
 		pinkNoiseGenerator = new PinkNoise();
 		frequency = 440f;
+	}
+	
+	public void initialize(){
+		pinkNoiseGenerator = new PinkNoise();
+		sensorRecorder = new SensorRecorder();
 	}
 
 
@@ -221,9 +225,6 @@ public class SimulationField implements Runnable, Serializable{
 			}
 
 		}
-
-
-
 	}
 
 	public void mouseClickInFieldCreateNil(int startX, int startY, int endX, int endY)
@@ -242,8 +243,6 @@ public class SimulationField implements Runnable, Serializable{
 
 			}
 		}
-
-
 	}
 
 	public void updateCanvas()
@@ -420,7 +419,7 @@ public class SimulationField implements Runnable, Serializable{
 			if (refreshGraphicAfterSteps < 1) {
 
 				updateCanvas();
-				refreshGraphicAfterSteps = 30 - speed;
+				refreshGraphicAfterSteps = 50 - speed;
 
 			}else{
 

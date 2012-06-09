@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+import javax.swing.JFileChooser;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
 import javax.swing.JCheckBox;
@@ -408,27 +409,27 @@ public class MainWindow {
 		frame.getContentPane().add(drawMode_disturb);
 		
 		JButton btnSaveMesh = new JButton("save mesh");
-		btnSaveMesh.setEnabled(false);
 		btnSaveMesh.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
 		btnSaveMesh.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 
-					//saveMesh();
+					saveMesh();
 
 			}
+
+
 		});
 		btnSaveMesh.setBackground(Color.GREEN);
 		btnSaveMesh.setBounds(664, 497, 117, 29);
 		frame.getContentPane().add(btnSaveMesh);
 		
 		JButton btnLoadMesh = new JButton("load mesh");
-		btnLoadMesh.setEnabled(false);
 		btnLoadMesh.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
 		btnLoadMesh.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
 	
-					//loadMesh();
+					loadMesh();
 
 				
 			}
@@ -794,4 +795,36 @@ public class MainWindow {
 		simulationField.clearWalls();
 		
 	}
+	
+	private void saveMesh() {
+		
+		JFileChooser fileChooser = new JFileChooser();
+		int status = fileChooser.showSaveDialog(frame);
+		if (status == JFileChooser.APPROVE_OPTION) {
+			
+			File selectedFile = fileChooser.getSelectedFile();
+			SimulationFileHandler simFileHandler = new SimulationFileHandler();
+			simFileHandler.writeToFile(selectedFile, simulationField);
+		}
+
+	}
+	
+	private void loadMesh() {
+		
+		JFileChooser fileChooser = new JFileChooser();
+		int status = fileChooser.showOpenDialog(frame);
+		if (status == JFileChooser.APPROVE_OPTION) {
+			
+			File selectedFile = fileChooser.getSelectedFile();
+			SimulationFileHandler simFileHandler = new SimulationFileHandler();
+			simulationField = simFileHandler.readFromFile(selectedFile);
+			simulationField.initialize();
+			simulationField.attatchCanvasElement(simulationFieldCanvas);
+			simulationField.setScopeCanvas(scopeCanvas);
+			simulationField.updateCanvas();
+			
+		}
+
+	}
+	
 }
