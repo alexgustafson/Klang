@@ -10,9 +10,6 @@ import java.util.Date;
 
 import com.jsyn.util.WaveFileWriter;
 
-
-
-
 public class SensorRecorder {
 	
 	private AudioPlayerWindow audioPlayerWindow = new AudioPlayerWindow();
@@ -29,8 +26,9 @@ public class SensorRecorder {
 			File audioDataFile = new File("sensorData" + time.getTime() + ".wav");
 			
 			writer = new WaveFileWriter(audioDataFile);
-			
-			
+			writer.setFrameRate(44100);
+			writer.setSamplesPerFrame(1);
+			writer.setBitsPerSample(16);
 			
 			//outputFile = new DataOutputStream( new BufferedOutputStream(new FileOutputStream(audioDataFile)));
 			isOpen = true;
@@ -48,7 +46,7 @@ public class SensorRecorder {
 		try {
 			if(isOpen){
 				//outputFile.writeFloat(mesh);
-				writer.write(mesh);
+				writer.write((double)mesh);
 			}
 			
 		} catch (IOException e) {
@@ -70,6 +68,10 @@ public class SensorRecorder {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public void stop(){
+		close();
 	}
 	
 }

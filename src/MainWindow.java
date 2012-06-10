@@ -615,6 +615,27 @@ public class MainWindow {
 		chckbxPinkNoise.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
 		chckbxPinkNoise.setBounds(26, 285, 128, 23);
 		frame.getContentPane().add(chckbxPinkNoise);
+		
+		final JButton btnRec = new JButton("rec");
+		btnRec.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				if (simulationField != null) {
+					if (simulationField.recording){
+						btnRec.setText("rec");
+						btnRec.setForeground(Color.black);
+					}else{
+						btnRec.setText("stop");
+						btnRec.setForeground(Color.red);
+					}
+					simulationField.recSensorData();
+				}
+				
+			}
+		});
+		btnRec.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
+		btnRec.setBounds(98, 419, 72, 29);
+		frame.getContentPane().add(btnRec);
 
 	}
 	
@@ -826,5 +847,4 @@ public class MainWindow {
 		}
 
 	}
-	
 }

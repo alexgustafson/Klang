@@ -52,13 +52,14 @@ public class SimulationField implements Runnable, Serializable{
 	transient PinkNoise pinkNoiseGenerator;
 	float frequency;
 	private int speed;
-	float dampingValue = 0.0001f;
+	float dampingValue = 0.00001f;
 	float variableDampingCoeff;
 	int boarderWidth = 35;
 	private boolean pinkNoise;
 	
 	private float audioRecordingTimeStep = 1f/441000f;
 	private float audioRecordingTime = 0;
+	public boolean recording = false;
 
 	public void createNewField(int sizex_cm, int sizey_cm, int resolution, float timeH)
 	{
@@ -120,7 +121,7 @@ public class SimulationField implements Runnable, Serializable{
 	
 	public void initialize(){
 		pinkNoiseGenerator = new PinkNoise();
-		sensorRecorder = new SensorRecorder();
+		recording = false;
 	}
 
 
@@ -342,7 +343,6 @@ public class SimulationField implements Runnable, Serializable{
 
 					center = mesh[n];
 
-
 					//falls nachbarelement ein wand element ist 
 					north = walls[n - xcount] ? 0 : mesh[n - xcount];
 					south = walls[n + xcount] ? 0 : mesh[n + xcount];
@@ -378,13 +378,12 @@ public class SimulationField implements Runnable, Serializable{
 		newMesh = tempMesh;
 
 		audioRecordingTime = audioRecordingTime + timeH;
-		if (audioRecordingTime > audioRecordingTimeStep){
+		
+		if (audioRecordingTime > audioRecordingTimeStep && recording){
 			audioRecordingTime = 0;
 			sensorRecorder.saveValue(mesh[sensorPosition]);
 		}
 		
-		
-
 		stepCount++;
 
 	}
@@ -459,13 +458,15 @@ public class SimulationField implements Runnable, Serializable{
 	}
 
 	public float generatorFunction(){
+		
 		if (pinkNoise) {
 			return (float) (pinkNoiseGenerator.nextValue() / 2f);
 		}
 
 		float nextValue = (float) (Math.sin( time) * 2f);
 
-		time = (float) (time + (frequency * 2f * Math.PI * timeH));
+		time =  (float) (time + (frequency * 2f * Math.PI * timeH));
+		
 		if(time > 2 * Math.PI)
 		{
 			time = (float) (-1 * 2 * Math.PI);
@@ -475,7 +476,8 @@ public class SimulationField implements Runnable, Serializable{
 
 	public void setFrequency(float f) {
 
-		frequency = (float)f;
+		frequency = f;
+		System.out.println("frequency:"+frequency);
 
 	}
 
@@ -513,8 +515,19 @@ public class SimulationField implements Runnable, Serializable{
 		pinkNoise = selected;
 
 	}
-
-
-
+	
+	public void recSensorData(){
+		
+		if(recording){
+			
+			recording = false;
+			sensorRecorder.stop();
+			
+		}else{
+			recording = true;
+			sensorRecorder = new SensorRecorder();
+		}
+		
+	}
 
 }
