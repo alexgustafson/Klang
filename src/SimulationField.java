@@ -52,7 +52,7 @@ public class SimulationField implements Runnable, Serializable{
 	transient PinkNoise pinkNoiseGenerator;
 	float frequency;
 	private int speed;
-	float dampingValue = 0.00001f;
+	float dampingValue = 0.00006f;
 	float variableDampingCoeff;
 	int boarderWidth = 35;
 	private boolean pinkNoise;
@@ -352,13 +352,13 @@ public class SimulationField implements Runnable, Serializable{
 					east = walls[n +1] ? 0 : mesh[n + 1];
 
 
-					if (x == 1   ) {
+					if (x < 2   ) {
 						west = oldMesh[n];
-					}else if(x == xcount - 2){
+					}else if(x > xcount - 2){
 						east = oldMesh[n];
-					}else if(y == 1){
+					}else if(y < 2){
 						north = oldMesh[n];
-					}else if(y == ycount - 2){
+					}else if(y > ycount - 2){
 						south = oldMesh[n];
 					}
 
