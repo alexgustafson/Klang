@@ -60,6 +60,9 @@ public class SimulationField implements Runnable, Serializable{
 	private float audioRecordingTimeStep = 1f/44100f;
 	private float audioRecordingTime = 0;
 	public boolean recording = false;
+	private int skipFrame;
+	private int sleepTIme;
+	private int sleepTime;
 
 	public void createNewField(int sizex_cm, int sizey_cm, int resolution, float timeH)
 	{
@@ -418,7 +421,7 @@ public class SimulationField implements Runnable, Serializable{
 			if (refreshGraphicAfterSteps < 1) {
 
 				updateCanvas();
-				refreshGraphicAfterSteps = 50 - speed;
+				refreshGraphicAfterSteps = skipFrame;
 
 			}else{
 
@@ -427,7 +430,7 @@ public class SimulationField implements Runnable, Serializable{
 			}
 			try {
 
-				Thread.sleep(speed);
+				Thread.sleep(sleepTime);
 
 			} catch (InterruptedException e) {
 
@@ -484,7 +487,16 @@ public class SimulationField implements Runnable, Serializable{
 
 	public void setSpeed(int value) {
 
-		speed = (int) (100f - value/2.0f);
+		//speed = (int) (100f - value/2.0f);
+		
+		if (value > 100) {
+			skipFrame = (value - 100) * 3;
+			sleepTime = 0;
+		}else{
+			skipFrame = 0;
+			sleepTime = 200 - (value * 2);
+		}
+		
 
 	}
 

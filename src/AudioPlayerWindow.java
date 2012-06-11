@@ -105,9 +105,6 @@ public class AudioPlayerWindow extends JFrame {
 				synth.startUnit( lineOut );
 				
 
-
-				// We only need to start the LineOut. It will pull data from the
-				// oscillator.
 				lineOut.start();
 				btnNewButton.setText("pause");
 

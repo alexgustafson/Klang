@@ -76,6 +76,7 @@ public class MainWindow {
 	private JLabel rohrFundamentalFreq;
 	private JCheckBox chckbxGeschlossen;
 	private JButton button;
+	private JRadioButton drawMode_measure;
 	
 	
 
@@ -143,7 +144,7 @@ public class MainWindow {
 			@Override
 			public void mouseExited(MouseEvent arg0) {
 				
-				
+				drawModeActive = false;
 				
 			}
 		});
@@ -175,7 +176,7 @@ public class MainWindow {
 				setUpSimulationField();
 			}
 		});
-		btnSetupSim.setBounds(81, 161, 87, 29);
+		btnSetupSim.setBounds(80, 152, 87, 29);
 		frame.getContentPane().add(btnSetupSim);
 		
 		JButton btnStep = new JButton("step");
@@ -207,18 +208,18 @@ public class MainWindow {
 			}
 		});
 		widthField.setText("60");
-		widthField.setBounds(81, 30, 87, 28);
+		widthField.setBounds(80, 21, 87, 28);
 		frame.getContentPane().add(widthField);
 		widthField.setColumns(10);
 		
 		JLabel lblNewLabel = new JLabel("width cm");
 		lblNewLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
-		lblNewLabel.setBounds(14, 36, 61, 16);
+		lblNewLabel.setBounds(13, 27, 61, 16);
 		frame.getContentPane().add(lblNewLabel);
 		
 		lblHeight = new JLabel("height cm");
 		lblHeight.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
-		lblHeight.setBounds(13, 72, 78, 16);
+		lblHeight.setBounds(12, 63, 78, 16);
 		frame.getContentPane().add(lblHeight);
 		
 		heightField = new JTextField();
@@ -235,12 +236,12 @@ public class MainWindow {
 		});
 		heightField.setText("36");
 		heightField.setColumns(10);
-		heightField.setBounds(81, 66, 87, 28);
+		heightField.setBounds(80, 57, 87, 28);
 		frame.getContentPane().add(heightField);
 		
 		resLabel = new JLabel("resolution");
 		resLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
-		resLabel.setBounds(14, 105, 72, 16);
+		resLabel.setBounds(13, 96, 72, 16);
 		frame.getContentPane().add(resLabel);
 		
 		resField = new JTextField();
@@ -260,7 +261,7 @@ public class MainWindow {
 		resField.setToolTipText("gibt an mit wie viele zellen pro cm gerechnet werden soll ( delta x und delta y )");
 		resField.setText("5");
 		resField.setColumns(10);
-		resField.setBounds(81, 99, 87, 28);
+		resField.setBounds(80, 90, 87, 28);
 		frame.getContentPane().add(resField);
 		
 		timeField = new JTextField();
@@ -280,12 +281,12 @@ public class MainWindow {
 		timeField.setToolTipText("gibt an mit welcher zeit schritten gerechnet werden soll ( delta t )");
 		timeField.setText("0.0000020408165");
 		timeField.setColumns(10);
-		timeField.setBounds(81, 133, 87, 28);
+		timeField.setBounds(80, 124, 87, 28);
 		frame.getContentPane().add(timeField);
 		
 		lblNewLabel_1 = new JLabel("Draw Mode");
 		lblNewLabel_1.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
-		lblNewLabel_1.setBounds(14, 196, 97, 16);
+		lblNewLabel_1.setBounds(13, 185, 97, 16);
 		frame.getContentPane().add(lblNewLabel_1);
 		
 		drawMode_luft = new JRadioButton("luft");
@@ -299,10 +300,11 @@ public class MainWindow {
 				drawMode_rohr.setSelected(false);
 				drawMode_sensor.setSelected(false);
 				drawMode_disturb.setSelected(false);
+				drawMode_measure.setSelected(false);
 			}
 		});
 		drawMode_luft.setSelected(true);
-		drawMode_luft.setBounds(14, 220, 72, 23);
+		drawMode_luft.setBounds(8, 202, 72, 23);
 		frame.getContentPane().add(drawMode_luft);
 		
 		drawMode_solid = new JRadioButton("wand");
@@ -316,9 +318,10 @@ public class MainWindow {
 				drawMode_rohr.setSelected(false);
 				drawMode_sensor.setSelected(false);
 				drawMode_disturb.setSelected(false);
+				drawMode_measure.setSelected(false);
 			}
 		});
-		drawMode_solid.setBounds(14, 246, 72, 23);
+		drawMode_solid.setBounds(8, 228, 72, 23);
 		frame.getContentPane().add(drawMode_solid);
 		
 		drawMode_gen = new JRadioButton("generator");
@@ -332,9 +335,10 @@ public class MainWindow {
 				drawMode_rohr.setSelected(false);
 				drawMode_sensor.setSelected(false);
 				drawMode_disturb.setSelected(false);
+				drawMode_measure.setSelected(false);
 			}
 		});
-		drawMode_gen.setBounds(14, 273, 87, 23);
+		drawMode_gen.setBounds(8, 255, 87, 23);
 		frame.getContentPane().add(drawMode_gen);
 		
 		drawMode_rohr = new JRadioButton("rohr");
@@ -347,9 +351,10 @@ public class MainWindow {
 				drawMode_rohr.setSelected(true);
 				drawMode_sensor.setSelected(false);
 				drawMode_disturb.setSelected(false);
+				drawMode_measure.setSelected(false);
 			}
 		});
-		drawMode_rohr.setBounds(14, 321, 117, 23);
+		drawMode_rohr.setBounds(8, 303, 117, 23);
 		frame.getContentPane().add(drawMode_rohr);
 		
 		drawMode_sensor = new JRadioButton("sensor");
@@ -363,9 +368,10 @@ public class MainWindow {
 				drawMode_rohr.setSelected(false);
 				drawMode_sensor.setSelected(true);
 				drawMode_disturb.setSelected(false);
+				drawMode_measure.setSelected(false);
 			}
 		});
-		drawMode_sensor.setBounds(14, 408, 78, 23);
+		drawMode_sensor.setBounds(8, 351, 78, 23);
 		frame.getContentPane().add(drawMode_sensor);
 		
 		drawMode_disturb = new JRadioButton("disturb");
@@ -379,11 +385,30 @@ public class MainWindow {
 				drawMode_rohr.setSelected(false);
 				drawMode_sensor.setSelected(false);
 				drawMode_disturb.setSelected(true);
+				drawMode_measure.setSelected(false);
 				
 			}
 		});
-		drawMode_disturb.setBounds(14, 431, 117, 23);
+		drawMode_disturb.setBounds(8, 374, 117, 23);
 		frame.getContentPane().add(drawMode_disturb);
+		
+		drawMode_measure = new JRadioButton("measure");
+		drawMode_measure.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
+		drawMode_measure.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				drawMode_luft.setSelected(false);
+				drawMode_solid.setSelected(false);
+				drawMode_gen.setSelected(false);
+				drawMode_rohr.setSelected(false);
+				drawMode_sensor.setSelected(false);
+				drawMode_disturb.setSelected(false);
+				drawMode_measure.setSelected(true);
+				
+			}
+		});
+		drawMode_measure.setBounds(8, 395, 117, 23);
+		frame.getContentPane().add(drawMode_measure);
 		
 		JButton btnSaveMesh = new JButton("save mesh");
 		btnSaveMesh.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
@@ -417,7 +442,7 @@ public class MainWindow {
 		
 		JLabel lblTimeH = new JLabel("time h");
 		lblTimeH.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
-		lblTimeH.setBounds(14, 139, 72, 16);
+		lblTimeH.setBounds(13, 130, 72, 16);
 		frame.getContentPane().add(lblTimeH);
 		
 		scopeCanvas = new Canvas();
@@ -533,29 +558,29 @@ public class MainWindow {
 		
 		chckbxGeschlossen = new JCheckBox("Geschlossen");
 		chckbxGeschlossen.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
-		chckbxGeschlossen.setBounds(34, 343, 97, 23);
+		chckbxGeschlossen.setBounds(28, 325, 97, 23);
 		frame.getContentPane().add(chckbxGeschlossen);
 		
 		JLabel lblLngeCm = new JLabel("l\u00E4nge cm");
 		lblLngeCm.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
-		lblLngeCm.setBounds(44, 371, 61, 16);
+		lblLngeCm.setBounds(14, 419, 61, 16);
 		frame.getContentPane().add(lblLngeCm);
 		
 		rohrLengthLabel = new JLabel("0");
 		rohrLengthLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
 		rohrLengthLabel.setHorizontalAlignment(SwingConstants.LEFT);
-		rohrLengthLabel.setBounds(105, 370, 61, 16);
+		rohrLengthLabel.setBounds(75, 418, 61, 16);
 		frame.getContentPane().add(rohrLengthLabel);
 		
 		lblFreq = new JLabel("freq Hz");
 		lblFreq.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
-		lblFreq.setBounds(44, 393, 61, 16);
+		lblFreq.setBounds(14, 441, 61, 16);
 		frame.getContentPane().add(lblFreq);
 		
 		rohrFundamentalFreq = new JLabel("0");
 		rohrFundamentalFreq.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
 		rohrFundamentalFreq.setHorizontalAlignment(SwingConstants.LEFT);
-		rohrFundamentalFreq.setBounds(105, 391, 61, 16);
+		rohrFundamentalFreq.setBounds(75, 439, 61, 16);
 		frame.getContentPane().add(rohrFundamentalFreq);
 		
 		JButton btnClear = new JButton("clear");
@@ -568,7 +593,7 @@ public class MainWindow {
 			}
 		});
 		btnClear.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
-		btnClear.setBounds(96, 271, 72, 29);
+		btnClear.setBounds(90, 253, 72, 29);
 		frame.getContentPane().add(btnClear);
 		
 		button = new JButton("clear");
@@ -583,7 +608,7 @@ public class MainWindow {
 
 		});
 		button.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
-		button.setBounds(96, 244, 72, 29);
+		button.setBounds(90, 226, 72, 29);
 		frame.getContentPane().add(button);
 		
 		final JCheckBox chckbxPinkNoise = new JCheckBox("pink noise");
@@ -596,7 +621,7 @@ public class MainWindow {
 			}
 		});
 		chckbxPinkNoise.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
-		chckbxPinkNoise.setBounds(14, 297, 87, 23);
+		chckbxPinkNoise.setBounds(8, 279, 87, 23);
 		frame.getContentPane().add(chckbxPinkNoise);
 		
 		final JButton btnRec = new JButton("rec");
@@ -617,21 +642,23 @@ public class MainWindow {
 			}
 		});
 		btnRec.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
-		btnRec.setBounds(96, 406, 72, 29);
+		btnRec.setBounds(90, 349, 72, 29);
 		frame.getContentPane().add(btnRec);
 		
 		JSeparator separator = new JSeparator();
-		separator.setBounds(13, 187, 154, 12);
+		separator.setBounds(13, 177, 154, 12);
 		frame.getContentPane().add(separator);
 		
 		JSeparator separator_1 = new JSeparator();
-		separator_1.setBounds(16, 457, 154, 12);
+		separator_1.setBounds(12, 456, 154, 12);
 		frame.getContentPane().add(separator_1);
 		
 		JLabel lblSimSetup = new JLabel("Sim Setup");
 		lblSimSetup.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
 		lblSimSetup.setBounds(12, 10, 97, 16);
 		frame.getContentPane().add(lblSimSetup);
+		
+
 
 	}
 	
@@ -698,6 +725,29 @@ public class MainWindow {
 			
 			simulationField.mouseClickInField(event.getX(),	event.getY());
 
+		}else if (drawMode_measure.isSelected()){
+			
+			if (drawModeActive) {
+				
+				drawModeActive = false;
+				
+				
+				float length =  (event.getX() - drawStartXCoordinate)*Float.parseFloat(widthField.getText())/simulationFieldCanvas.getWidth();
+				
+				rohrLengthLabel.setText(Float.toString( length   ));
+				
+				
+				float frequency = chckbxGeschlossen.isSelected() ?  343.0f /  (4*length/100 )  :  343.0f /  (2*length/100 )  ;
+				rohrFundamentalFreq.setText(Float.toString( frequency ));
+				
+			}else{
+				
+				drawModeActive = true;
+				drawStartXCoordinate = event.getX();
+				drawStartYCoordinate = event.getY();
+				
+			}
+			
 		}
 		
 	}
