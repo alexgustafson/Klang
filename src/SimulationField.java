@@ -57,7 +57,7 @@ public class SimulationField implements Runnable, Serializable{
 	int boarderWidth = 35;
 	private boolean pinkNoise;
 	
-	private float audioRecordingTimeStep = 1f/441000f;
+	private float audioRecordingTimeStep = 1f/44100f;
 	private float audioRecordingTime = 0;
 	public boolean recording = false;
 
@@ -293,7 +293,6 @@ public class SimulationField implements Runnable, Serializable{
 			gs.copyArea(0, 0, 100, 100, -1, 0);
 			gs.fillRect(99, 0, 1, 99);
 
-			//System.out.println("pressure at sensor:" +y);
 			gs.setColor(cs);
 			gs.fillRect(98, y, 2, 2);
 
@@ -380,6 +379,7 @@ public class SimulationField implements Runnable, Serializable{
 		audioRecordingTime = audioRecordingTime + timeH;
 		
 		if (audioRecordingTime > audioRecordingTimeStep && recording){
+			
 			audioRecordingTime = 0;
 			sensorRecorder.saveValue(mesh[sensorPosition]);
 		}
@@ -396,7 +396,7 @@ public class SimulationField implements Runnable, Serializable{
 			runningSim = false;
 		}else
 		{
-			sensorRecorder = new SensorRecorder();
+			
 			runningSim = true;
 			runner = new Thread(this);
 			runner.start();
@@ -524,8 +524,10 @@ public class SimulationField implements Runnable, Serializable{
 			sensorRecorder.stop();
 			
 		}else{
-			recording = true;
+			
 			sensorRecorder = new SensorRecorder();
+			recording = true;
+			
 		}
 		
 	}

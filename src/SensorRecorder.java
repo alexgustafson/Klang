@@ -16,6 +16,8 @@ public class SensorRecorder {
 	private DataOutputStream outputFile;
 	public Boolean isOpen;
 	WaveFileWriter writer;
+	private float sampleBuffer[] = new float[1024];
+	private int samplePosition = 0;
 	
 	public SensorRecorder(){
 		
@@ -24,6 +26,7 @@ public class SensorRecorder {
 			Date date= new java.util.Date();
 			Timestamp time = new Timestamp(date.getTime());
 			File audioDataFile = new File("sensorData" + time.getTime() + ".wav");
+			
 			
 			writer = new WaveFileWriter(audioDataFile);
 			writer.setFrameRate(44100);
@@ -34,6 +37,7 @@ public class SensorRecorder {
 			isOpen = true;
 			audioPlayerWindow.setVisible(true);
 			audioPlayerWindow.setAudioFile(audioDataFile);
+			audioPlayerWindow.setTitle(audioDataFile.getName());
 			
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -42,11 +46,21 @@ public class SensorRecorder {
 		
 	}
 	
-	public void saveValue(float mesh){
+	public void saveValue(float meshValue){
 		try {
 			if(isOpen){
 				//outputFile.writeFloat(mesh);
-				writer.write((double)mesh);
+				writer.write((double)meshValue);
+				//audioPlayerWindow.writeToAudioBuffer(meshValue);
+				
+				sampleBuffer[samplePosition] = meshValue;
+				samplePosition = samplePosition + 1;
+				if(samplePosition == sampleBuffer.length){
+					samplePosition = 0;
+					audioPlayerWindow.writeToAudioBuffer(sampleBuffer);
+				}
+				
+				
 			}
 			
 		} catch (IOException e) {
@@ -58,9 +72,10 @@ public class SensorRecorder {
 	public void close(){
 		try {
 			if (isOpen) {
-				outputFile.close();
+				
+				writer.close();
 				isOpen = false;
-				audioPlayerWindow.setVisible(false);
+				//audioPlayerWindow.setVisible(false);
 				
 			}
 			

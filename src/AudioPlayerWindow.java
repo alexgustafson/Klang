@@ -38,7 +38,10 @@ public class AudioPlayerWindow extends JFrame {
 	Synthesizer synth;
 	UnitOscillator osc;
 	FloatSample sample;
-	VariableRateDataReader samplePlayer;
+	FloatSample sampleBuffer;
+	int samplePosition = 0;
+	int bufferSize = 11025;
+	VariableRateMonoReader samplePlayer;
 	LineOut lineOut;
 	JButton btnNewButton;
 	private File audioDataFile;
@@ -74,6 +77,9 @@ public class AudioPlayerWindow extends JFrame {
 		canvas.setBounds(87, 6, 364, 74);
 		contentPane.add(canvas);
 		
+		sampleBuffer = new FloatSample(bufferSize);
+		sampleBuffer.setFrameRate(44100);
+		
 		
 	}
 	
@@ -85,38 +91,20 @@ public class AudioPlayerWindow extends JFrame {
 	{
 		// Create a context for the synthesizer.
 				synth = JSyn.createSynthesizer();
+				synth.add( lineOut = new LineOut() );
 				
-				// Start synthesizer using default stereo output at 44100 Hz.
 				synth.start();
+				
 
-				// Add a tone generator.
-				try {
-					//outputFile = new DataOutputStream( new BufferedOutputStream(new FileOutputStream(audioDataFile)));
-					sample = SampleLoader.loadFloatSample(new DataInputStream(new BufferedInputStream(new FileInputStream(audioDataFile))));
-					
-				} catch (IOException e1) {
-					
-					e1.printStackTrace();
-				} catch (UnsupportedAudioFileException e1) {
-					
-					e1.printStackTrace();
-				}
 				samplePlayer = new VariableRateMonoReader();
-				samplePlayer.dataQueue.queueLoop( sample, 0, sample.getNumFrames() );
+				samplePlayer.dataQueue.queue( sampleBuffer, 0, samplePosition );
+				samplePlayer.output.connect( 0, lineOut.input, 0 );
 				
 				synth.add( samplePlayer);
-				// Add a stereo audio output unit.
-				synth.add( lineOut = new LineOut() );
-
-				// Connect the oscillator to both channels of the output.
-				osc.output.connect( 0, lineOut.input, 0 );
-				osc.output.connect( 0, lineOut.input, 1 );
-				
+				samplePlayer.rate.set(44100);
+				synth.startUnit( lineOut );
 				
 
-				// Set the frequency and amplitude for the sine wave.
-				osc.frequency.set( 345.0 );
-				osc.amplitude.set( 0.6 );
 
 				// We only need to start the LineOut. It will pull data from the
 				// oscillator.
@@ -125,11 +113,14 @@ public class AudioPlayerWindow extends JFrame {
 
 
 				// Sleep while the sound is generated in the background.
+				// Sleep while the sound is generated in the background.
 				try
 				{
-					double time = synth.getCurrentTime();
-					// Sleep for a few seconds.
-					synth.sleepUntil( time + 4.0 );
+					// Wait until the sample has finished playing.
+					do
+					{
+						synth.sleepFor( 1.0 );
+					} while( samplePlayer.dataQueue.hasMore() );
 				} catch( InterruptedException e )
 				{
 					e.printStackTrace();
@@ -145,5 +136,10 @@ public class AudioPlayerWindow extends JFrame {
 	
 		this.audioDataFile = audioDataFile;
 		
+	}
+	
+	public void writeToAudioBuffer(float[] samples){
+		sampleBuffer.write(samplePosition, samples, 0, 1);
+		samplePosition = (samplePosition + samples.length)%bufferSize;
 	}
 }
