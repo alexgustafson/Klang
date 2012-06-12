@@ -20,6 +20,7 @@ public class SimulationField implements Runnable, Serializable{
 	float mesh[];
 	float newMesh[];
 	float damping[];
+	float pressure[];
 	boolean walls[];
 	boolean boarder[];
 	boolean generators[];
@@ -63,11 +64,18 @@ public class SimulationField implements Runnable, Serializable{
 	private int skipFrame;
 	private int sleepTIme;
 	private int sleepTime;
+	private float b1;
+	private float a0;
+	private float a1;
+	private float prevSampleValue;
+	private float prevCalculatedSampleValue;
 
 	public void createNewField(int sizex_cm, int sizey_cm, int resolution, float timeH)
 	{
 		this.resolution = resolution;
 		this.timeH = timeH;
+		
+		SetLPF();
 
 		spaceH = (float) (1.0 / ( 100.0 * resolution));
 
@@ -83,6 +91,7 @@ public class SimulationField implements Runnable, Serializable{
 		oldMesh = new float[cellCount];
 		generators = new boolean[cellCount];
 		damping = new float[cellCount];
+		pressure = new float[cellCount];
 
 		pixelBuffer = new int[cellCount];
 
@@ -152,8 +161,8 @@ public class SimulationField implements Runnable, Serializable{
 		int yCellCoordinate = (int) (float)(ycount * (yfloat / height));
 
 		int cellNumber = (yCellCoordinate * xcount) + xCellCoordinate;
-		mesh[cellNumber] = 5.0f;
-		oldMesh[cellNumber] = 5.0f;
+		mesh[cellNumber] = 0.01f;
+		oldMesh[cellNumber] = 0.01f;
 
 		System.out.println("cell:" + xCellCoordinate + " y:" + yCellCoordinate);
 
@@ -265,7 +274,8 @@ public class SimulationField implements Runnable, Serializable{
 
 			if(boarder[i]){
 
-				c = new Color(  Color.HSBtoRGB((float)(mesh[i]/3f) +1.82f, (float)0.8, (float)0.8) );
+				//c = new Color(  Color.HSBtoRGB((float)(pressure[i] / 4000f) +1.82f, (float)0.8, (float)0.8) );
+				c = new Color(  Color.HSBtoRGB((float)(mesh[i] / 3f ) +1.82f, (float)0.8, (float)0.8) );
 
 			}else if(walls[i]){
 
@@ -273,7 +283,8 @@ public class SimulationField implements Runnable, Serializable{
 
 			}else{
 
-				c = new Color(  Color.HSBtoRGB((float)(mesh[i] / 3f) +1.8f, (float)0.8, (float)0.8) );
+				c = new Color(  Color.HSBtoRGB((float)(mesh[i] / 2.5f) +1.8f, (float)0.8, (float)0.8) );
+				//c = new Color(  Color.HSBtoRGB((float)(pressure[i] / 4000f) +1.8f, (float)0.8, (float)0.8) );
 
 			}
 
@@ -362,10 +373,11 @@ public class SimulationField implements Runnable, Serializable{
 						south = oldMesh[n];
 					}
 
-
+					//pressure[n] = ((south - north)+(east-west))/(2*timeH);
 					center =  ((2.0f*center) - oldMesh[n] ) + cSquared*( north+south+east+west - (4.0f * center) )  ;
 					center = center - center*damping[n]*variableDampingCoeff;
 					newMesh[n] = generators[n] ? generatorFunction() : center;
+					
 
 				}
 
@@ -384,7 +396,8 @@ public class SimulationField implements Runnable, Serializable{
 		if (audioRecordingTime > audioRecordingTimeStep && recording){
 			
 			audioRecordingTime = 0;
-			sensorRecorder.saveValue(mesh[sensorPosition]);
+			//sensorRecorder.saveValue(pressure[sensorPosition]/ 4000f);
+			sensorRecorder.saveValue(filter(mesh[sensorPosition]));
 		}
 		
 		stepCount++;
@@ -542,6 +555,27 @@ public class SimulationField implements Runnable, Serializable{
 			
 		}
 		
+	}
+	
+	void SetLPF()
+	{
+		float fCut = 44100/4;
+	    float w = 2.0f * 44100;
+	    float Norm;
+
+	    fCut *= 2.0F * Math.PI;
+	    Norm = 1.0f / (fCut + w);
+	    b1 = (w - fCut) * Norm;
+	    a0 = a1 = fCut * Norm;
+	}
+	
+	float filter(float sampleValue){
+		
+		//out[n] = in[n]*a0 + in[n-1]*a1 + out[n-1]*b1;
+		float filteredValue = (sampleValue * a0) + (prevSampleValue * a1) + ( prevCalculatedSampleValue * b1);
+		prevCalculatedSampleValue = filteredValue;
+		prevSampleValue = sampleValue;
+		return filteredValue;
 	}
 
 }
