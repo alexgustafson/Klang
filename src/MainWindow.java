@@ -289,7 +289,7 @@ public class MainWindow {
 		lblNewLabel_1.setBounds(13, 185, 97, 16);
 		frame.getContentPane().add(lblNewLabel_1);
 		
-		drawMode_luft = new JRadioButton("luft");
+		drawMode_luft = new JRadioButton("air");
 		drawMode_luft.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
 		drawMode_luft.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -307,7 +307,7 @@ public class MainWindow {
 		drawMode_luft.setBounds(8, 202, 72, 23);
 		frame.getContentPane().add(drawMode_luft);
 		
-		drawMode_solid = new JRadioButton("wand");
+		drawMode_solid = new JRadioButton("solid");
 		drawMode_solid.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
 		drawMode_solid.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -341,7 +341,7 @@ public class MainWindow {
 		drawMode_gen.setBounds(8, 255, 87, 23);
 		frame.getContentPane().add(drawMode_gen);
 		
-		drawMode_rohr = new JRadioButton("rohr");
+		drawMode_rohr = new JRadioButton("tube");
 		drawMode_rohr.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
 		drawMode_rohr.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -556,12 +556,12 @@ public class MainWindow {
 		lblDamping.setBounds(429, 421, 150, 16);
 		frame.getContentPane().add(lblDamping);
 		
-		chckbxGeschlossen = new JCheckBox("Geschlossen");
+		chckbxGeschlossen = new JCheckBox("right side closed");
 		chckbxGeschlossen.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
-		chckbxGeschlossen.setBounds(28, 325, 97, 23);
+		chckbxGeschlossen.setBounds(28, 325, 117, 23);
 		frame.getContentPane().add(chckbxGeschlossen);
 		
-		JLabel lblLngeCm = new JLabel("l\u00E4nge cm");
+		JLabel lblLngeCm = new JLabel("length cm");
 		lblLngeCm.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
 		lblLngeCm.setBounds(14, 419, 61, 16);
 		frame.getContentPane().add(lblLngeCm);
