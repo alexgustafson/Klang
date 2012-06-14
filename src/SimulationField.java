@@ -21,10 +21,18 @@ public class SimulationField implements Runnable, Serializable{
 	float newMesh[];
 	float damping[];
 	float pressure[];
-	boolean walls[];
+	float walls[];
 	boolean boarder[];
 	boolean generators[];
+	float dampingWallValue = 0.01f;
+	
+	float north;
+	float south;
+	float east;
+	float west;
+	float center;
 
+	int n;
 
 	private transient BufferedImage dbimage;
 
@@ -83,10 +91,12 @@ public class SimulationField implements Runnable, Serializable{
 		ycount = sizey_cm * resolution;
 
 		cellCount = xcount * ycount;
+		
+		boarderWidth = ycount / 8;
 
 		mesh = new float[cellCount];
 		newMesh = new float[cellCount];
-		walls = new boolean[cellCount];
+		walls = new float[cellCount];
 		boarder = new boolean[cellCount];
 		oldMesh = new float[cellCount];
 		generators = new boolean[cellCount];
@@ -104,6 +114,7 @@ public class SimulationField implements Runnable, Serializable{
 				int cell = x+xcount*y;
 
 				damping[cell] = dampingValue;
+				walls[cell] = 1f;
 
 				if (x < boarderWidth || x > xcount- boarderWidth ) 
 				{
@@ -116,6 +127,7 @@ public class SimulationField implements Runnable, Serializable{
 					boarder[cell] = true;
 					damping[cell] = y < boarderWidth ? (float)(dampingValue*(boarderWidth - y)):(dampingValue*(boarderWidth - (ycount -  y)));
 				}
+				
 			}
 		}
 
@@ -161,8 +173,8 @@ public class SimulationField implements Runnable, Serializable{
 		int yCellCoordinate = (int) (float)(ycount * (yfloat / height));
 
 		int cellNumber = (yCellCoordinate * xcount) + xCellCoordinate;
-		mesh[cellNumber] = 0.01f;
-		oldMesh[cellNumber] = 0.01f;
+		mesh[cellNumber] = 2f;
+		oldMesh[cellNumber] = 2f;
 
 		System.out.println("cell:" + xCellCoordinate + " y:" + yCellCoordinate);
 
@@ -183,11 +195,11 @@ public class SimulationField implements Runnable, Serializable{
 
 		}else if(type == CellType.CellTypeSolidCell){
 
-			walls[cellNumber] = true;
+			walls[cellNumber] = dampingWallValue;
 
 		}else if(type == CellType.CellTypeSimulationCell){
 
-			walls[cellNumber] = false;
+			walls[cellNumber] = 1f;
 
 		}
 
@@ -220,12 +232,12 @@ public class SimulationField implements Runnable, Serializable{
 
 		for (int i = (startY * xcount) + startX; i < (startY * xcount) + endX; i++) {
 
-			walls[i] = true;
+			walls[i] = dampingWallValue;
 		}
 
 		for (int i = (endY * xcount) + startX; i <(endY * xcount) + endX; i++) {
 
-			walls[i] = true;
+			walls[i] = dampingWallValue;
 
 		}
 
@@ -233,7 +245,7 @@ public class SimulationField implements Runnable, Serializable{
 
 			for (int i = (startY * xcount) + endX;  i <(endY * xcount) + endX ; i = i + xcount) {
 
-				walls[i] = true;
+				walls[i] = dampingWallValue;
 
 			}
 
@@ -277,7 +289,7 @@ public class SimulationField implements Runnable, Serializable{
 				//c = new Color(  Color.HSBtoRGB((float)(pressure[i] / 4000f) +1.82f, (float)0.8, (float)0.8) );
 				c = new Color(  Color.HSBtoRGB((float)(mesh[i] / 3f ) +1.82f, (float)0.8, (float)0.8) );
 
-			}else if(walls[i]){
+			}else if(walls[i] < 1f){
 
 				c = Color.BLACK;
 
@@ -334,15 +346,6 @@ public class SimulationField implements Runnable, Serializable{
 
 	public void updateMesh(){
 
-		float north;
-		float south;
-		float east;
-		float west;
-		float center;
-
-		int n;
-
-
 		for(int y = 1; y < ycount -1; y++){
 
 			int yOffset = y * xcount;
@@ -352,16 +355,15 @@ public class SimulationField implements Runnable, Serializable{
 
 				n = x + yOffset;
 
-				if(!walls[n]){
+				
 
 					center = mesh[n];
 
 					//falls nachbarelement ein wand element ist 
-					north = walls[n - xcount] ? 0 : mesh[n - xcount];
-					south = walls[n + xcount] ? 0 : mesh[n + xcount];
-					west = walls[n -1] ? 0 : mesh[n - 1];
-					east = walls[n +1] ? 0 : mesh[n + 1];
-
+					north =   mesh[n - xcount] * walls[n - xcount];
+					south =  mesh[n + xcount] * walls[n + xcount];
+					west = mesh[n - 1] *walls[n -1];
+					east = mesh[n + 1] * walls[n +1];
 
 					if (x < 2   ) {
 						west = oldMesh[n];
@@ -373,13 +375,12 @@ public class SimulationField implements Runnable, Serializable{
 						south = oldMesh[n];
 					}
 
-					//pressure[n] = ((south - north)+(east-west))/(2*timeH);
+					//pressure[n] = Math.abs((south - north)+(east-west))/(2*timeH);
+					
 					center =  ((2.0f*center) - oldMesh[n] ) + cSquared*( north+south+east+west - (4.0f * center) )  ;
 					center = center - center*damping[n]*variableDampingCoeff;
 					newMesh[n] = generators[n] ? generatorFunction() : center;
 					
-
-				}
 
 				oldMesh[n] = mesh[n];
 
@@ -530,7 +531,7 @@ public class SimulationField implements Runnable, Serializable{
 
 	public void clearWalls() {
 		for (int i = 0; i < walls.length; i++) {
-			walls[i] = false;
+			walls[i] = 1f;
 		}
 	}
 
