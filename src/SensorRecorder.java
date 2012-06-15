@@ -35,9 +35,9 @@ public class SensorRecorder {
 			
 			//outputFile = new DataOutputStream( new BufferedOutputStream(new FileOutputStream(audioDataFile)));
 			isOpen = true;
-			audioPlayerWindow.setVisible(true);
-			audioPlayerWindow.setAudioFile(audioDataFile);
-			audioPlayerWindow.setTitle(audioDataFile.getName());
+			//audioPlayerWindow.setVisible(true);
+			//audioPlayerWindow.setAudioFile(audioDataFile);
+			//audioPlayerWindow.setTitle(audioDataFile.getName());
 			
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -53,12 +53,12 @@ public class SensorRecorder {
 				writer.write((double)meshValue);
 				//audioPlayerWindow.writeToAudioBuffer(meshValue);
 				
-				sampleBuffer[samplePosition] = meshValue;
-				samplePosition = samplePosition + 1;
-				if(samplePosition == sampleBuffer.length){
-					samplePosition = 0;
-					audioPlayerWindow.writeToAudioBuffer(sampleBuffer);
-				}
+				//sampleBuffer[samplePosition] = meshValue;
+				//samplePosition = samplePosition + 1;
+				//if(samplePosition == sampleBuffer.length){
+					//samplePosition = 0;
+					//audioPlayerWindow.writeToAudioBuffer(sampleBuffer);
+				//}
 				
 				
 			}

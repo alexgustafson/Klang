@@ -501,7 +501,7 @@ public class SimulationField implements Runnable, Serializable{
 
 	public void setSpeed(int value) {
 
-		//speed = (int) (100f - value/2.0f);
+		speed = value;
 		
 		if (value > 100) {
 			skipFrame = (value - 100) * 3;
@@ -577,6 +577,21 @@ public class SimulationField implements Runnable, Serializable{
 		prevCalculatedSampleValue = filteredValue;
 		prevSampleValue = sampleValue;
 		return filteredValue;
+	}
+
+	public int getFrequency() {
+		// TODO Auto-generated method stub
+		return (int)frequency;
+	}
+
+	public int getSpeed() {
+		
+		return speed;
+	}
+
+	public int getDamping() {
+		
+		return (int) (variableDampingCoeff*30);
 	}
 
 }

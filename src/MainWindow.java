@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+import javax.swing.AbstractButton;
 import javax.swing.JFileChooser;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
@@ -64,12 +65,12 @@ public class MainWindow {
 	private int drawStartXCoordinate;
 	private int drawStartYCoordinate;
 	private JRadioButton drawMode_disturb;
-	private JSlider slider_1;
+	private JSlider slider_simulationSpeed;
 	
 	private JSlider frequencySlider ;
 	private JSlider frequencyFineTuneSlider;
 	private JTextField frequencyTextField;
-	private JSlider slider;
+	private JSlider slider_damping;
 	private JLabel lblDamping;
 	private JLabel rohrLengthLabel;
 	private JLabel lblFreq;
@@ -77,6 +78,7 @@ public class MainWindow {
 	private JCheckBox chckbxGeschlossen;
 	private JButton button;
 	private JRadioButton drawMode_measure;
+	private AbstractButton btnRec;
 	
 	
 
@@ -468,24 +470,24 @@ public class MainWindow {
 		frequencySlider.setBounds(176, 389, 246, 29);
 		frame.getContentPane().add(frequencySlider);
 		
-		slider_1 = new JSlider();
-		slider_1.addMouseMotionListener(new MouseMotionAdapter() {
+		slider_simulationSpeed = new JSlider();
+		slider_simulationSpeed.addMouseMotionListener(new MouseMotionAdapter() {
 			
 
 			@Override
 			public void mouseDragged(MouseEvent e) {
 				
 				if (simulationField != null) {
-					simulationField.setSpeed(slider_1.getValue());
+					simulationField.setSpeed(slider_simulationSpeed.getValue());
 				}
 				
 			}
 		});
-		slider_1.setValue(100);
-		slider_1.setMinimum(1);
-		slider_1.setMaximum(200);
-		slider_1.setBounds(419, 389, 246, 29);
-		frame.getContentPane().add(slider_1);
+		slider_simulationSpeed.setValue(100);
+		slider_simulationSpeed.setMinimum(1);
+		slider_simulationSpeed.setMaximum(200);
+		slider_simulationSpeed.setBounds(419, 389, 246, 29);
+		frame.getContentPane().add(slider_simulationSpeed);
 		
 		JLabel lblNewLabel_2 = new JLabel("Generator Frequency Hz");
 		lblNewLabel_2.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
@@ -537,19 +539,19 @@ public class MainWindow {
 		lblFine.setBounds(186, 421, 150, 16);
 		frame.getContentPane().add(lblFine);
 		
-		slider = new JSlider();
-		slider.setMaximum(50);
-		slider.addMouseMotionListener(new MouseMotionAdapter() {
+		slider_damping = new JSlider();
+		slider_damping.setMaximum(50);
+		slider_damping.addMouseMotionListener(new MouseMotionAdapter() {
 			@Override
 			public void mouseDragged(MouseEvent e) {
 				
-				simulationField.setVariableDampingValue(slider.getValue()*20);
+				simulationField.setVariableDampingValue(slider_damping.getValue()*20);
 			}
 		});
-		slider.setMinimum(0);
-		slider.setValue(0);
-		slider.setBounds(419, 434, 246, 29);
-		frame.getContentPane().add(slider);
+		slider_damping.setMinimum(0);
+		slider_damping.setValue(0);
+		slider_damping.setBounds(419, 434, 246, 29);
+		frame.getContentPane().add(slider_damping);
 		
 		lblDamping = new JLabel("Damping");
 		lblDamping.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
@@ -624,7 +626,7 @@ public class MainWindow {
 		chckbxPinkNoise.setBounds(28, 279, 87, 23);
 		frame.getContentPane().add(chckbxPinkNoise);
 		
-		final JButton btnRec = new JButton("rec");
+		btnRec = new JButton("rec");
 		btnRec.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
@@ -854,6 +856,7 @@ public class MainWindow {
 		int status = fileChooser.showOpenDialog(frame);
 		if (status == JFileChooser.APPROVE_OPTION) {
 			
+
 			File selectedFile = fileChooser.getSelectedFile();
 			SimulationFileHandler simFileHandler = new SimulationFileHandler();
 			simulationField = simFileHandler.readFromFile(selectedFile);
@@ -862,6 +865,11 @@ public class MainWindow {
 			simulationField.setScopeCanvas(scopeCanvas);
 			simulationField.updateCanvas();
 			
+			frequencySlider.setValue(simulationField.getFrequency());
+			slider_simulationSpeed.setValue(simulationField.getSpeed());
+			frequencyTextField.setText(String.valueOf(simulationField.getFrequency()));
+			slider_damping.setValue(simulationField.getDamping());
+			btnRec.setText("run");
 		}
 
 	}
