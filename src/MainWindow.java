@@ -621,7 +621,7 @@ public class MainWindow {
 			}
 		});
 		chckbxPinkNoise.setFont(new Font("Lucida Grande", Font.PLAIN, 10));
-		chckbxPinkNoise.setBounds(8, 279, 87, 23);
+		chckbxPinkNoise.setBounds(28, 279, 87, 23);
 		frame.getContentPane().add(chckbxPinkNoise);
 		
 		final JButton btnRec = new JButton("rec");

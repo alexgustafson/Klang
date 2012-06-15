@@ -24,7 +24,7 @@ public class SimulationField implements Runnable, Serializable{
 	float walls[];
 	boolean boarder[];
 	boolean generators[];
-	float dampingWallValue = 0.01f;
+	float dampingWallValue = 0.0f;
 	
 	float north;
 	float south;
@@ -375,7 +375,7 @@ public class SimulationField implements Runnable, Serializable{
 						south = oldMesh[n];
 					}
 
-					//pressure[n] = Math.abs((south - north)+(east-west))/(2*timeH);
+					//pressure[n] = ((center - oldMesh[n])/timeH);
 					
 					center =  ((2.0f*center) - oldMesh[n] ) + cSquared*( north+south+east+west - (4.0f * center) )  ;
 					center = center - center*damping[n]*variableDampingCoeff;
